@@ -24,6 +24,7 @@ const Profile = () => {
   const { user, signOut } = useAuth();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState<string>('');
 
   if (!user) {
     return <Navigate to="/auth" replace />;
@@ -31,6 +32,17 @@ const Profile = () => {
 
   const fetchUserTracks = async () => {
     try {
+      // Fetch user profile first
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('user_id', user.id)
+        .single();
+
+      const userUsername = profileData?.username || 'Unknown';
+      setUsername(userUsername);
+
+      // Fetch tracks
       const { data, error } = await supabase
         .from('tracks')
         .select(`
@@ -39,14 +51,20 @@ const Profile = () => {
           artist,
           file_url,
           user_id,
-          created_at,
-          profiles!tracks_user_id_fkey(username)
+          created_at
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setTracks(data || []);
+      
+      // Add username to each track
+      const tracksWithProfiles = (data || []).map(track => ({
+        ...track,
+        profiles: { username: userUsername }
+      }));
+      
+      setTracks(tracksWithProfiles);
     } catch (error) {
       console.error('Error fetching tracks:', error);
     } finally {
