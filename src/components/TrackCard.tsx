@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { Play, Pause, Heart, Flame, ThumbsUp, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Play, Pause, Heart, Flame, ThumbsUp } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAudio } from "@/hooks/useAudio";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import CommentsModal from "@/components/CommentsModal";
 
 interface Track {
   id: string;
@@ -21,22 +23,47 @@ interface Track {
 
 interface TrackCardProps {
   track: Track;
-  reactions?: Array<{
-    type: string;
-    user_id: string;
-  }>;
-  commentsCount?: number;
 }
 
-const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps) => {
+const TrackCard = ({ track }: TrackCardProps) => {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [localReactions, setLocalReactions] = useState(reactions);
+  const [reactions, setReactions] = useState<Array<{ type: string; user_id: string }>>([]);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [reactingType, setReactingType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const isCurrentTrack = currentTrack?.id === track.id;
   const isTrackPlaying = isCurrentTrack && isPlaying;
+
+  // Fetch reactions and comments count
+  const fetchInteractions = async () => {
+    try {
+      // Fetch reactions
+      const { data: reactionsData } = await supabase
+        .from('reactions')
+        .select('type, user_id')
+        .eq('track_id', track.id);
+
+      // Fetch comments count
+      const { count: commentsCountData } = await supabase
+        .from('comments')
+        .select('*', { count: 'exact', head: true })
+        .eq('track_id', track.id);
+
+      setReactions(reactionsData || []);
+      setCommentsCount(commentsCountData || 0);
+    } catch (error) {
+      console.error('Error fetching interactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInteractions();
+  }, [track.id]);
 
   const handlePlayPause = () => {
     if (isCurrentTrack) {
@@ -62,7 +89,7 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
 
     setReactingType(type);
 
-    const existingReaction = localReactions.find(
+    const existingReaction = reactions.find(
       r => r.type === type && r.user_id === user.id
     );
 
@@ -78,7 +105,7 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
 
         if (error) throw error;
 
-        setLocalReactions(prev => 
+        setReactions(prev => 
           prev.filter(r => !(r.type === type && r.user_id === user.id))
         );
       } else {
@@ -93,7 +120,7 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
 
         if (error) throw error;
 
-        setLocalReactions(prev => [
+        setReactions(prev => [
           ...prev,
           { type, user_id: user.id }
         ]);
@@ -110,11 +137,11 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
   };
 
   const getReactionCount = (type: string) => {
-    return localReactions.filter(r => r.type === type).length;
+    return reactions.filter(r => r.type === type).length;
   };
 
   const hasUserReacted = (type: string) => {
-    return user && localReactions.some(r => r.type === type && r.user_id === user.id);
+    return user && reactions.some(r => r.type === type && r.user_id === user.id);
   };
 
   return (
@@ -126,9 +153,12 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
             {track.artist && (
               <p className="text-muted-foreground">{track.artist}</p>
             )}
-            <p className="text-sm text-muted-foreground font-mono">
+            <Link 
+              to={`/user/${track.user_id}`}
+              className="text-sm text-muted-foreground font-mono hover:text-primary transition-colors"
+            >
               by @{track.profiles.username}
-            </p>
+            </Link>
           </div>
           
           <Button
@@ -180,14 +210,11 @@ const TrackCard = ({ track, reactions = [], commentsCount = 0 }: TrackCardProps)
             <span className="ml-1 text-xs">{getReactionCount('heart')}</span>
           </Button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-brutalist ml-auto"
-          >
-            <MessageSquare size={14} />
-            <span className="ml-1 text-xs">{commentsCount}</span>
-          </Button>
+          <CommentsModal
+            trackId={track.id}
+            commentsCount={commentsCount}
+            onCommentsChange={setCommentsCount}
+          />
         </div>
       </CardContent>
     </Card>
