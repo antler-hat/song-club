@@ -269,18 +269,21 @@ const TrackCard = ({ track }: TrackCardProps) => {
                     onClick={isOwn ? () => handleEditComment(comment) : undefined}
                     style={isOwn ? { position: "relative" } : {}}
                   >
-                    <div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
-                      <span className="font-bold">@{comment.profiles.username}</span>
-                      <span className="text whitespace-pre-line">{comment.content}</span>
-                      {isOwn && (
-                        <span
-                          className="opacity-0 group-hover:opacity-100"
-                          style={{ pointerEvents: "none" }}
-                        >
-                          (Edit)
-                        </span>
-                      )}
-                    </div>
+<div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
+  <Link
+    to={`/user/${comment.user_id}`}
+    className="font-bold hover:underline"
+    onClick={e => e.stopPropagation()}
+  >
+    @{comment.profiles.username}
+  </Link>
+  <span
+    className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
+    onClick={isOwn ? () => handleEditComment(comment) : undefined}
+  >
+    {comment.content}
+  </span>
+</div>
                   </div>
                 );
               })
