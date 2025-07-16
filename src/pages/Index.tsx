@@ -147,7 +147,7 @@ const Index = () => {
               <Link to="/auth">
                 <Button variant="outline" size="sm" className="border-brutalist">
                   <LogIn size={16} />
-                  LOGIN
+                  Log in
                 </Button>
               </Link>
             )}
@@ -177,7 +177,7 @@ const Index = () => {
             ) : (
               <Link to="/auth">
                 <Button className="border-brutalist">
-                  GET STARTED
+                  Get started
                 </Button>
               </Link>
             ))}

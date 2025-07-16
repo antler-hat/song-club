@@ -104,10 +104,10 @@ const Profile = () => {
             <Button
               onClick={handleSignOut}
               variant="outline"
-              size="sm"
               className="border-brutalist"
             >
               <LogOut size={16} />
+              Log out
             </Button>
           </div>
         </div>

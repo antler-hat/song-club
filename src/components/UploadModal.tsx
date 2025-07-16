@@ -17,7 +17,6 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +70,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
         .insert({
           user_id: user.id,
           title: title.trim(),
-          artist: artist.trim() || null,
+          
           file_url: publicUrl,
           file_size: file.size,
         });
@@ -85,7 +84,6 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
 
       // Reset form
       setTitle("");
-      setArtist("");
       setFile(null);
       setOpen(false);
       onUploadComplete();
@@ -125,6 +123,8 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               className="border-brutalist placeholder:text-muted-foreground"
             />
           </div>
+          
+          
           
           <div>
             <input
