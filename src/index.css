@@ -113,6 +113,7 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
   body {
     @apply bg-background text-foreground;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
   }
 
   /* Brutalist typography */

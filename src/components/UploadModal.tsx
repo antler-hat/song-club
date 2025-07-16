@@ -105,20 +105,20 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="border-brutalist">
-          <Upload size={16} className="mr-2" />
-          UPLOAD
+          <Upload size={16} className="mr-1" />
+          Upload a Song
         </Button>
       </DialogTrigger>
       <DialogContent className="border-brutalist">
         <DialogHeader>
-          <DialogTitle className="font-bold">UPLOAD TRACK</DialogTitle>
+          <DialogTitle className="font-bold">Upload a song</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleUpload} className="space-y-4">
           <div>
             <Input
               type="text"
-              placeholder="TRACK TITLE*"
+              placeholder="Title*"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required

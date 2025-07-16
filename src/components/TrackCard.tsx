@@ -134,6 +134,41 @@ const TrackCard = ({ track }: TrackCardProps) => {
     setEditModalOpen(true);
   };
 
+  // Delete comment state and handler
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleDeleteComment = async () => {
+    if (!editingComment) return;
+    setSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .delete()
+        .eq('id', editingComment.id);
+
+      if (error) throw error;
+
+      setEditModalOpen(false);
+      setEditingComment(null);
+      setEditCommentText("");
+      setConfirmDelete(false);
+      await fetchComments();
+
+      toast({
+        title: "Comment deleted",
+        description: "Your comment has been deleted.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete comment",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   // Update comment in supabase
   const handleUpdateComment = async () => {
     if (!editingComment || !editCommentText.trim()) return;
@@ -308,25 +343,51 @@ const TrackCard = ({ track }: TrackCardProps) => {
                     className="border-brutalist resize-none"
                     rows={3}
                   />
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setEditModalOpen(false);
-                        setEditingComment(null);
-                        setEditCommentText("");
-                      }}
-                      className="border-brutalist"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleUpdateComment}
-                      disabled={!editCommentText.trim() || submitting}
-                      className="border-brutalist"
-                    >
-                      <span>Save</span>
-                    </Button>
+                  <div className="flex justify-between items-center items-end mt-2">
+                    {/* Delete button bottom left */}
+                    <div>
+                      {!confirmDelete ? (
+                        <button
+                          type="button"
+                          className="text-xs text-muted-foreground hover:underline"
+                          onClick={() => setConfirmDelete(true)}
+                          disabled={submitting}
+                        >
+                          Delete comment
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="text-xs text-red-600 hover:underline"
+                          onClick={handleDeleteComment}
+                          disabled={submitting}
+                        >
+                          Yes delete this idiot comment
+                        </button>
+                      )}
+                    </div>
+                    {/* Save/Cancel right */}
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setEditModalOpen(false);
+                          setEditingComment(null);
+                          setEditCommentText("");
+                          setConfirmDelete(false);
+                        }}
+                        className="border-brutalist"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleUpdateComment}
+                        disabled={!editCommentText.trim() || submitting}
+                        className="border-brutalist"
+                      >
+                        <span>Save</span>
+                      </Button>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
