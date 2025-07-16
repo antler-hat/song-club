@@ -18,6 +18,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [lyrics, setLyrics] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -70,7 +71,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
         .insert({
           user_id: user.id,
           title: title.trim(),
-          
+          lyrics: lyrics.trim() || null,
           file_url: publicUrl,
           file_size: file.size,
         });
@@ -85,6 +86,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
       // Reset form
       setTitle("");
       setFile(null);
+      setLyrics("");
       setOpen(false);
       onUploadComplete();
 
@@ -123,9 +125,15 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               className="border-brutalist placeholder:text-muted-foreground"
             />
           </div>
-          
-          
-          
+          <div>
+            <textarea
+              placeholder="Lyrics (optional)"
+              value={lyrics}
+              onChange={(e) => setLyrics(e.target.value)}
+              className="border-brutalist w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y"
+              rows={4}
+            />
+          </div>
           <div>
             <input
               type="file"
@@ -134,11 +142,6 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               className="block w-full text-sm border-brutalist p-2 bg-background"
               required
             />
-            {file && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Selected: {file.name}
-              </p>
-            )}
           </div>
           
           <Button
@@ -146,7 +149,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
             disabled={uploading || !file || !title.trim()}
             className="w-full border-brutalist font-bold"
           >
-            {uploading ? "UPLOADING..." : "UPLOAD TRACK"}
+            {uploading ? "Uploading..." : "Upload"}
           </Button>
         </form>
       </DialogContent>

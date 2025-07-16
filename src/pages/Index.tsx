@@ -16,6 +16,7 @@ interface Track {
   file_url: string;
   user_id: string;
   created_at: string;
+  lyrics?: string | null;
   profiles: {
     username: string;
   };
@@ -39,7 +40,8 @@ const Index = () => {
           artist,
           file_url,
           user_id,
-          created_at
+          created_at,
+          lyrics
         `)
         .order('created_at', { ascending: false });
 

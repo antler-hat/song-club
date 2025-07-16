@@ -24,6 +24,7 @@ interface Track {
   file_url: string;
   user_id: string;
   created_at: string;
+  lyrics?: string | null;
   profiles: {
     username: string;
   };
@@ -56,9 +57,10 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
   const [deleting, setDeleting] = useState(false);
   const [replacing, setReplacing] = useState(false);
 
-  // Edit title modal state
+  // Edit info modal state
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(track.title);
+  const [editedLyrics, setEditedLyrics] = useState(track.lyrics || "");
   const [savingTitle, setSavingTitle] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -370,6 +372,9 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
             >
               @{track.profiles.username}
             </Link>
+            {track.lyrics && (
+              <LyricsModalButton lyrics={track.lyrics} />
+            )}
           </div>
           {/* Ellipses menu for own track */}
           {isOwnTrack && (
@@ -390,10 +395,11 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                     onSelect={(e) => {
                       e.preventDefault();
                       setEditedTitle(track.title);
+                      setEditedLyrics(track.lyrics || "");
                       setEditTitleModalOpen(true);
                     }}
                   >
-                    Edit title
+                    Edit info
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={(e) => {
@@ -415,11 +421,11 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {/* Edit Title Modal */}
+              {/* Edit Info Modal */}
               <Dialog open={editTitleModalOpen} onOpenChange={setEditTitleModalOpen}>
-                <DialogContent className="border-brutalist max-w-md">
+                <DialogContent className="border-brutalist max-w-md max-h-[80vh]">
                   <DialogHeader>
-                    <DialogTitle className="font-bold text-base">Edit Title</DialogTitle>
+                    <DialogTitle className="font-bold text-base">Edit Info</DialogTitle>
                   </DialogHeader>
                   <input
                     type="text"
@@ -428,12 +434,20 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                     onChange={e => setEditedTitle(e.target.value)}
                     autoFocus
                   />
+                  <textarea
+                    placeholder="Lyrics (optional)"
+                    className="border-brutalist w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y h-80"
+                    rows={2}
+                    value={editedLyrics}
+                    onChange={e => setEditedLyrics(e.target.value)}
+                  />
                   <div className="flex justify-end gap-2 mt-2">
                     <Button
                       variant="outline"
                       onClick={() => {
                         setEditTitleModalOpen(false);
                         setEditedTitle(track.title);
+                        setEditedLyrics(track.lyrics || "");
                       }}
                       className="border-brutalist"
                       disabled={savingTitle}
@@ -442,31 +456,35 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                     </Button>
                     <Button
                       onClick={async () => {
-                        if (!editedTitle.trim() || editedTitle === track.title) return;
+                        if (!editedTitle.trim() || (editedTitle === track.title && editedLyrics === (track.lyrics || ""))) return;
                         setSavingTitle(true);
                         try {
                           const { error } = await supabase
                             .from('tracks')
-                            .update({ title: editedTitle.trim() })
+                            .update({ title: editedTitle.trim(), lyrics: editedLyrics.trim() || null })
                             .eq('id', track.id);
                           if (error) throw error;
                           setEditTitleModalOpen(false);
                           toast({
-                            title: "Title updated",
-                            description: "The track title has been updated.",
+                            title: "Info updated",
+                            description: "The track info has been updated.",
                           });
                           if (onTrackChanged) onTrackChanged();
                         } catch (error) {
                           toast({
                             title: "Error",
-                            description: "Failed to update title",
+                            description: "Failed to update info",
                             variant: "destructive",
                           });
                         } finally {
                           setSavingTitle(false);
                         }
                       }}
-                      disabled={!editedTitle.trim() || editedTitle === track.title || savingTitle}
+                      disabled={
+                        !editedTitle.trim() ||
+                        (editedTitle === track.title && editedLyrics === (track.lyrics || "")) ||
+                        savingTitle
+                      }
                       className="border-brutalist"
                     >
                       {savingTitle ? "Saving..." : "Save"}
@@ -661,6 +679,29 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        className="text-xs text-muted-foreground hover:underline mt-1"
+        style={{ display: "block" }}
+        onClick={() => setOpen(true)}
+        type="button"
+      >
+        See lyrics
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="border-brutalist max-w-md">
+          <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto">
+            {lyrics}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
