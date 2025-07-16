@@ -37,6 +37,11 @@ const TrackCard = ({ track }: TrackCardProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+  // Edit comment state
+  const [editingComment, setEditingComment] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editCommentText, setEditCommentText] = useState("");
+
   const isCurrentTrack = currentTrack?.id === track.id;
   const isTrackPlaying = isCurrentTrack && isPlaying;
 
@@ -122,6 +127,46 @@ const TrackCard = ({ track }: TrackCardProps) => {
     }
   };
 
+  // Edit comment handler
+  const handleEditComment = (comment) => {
+    setEditingComment(comment);
+    setEditCommentText(comment.content);
+    setEditModalOpen(true);
+  };
+
+  // Update comment in supabase
+  const handleUpdateComment = async () => {
+    if (!editingComment || !editCommentText.trim()) return;
+
+    setSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .update({ content: editCommentText.trim() })
+        .eq('id', editingComment.id);
+
+      if (error) throw error;
+
+      setEditModalOpen(false);
+      setEditingComment(null);
+      setEditCommentText("");
+      await fetchComments();
+
+      toast({
+        title: "Comment updated!",
+        description: "Your comment has been updated.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update comment",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     fetchComments();
     // eslint-disable-next-line
@@ -180,22 +225,36 @@ const TrackCard = ({ track }: TrackCardProps) => {
             ) : comments.length === 0 ? (
               null
             ) : (
-              comments.map((comment) => (
-                <div key={comment.id} className="mb-2">
-                  <div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
-                  <span className="font-bold">@{comment.profiles.username}</span>
-                  <span className="text">{comment.content}</span>
+              comments.map((comment) => {
+                const isOwn = user && comment.user_id === user.id;
+                return (
+                  <div
+                    key={comment.id}
+                    className={`mb-2 ${isOwn ? "group cursor-pointer" : ""}`}
+                    onClick={isOwn ? () => handleEditComment(comment) : undefined}
+                    style={isOwn ? { position: "relative" } : {}}
+                  >
+                    <div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
+                      <span className="font-bold">@{comment.profiles.username}</span>
+                      <span className="text whitespace-pre-line">{comment.content}</span>
+                      {isOwn && (
+                        <span
+                          className="opacity-0 group-hover:opacity-100"
+                          style={{ pointerEvents: "none" }}
+                        >
+                          (Edit)
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  {/* <p className="text-xs text-muted-foreground">
-                      {formatDate(comment.created_at)}
-                  </p> */}
-                </div>
-              ))
+                );
+              })
             )}
           </div>
           {/* Add a comment button and modal */}
           {user ? (
             <div className="">
+              {/* Add Comment Modal */}
               <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                 <DialogTrigger asChild>
                   <button
@@ -226,6 +285,47 @@ const TrackCard = ({ track }: TrackCardProps) => {
                       className="border-brutalist"
                     >
                       <span>Post</span>
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {/* Edit Comment Modal */}
+              <Dialog open={editModalOpen} onOpenChange={(open) => {
+                setEditModalOpen(open);
+                if (!open) {
+                  setEditingComment(null);
+                  setEditCommentText("");
+                }
+              }}>
+                <DialogContent className="border-brutalist max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-bold text-base">Edit Comment</DialogTitle>
+                  </DialogHeader>
+                  <Textarea
+                    placeholder="Edit your comment..."
+                    value={editCommentText}
+                    onChange={(e) => setEditCommentText(e.target.value)}
+                    className="border-brutalist resize-none"
+                    rows={3}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setEditModalOpen(false);
+                        setEditingComment(null);
+                        setEditCommentText("");
+                      }}
+                      className="border-brutalist"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleUpdateComment}
+                      disabled={!editCommentText.trim() || submitting}
+                      className="border-brutalist"
+                    >
+                      <span>Save</span>
                     </Button>
                   </div>
                 </DialogContent>
