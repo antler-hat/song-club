@@ -100,7 +100,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
       onCommentsChange(comments.length + 1);
 
       toast({
-        title: "Comment posted!",
+        title: "Comment posted",
         description: "Your comment has been added to the track",
       });
     } catch (error) {

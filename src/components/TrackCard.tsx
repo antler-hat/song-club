@@ -56,6 +56,11 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
   const [deleting, setDeleting] = useState(false);
   const [replacing, setReplacing] = useState(false);
 
+  // Edit title modal state
+  const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(track.title);
+  const [savingTitle, setSavingTitle] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isCurrentTrack = currentTrack?.id === track.id;
@@ -130,7 +135,7 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
       await fetchComments();
 
       toast({
-        title: "Comment posted!",
+        title: "Comment posted",
         description: "Your comment has been added to the track",
       });
     } catch (error) {
@@ -205,7 +210,7 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
       await fetchComments();
 
       toast({
-        title: "Comment updated!",
+        title: "Comment updated",
         description: "Your comment has been updated.",
       });
     } catch (error) {
@@ -384,6 +389,15 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                   <DropdownMenuItem
                     onSelect={(e) => {
                       e.preventDefault();
+                      setEditedTitle(track.title);
+                      setEditTitleModalOpen(true);
+                    }}
+                  >
+                    Edit title
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
                       handleReplaceAudioClick();
                     }}
                     disabled={replacing}
@@ -401,6 +415,65 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {/* Edit Title Modal */}
+              <Dialog open={editTitleModalOpen} onOpenChange={setEditTitleModalOpen}>
+                <DialogContent className="border-brutalist max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-bold text-base">Edit Title</DialogTitle>
+                  </DialogHeader>
+                  <input
+                    type="text"
+                    className="border-brutalist w-full px-3 py-2 rounded mb-4"
+                    value={editedTitle}
+                    onChange={e => setEditedTitle(e.target.value)}
+                    autoFocus
+                  />
+                  <div className="flex justify-end gap-2 mt-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setEditTitleModalOpen(false);
+                        setEditedTitle(track.title);
+                      }}
+                      className="border-brutalist"
+                      disabled={savingTitle}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        if (!editedTitle.trim() || editedTitle === track.title) return;
+                        setSavingTitle(true);
+                        try {
+                          const { error } = await supabase
+                            .from('tracks')
+                            .update({ title: editedTitle.trim() })
+                            .eq('id', track.id);
+                          if (error) throw error;
+                          setEditTitleModalOpen(false);
+                          toast({
+                            title: "Title updated",
+                            description: "The track title has been updated.",
+                          });
+                          if (onTrackChanged) onTrackChanged();
+                        } catch (error) {
+                          toast({
+                            title: "Error",
+                            description: "Failed to update title",
+                            variant: "destructive",
+                          });
+                        } finally {
+                          setSavingTitle(false);
+                        }
+                      }}
+                      disabled={!editedTitle.trim() || editedTitle === track.title || savingTitle}
+                      className="border-brutalist"
+                    >
+                      {savingTitle ? "Saving..." : "Save"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
               {/* Hidden file input for replace */}
               <input
                 ref={fileInputRef}

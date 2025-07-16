@@ -138,7 +138,7 @@ const Index = () => {
               <>
                 <UploadModal onUploadComplete={fetchAllTracks} />
                 <Link to="/profile">
-                  <Button variant="outline" size="sm" className="border-brutalist">
+                  <Button variant="outline" className="border-brutalist">
                     <User size={16} />
                   </Button>
                 </Link>
