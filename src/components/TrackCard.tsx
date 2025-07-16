@@ -34,9 +34,10 @@ interface TrackCardProps {
   track: Track;
   // Optionally, a callback to refresh the track list after delete/replace
   onTrackChanged?: () => void;
+  showLyricsExpanded?: boolean;
 }
 
-const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
+const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps) => {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -366,14 +367,22 @@ const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
             {isTrackPlaying ? <Pause size={16} /> : <Play size={16} />}
           </Button>
           <div className="flex-1">
-            <h3 className="font-bold">{track.title}</h3>
+            <h3 className="font-bold">
+              <Link to={`/track/${track.id}`} className="hover:underline">
+                {track.title}
+              </Link>
+            </h3>
             <Link 
               to={`/user/${track.user_id}`}
             >
               @{track.profiles.username}
             </Link>
             {track.lyrics && (
-              <LyricsModalButton lyrics={track.lyrics} />
+              showLyricsExpanded ? (
+                <div className="whitespace-pre-line text-xs text-muted-foreground mt-1">{track.lyrics}</div>
+              ) : (
+                <LyricsModalButton lyrics={track.lyrics} />
+              )
             )}
           </div>
           {/* Ellipses menu for own track */}
