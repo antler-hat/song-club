@@ -101,7 +101,7 @@ const UserProfile = () => {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <Button variant="outline" size="sm" className="border-brutalist brutalist-press">
+              <Button variant="outline" size="sm" className="border-brutalist">
                 <ArrowLeft size={16} />
               </Button>
             </Link>
@@ -118,13 +118,13 @@ const UserProfile = () => {
       {/* Content */}
       <main className="max-w-4xl mx-auto p-4">
         {loading ? (
-          <div className="text-center py-8 font-mono">LOADING USER...</div>
+          <div className="text-center py-8">LOADING USER...</div>
         ) : (
           <>
             {/* User Info */}
-            <div className="mb-8 p-6 border-brutalist shadow-brutalist">
+            <div className="mb-8 p-6 border-brutalist">
               <h2 className="text-3xl font-bold mb-2">@{profile?.username}</h2>
-              <p className="text-muted-foreground font-mono">
+              <p className="text-muted-foreground">
                 Member since {profile ? new Date(profile.created_at).toLocaleDateString('en-US', {
                   month: 'long',
                   year: 'numeric'

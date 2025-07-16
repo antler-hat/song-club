@@ -53,7 +53,7 @@ const AudioPlayer = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-brutalist brutalist-press"
+              className="border-brutalist"
             >
               <SkipBack size={16} />
             </Button>
@@ -61,7 +61,7 @@ const AudioPlayer = () => {
             <Button
               onClick={isPlaying ? pauseTrack : resumeTrack}
               size="sm"
-              className="border-brutalist shadow-brutalist brutalist-press"
+              className="border-brutalist"
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>
@@ -69,7 +69,7 @@ const AudioPlayer = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-brutalist brutalist-press"
+              className="border-brutalist"
             >
               <SkipForward size={16} />
             </Button>
@@ -77,7 +77,7 @@ const AudioPlayer = () => {
 
           {/* Progress */}
           <div className="flex-1 flex items-center gap-2">
-            <span className="text-xs font-mono">{formatTime(currentTime)}</span>
+            <span className="text-xs">{formatTime(currentTime)}</span>
             <Slider
               value={[progress]}
               onValueChange={handleProgressChange}
@@ -85,7 +85,7 @@ const AudioPlayer = () => {
               step={1}
               className="flex-1"
             />
-            <span className="text-xs font-mono">{formatTime(duration)}</span>
+            <span className="text-xs">{formatTime(duration)}</span>
           </div>
 
           {/* Volume */}

@@ -134,14 +134,14 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         <Button
           variant="outline"
           size="sm"
-          className="border-brutalist brutalist-press"
+          className="border-brutalist"
         >
           <MessageSquare size={14} />
           <span className="ml-1 text-xs">{commentsCount}</span>
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="border-brutalist shadow-brutalist max-w-2xl max-h-[80vh] flex flex-col">
+      <DialogContent className="border-brutalist max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="font-bold">COMMENTS</DialogTitle>
         </DialogHeader>
@@ -149,7 +149,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         {/* Comments List */}
         <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {loading ? (
-            <div className="text-center py-4 font-mono">LOADING...</div>
+            <div className="text-center py-4">LOADING...</div>
           ) : comments.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No comments yet. Be the first to comment!
@@ -159,7 +159,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
               <div key={comment.id} className="border-brutalist p-3">
                 <div className="flex justify-between items-start mb-2">
                   <span className="font-bold text-sm">@{comment.profiles.username}</span>
-                  <span className="text-xs text-muted-foreground font-mono">
+                  <span className="text-xs text-muted-foreground">
                     {formatDate(comment.created_at)}
                   </span>
                 </div>
@@ -183,7 +183,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
               <Button
                 onClick={handleSubmitComment}
                 disabled={!newComment.trim() || submitting}
-                className="border-brutalist shadow-brutalist brutalist-press"
+                className="border-brutalist"
               >
                 <Send size={14} />
                 <span className="ml-2">POST</span>

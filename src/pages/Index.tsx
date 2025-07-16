@@ -134,14 +134,14 @@ const Index = () => {
               <>
                 <UploadModal onUploadComplete={fetchAllTracks} />
                 <Link to="/profile">
-                  <Button variant="outline" size="sm" className="border-brutalist brutalist-press">
+                  <Button variant="outline" size="sm" className="border-brutalist">
                     <User size={16} />
                   </Button>
                 </Link>
               </>
             ) : (
               <Link to="/auth">
-                <Button variant="outline" size="sm" className="border-brutalist brutalist-press">
+                <Button variant="outline" size="sm" className="border-brutalist">
                   <LogIn size={16} />
                   LOGIN
                 </Button>
@@ -151,27 +151,18 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="max-w-4xl mx-auto p-4 py-8">
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-bold mb-4">DISCOVER MUSIC</h2>
-          <p className="text-xl text-muted-foreground font-mono">
-            Share your beats. Discover new sounds. Connect with creators.
-          </p>
-        </div>
-      </section>
 
       {/* Content */}
       <main className="max-w-4xl mx-auto p-4">
         {searchQuery && (
           <div className="mb-4">
-            <p className="text-sm text-muted-foreground font-mono">
+            <p className="text-sm text-muted-foreground">
               {filteredTracks.length} result{filteredTracks.length !== 1 ? 's' : ''} for "{searchQuery}"
             </p>
           </div>
         )}
         {loading ? (
-          <div className="text-center py-8 font-mono">LOADING TRACKS...</div>
+          <div className="text-center py-8">LOADING TRACKS...</div>
         ) : filteredTracks.length === 0 ? (
           <div className="text-center py-8">
             <h3 className="text-xl font-bold mb-2">
@@ -184,7 +175,7 @@ const Index = () => {
               <UploadModal onUploadComplete={fetchAllTracks} />
             ) : (
               <Link to="/auth">
-                <Button className="border-brutalist shadow-brutalist brutalist-press">
+                <Button className="border-brutalist">
                   GET STARTED
                 </Button>
               </Link>

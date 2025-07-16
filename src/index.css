@@ -111,7 +111,8 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
   }
 
   body {
-    @apply bg-background text-foreground font-mono;
+    @apply bg-background text-foreground;
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   /* Brutalist typography */
@@ -123,16 +124,5 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
   .border-brutalist {
     border-width: 3px;
     border-style: solid;
-  }
-
-  /* Sharp shadows */
-  .shadow-brutalist {
-    box-shadow: 4px 4px 0px 0px hsl(var(--foreground));
-  }
-
-  /* Button press effect */
-  .brutalist-press:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px 0px hsl(var(--foreground));
   }
 }

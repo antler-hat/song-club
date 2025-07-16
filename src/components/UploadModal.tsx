@@ -104,12 +104,12 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="border-brutalist shadow-brutalist brutalist-press">
+        <Button className="border-brutalist">
           <Upload size={16} className="mr-2" />
           UPLOAD
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-brutalist shadow-brutalist">
+      <DialogContent className="border-brutalist">
         <DialogHeader>
           <DialogTitle className="font-bold">UPLOAD TRACK</DialogTitle>
         </DialogHeader>
@@ -122,7 +122,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="border-brutalist font-mono uppercase placeholder:text-muted-foreground"
+              className="border-brutalist uppercase placeholder:text-muted-foreground"
             />
           </div>
           
@@ -132,7 +132,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               placeholder="ARTIST (OPTIONAL)"
               value={artist}
               onChange={(e) => setArtist(e.target.value)}
-              className="border-brutalist font-mono uppercase placeholder:text-muted-foreground"
+              className="border-brutalist uppercase placeholder:text-muted-foreground"
             />
           </div>
           
@@ -141,11 +141,11 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               type="file"
               accept="audio/*"
               onChange={handleFileChange}
-              className="block w-full text-sm font-mono border-brutalist p-2 bg-background"
+              className="block w-full text-sm border-brutalist p-2 bg-background"
               required
             />
             {file && (
-              <p className="text-sm text-muted-foreground mt-1 font-mono">
+              <p className="text-sm text-muted-foreground mt-1">
                 Selected: {file.name}
               </p>
             )}
@@ -154,7 +154,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
           <Button
             type="submit"
             disabled={uploading || !file || !title.trim()}
-            className="w-full border-brutalist shadow-brutalist brutalist-press font-bold"
+            className="w-full border-brutalist font-bold"
           >
             {uploading ? "UPLOADING..." : "UPLOAD TRACK"}
           </Button>

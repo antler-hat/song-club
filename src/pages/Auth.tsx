@@ -61,7 +61,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-brutalist shadow-brutalist">
+      <Card className="w-full max-w-md border-brutalist">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold">
             {isSignUp ? "CREATE ACCOUNT" : "LOGIN"}
@@ -76,7 +76,7 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-brutalist font-mono uppercase placeholder:text-muted-foreground"
+                className="border-brutalist uppercase placeholder:text-muted-foreground"
               />
             </div>
             
@@ -88,7 +88,7 @@ const Auth = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="border-brutalist font-mono uppercase placeholder:text-muted-foreground"
+                  className="border-brutalist uppercase placeholder:text-muted-foreground"
                 />
               </div>
             )}
@@ -100,14 +100,14 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-brutalist font-mono uppercase placeholder:text-muted-foreground"
+                className="border-brutalist uppercase placeholder:text-muted-foreground"
               />
             </div>
             
             <Button
               type="submit"
               disabled={loading}
-              className="w-full border-brutalist shadow-brutalist brutalist-press bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+              className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
             >
               {loading ? "..." : (isSignUp ? "SIGN UP" : "LOGIN")}
             </Button>
@@ -117,7 +117,7 @@ const Auth = () => {
             <button
               type="button"
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-muted-foreground hover:text-foreground font-mono text-sm underline"
+              className="text-muted-foreground hover:text-foreground text-sm underline"
             >
               {isSignUp ? "ALREADY HAVE AN ACCOUNT? LOGIN" : "NEED AN ACCOUNT? SIGN UP"}
             </button>
