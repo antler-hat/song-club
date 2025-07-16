@@ -379,7 +379,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
             </Link>
             {track.lyrics && (
               showLyricsExpanded ? (
-                <div className="whitespace-pre-line text-xs text-muted-foreground mt-1">{track.lyrics}</div>
+                <div className="whitespace-pre-line text-sm mt-4 mb-4">{track.lyrics}</div>
               ) : (
                 <LyricsModalButton lyrics={track.lyrics} />
               )
@@ -543,7 +543,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         </div>
 
         {/* Comments Section */}
-        <div className="pl-3">
+        <div className="">
           <div className="flex-1 overflow-y-auto pr-2 max-h-48">
             {loading ? (
               <div className="text-center py-4">Loading...</div>

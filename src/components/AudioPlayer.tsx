@@ -29,11 +29,11 @@ const AudioPlayer = () => {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t-brutalist p-4">
+    <div className="fixed bottom-0 left-0 right-0 bg-background border-brutalist border-r-0 border-l-0 border-b-0  p-4 md:pb-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           {/* Track Info */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 mb-2 sm:mb-0">
             <h4 className="font-bold truncate">{currentTrack.title}</h4>
             {currentTrack.artist && (
               <p className="text-sm text-muted-foreground truncate">
@@ -41,10 +41,9 @@ const AudioPlayer = () => {
               </p>
             )}
           </div>
-
-          {/* Controls */}
-          <div className="flex items-center gap-2">
-            
+          {/* Controls + Progress (mobile: row, desktop: keep as before) */}
+          <div className="flex flex-row items-center gap-2 flex-1">
+            {/* Controls */}
             <Button
               onClick={isPlaying ? pauseTrack : resumeTrack}
               size="sm"
@@ -52,19 +51,18 @@ const AudioPlayer = () => {
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>
-          </div>
-
-          {/* Progress */}
-          <div className="flex-1 flex items-center gap-2">
-            <span className="text-xs">{formatTime(currentTime)}</span>
-            <Slider
-              value={[progress]}
-              onValueChange={handleProgressChange}
-              max={100}
-              step={1}
-              className="flex-1"
-            />
-            <span className="text-xs">{formatTime(duration)}</span>
+            {/* Progress */}
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs">{formatTime(currentTime)}</span>
+              <Slider
+                value={[progress]}
+                onValueChange={handleProgressChange}
+                max={100}
+                step={1}
+                className="flex-1"
+              />
+              <span className="text-xs">{formatTime(duration)}</span>
+            </div>
           </div>
         </div>
       </div>
