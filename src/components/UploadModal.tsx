@@ -104,7 +104,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="border-brutalist">
+        <Button>
           <Upload size={16} className="mr-1" />
           Upload a Song
         </Button>
@@ -122,17 +122,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="border-brutalist uppercase placeholder:text-muted-foreground"
-            />
-          </div>
-          
-          <div>
-            <Input
-              type="text"
-              placeholder="ARTIST (OPTIONAL)"
-              value={artist}
-              onChange={(e) => setArtist(e.target.value)}
-              className="border-brutalist uppercase placeholder:text-muted-foreground"
+              className="border-brutalist placeholder:text-muted-foreground"
             />
           </div>
           

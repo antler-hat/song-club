@@ -80,6 +80,11 @@ const Profile = () => {
     await signOut();
   };
 
+  // Refresh handler for TrackCard
+  const handleTrackChanged = () => {
+    fetchUserTracks();
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
@@ -91,7 +96,7 @@ const Profile = () => {
                 <ArrowLeft size={16} />
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">YOUR TRACKS</h1>
+            <h1 className="text-2xl font-bold">Your songs</h1>
           </div>
           
           <div className="flex items-center gap-2">
@@ -111,17 +116,17 @@ const Profile = () => {
       {/* Content */}
       <main className="max-w-4xl mx-auto p-4">
         {loading ? (
-          <div className="text-center py-8">LOADING...</div>
+          <div className="text-center py-8">Loading...</div>
         ) : tracks.length === 0 ? (
           <div className="text-center py-8">
-            <h2 className="text-xl font-bold mb-2">NO TRACKS YET</h2>
-            <p className="text-muted-foreground mb-4">Upload your first track to get started</p>
+            <h2 className="text-xl font-bold mb-2">Nothing yet</h2>
+            <p className="text-muted-foreground mb-4">Upload a song?</p>
             <UploadModal onUploadComplete={fetchUserTracks} />
           </div>
         ) : (
           <div className="space-y-4">
             {tracks.map((track) => (
-              <TrackCard key={track.id} track={track} />
+              <TrackCard key={track.id} track={track} onTrackChanged={handleTrackChanged} />
             ))}
           </div>
         )}

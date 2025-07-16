@@ -94,6 +94,11 @@ const Index = () => {
     setSearchQuery("");
   };
 
+  // Refresh handler for TrackCard
+  const handleTrackChanged = () => {
+    fetchAllTracks();
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
@@ -180,7 +185,7 @@ const Index = () => {
         ) : (
           <div className="space-y-4">
             {filteredTracks.map((track) => (
-              <TrackCard key={track.id} track={track} />
+              <TrackCard key={track.id} track={track} onTrackChanged={handleTrackChanged} />
             ))}
           </div>
         )}

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Play, Pause, Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Play, Pause, Send, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,13 @@ import { useAudio } from "@/hooks/useAudio";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 interface Track {
   id: string;
@@ -24,9 +31,11 @@ interface Track {
 
 interface TrackCardProps {
   track: Track;
+  // Optionally, a callback to refresh the track list after delete/replace
+  onTrackChanged?: () => void;
 }
 
-const TrackCard = ({ track }: TrackCardProps) => {
+const TrackCard = ({ track, onTrackChanged }: TrackCardProps) => {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -42,8 +51,16 @@ const TrackCard = ({ track }: TrackCardProps) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editCommentText, setEditCommentText] = useState("");
 
+  // Dropdown and modals for track actions
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [replacing, setReplacing] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const isCurrentTrack = currentTrack?.id === track.id;
   const isTrackPlaying = isCurrentTrack && isPlaying;
+  const isOwnTrack = user && user.id === track.user_id;
 
   const fetchComments = async () => {
     setLoading(true);
@@ -202,6 +219,107 @@ const TrackCard = ({ track }: TrackCardProps) => {
     }
   };
 
+  // Replace audio file logic
+  const handleReplaceAudioClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // reset so same file can be selected again
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleReplaceAudioFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+    if (!selectedFile.type.startsWith("audio/")) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an audio file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setReplacing(true);
+    try {
+      // Upload new file to storage
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${user.id}/${track.id}-${Date.now()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('tracks')
+        .upload(fileName, selectedFile, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('tracks')
+        .getPublicUrl(fileName);
+
+      // Update track record
+      const { error: dbError } = await supabase
+        .from('tracks')
+        .update({ file_url: publicUrl })
+        .eq('id', track.id);
+
+      if (dbError) throw dbError;
+
+      toast({
+        title: "Audio replaced",
+        description: "The audio file has been updated.",
+      });
+
+      if (onTrackChanged) onTrackChanged();
+    } catch (error: any) {
+      toast({
+        title: "Replace failed",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setReplacing(false);
+    }
+  };
+
+  // Delete track logic
+  const handleDeleteTrack = async () => {
+    setDeleting(true);
+    try {
+      // Delete track from DB
+      const { error: dbError } = await supabase
+        .from('tracks')
+        .delete()
+        .eq('id', track.id);
+
+      if (dbError) throw dbError;
+
+      // Optionally, delete file from storage (not required, but good practice)
+      // Try to extract the file path from file_url
+      try {
+        const url = new URL(track.file_url);
+        const path = decodeURIComponent(url.pathname.replace(/^\/storage\/v1\/object\/public\/tracks\//, ""));
+        await supabase.storage.from('tracks').remove([path]);
+      } catch (e) {
+        // Ignore file delete errors
+      }
+
+      toast({
+        title: "Song deleted",
+        description: "The song has been deleted.",
+      });
+
+      setDeleteDialogOpen(false);
+      if (onTrackChanged) onTrackChanged();
+    } catch (error: any) {
+      toast({
+        title: "Delete failed",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   useEffect(() => {
     fetchComments();
     // eslint-disable-next-line
@@ -229,11 +347,10 @@ const TrackCard = ({ track }: TrackCardProps) => {
     }
   };
 
-
   return (
-    <Card className="">
+    <Card className="relative">
       <CardContent className="">
-        <div className="flex items-start gap-4 mb-3 border-brutalist p-3">
+        <div className="flex items-start gap-4 mb-3 border-brutalist p-3 relative">
           <Button
             onClick={handlePlayPause}
             size="sm"
@@ -249,7 +366,80 @@ const TrackCard = ({ track }: TrackCardProps) => {
               @{track.profiles.username}
             </Link>
           </div>
-          
+          {/* Ellipses menu for own track */}
+          {isOwnTrack && (
+            <div className="absolute right-2 top-2 z-10">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 p-0"
+                    aria-label="Track options"
+                  >
+                    <MoreHorizontal size={20} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      handleReplaceAudioClick();
+                    }}
+                    disabled={replacing}
+                  >
+                    Replace the audio file
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      setDeleteDialogOpen(true);
+                    }}
+                    className="text-red-600 focus:text-red-600"
+                  >
+                    Delete this song
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {/* Hidden file input for replace */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="audio/*"
+                style={{ display: "none" }}
+                onChange={handleReplaceAudioFile}
+                disabled={replacing}
+              />
+              {/* Delete confirmation dialog */}
+              <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <DialogContent className="border-brutalist max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-bold text-base">Are you sure?</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-2">
+                    <p>Your song will be gone for good!</p>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setDeleteDialogOpen(false)}
+                      disabled={deleting}
+                      className="border-brutalist"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleDeleteTrack}
+                      disabled={deleting}
+                      className="bg-red-600 text-white hover:bg-red-700"
+                    >
+                      {deleting ? "Deleting..." : "Delete song"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
         </div>
 
         {/* Comments Section */}
@@ -265,8 +455,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
                 return (
                   <div
                     key={comment.id}
-                    className={`mb-2 ${isOwn ? "group cursor-pointer" : ""}`}
-                    onClick={isOwn ? () => handleEditComment(comment) : undefined}
+                    className={`mb-2`}
                     style={isOwn ? { position: "relative" } : {}}
                   >
 <div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
