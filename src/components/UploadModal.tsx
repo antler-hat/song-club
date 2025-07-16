@@ -31,10 +31,10 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
         });
         return;
       }
-      if (selectedFile.size > 20 * 1024 * 1024) {
+      if (selectedFile.size > 15 * 1024 * 1024) {
         toast({
           title: "File too large",
-          description: "Maximum allowed size is 20MB.",
+          description: "Maximum allowed size is 15MB.",
           variant: "destructive",
         });
         return;
