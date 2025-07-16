@@ -23,15 +23,23 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.type.startsWith('audio/')) {
-        setFile(selectedFile);
-      } else {
+      if (!selectedFile.type.startsWith('audio/')) {
         toast({
           title: "Invalid file type",
           description: "Please select an audio file",
           variant: "destructive",
         });
+        return;
       }
+      if (selectedFile.size > 20 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Maximum allowed size is 20MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setFile(selectedFile);
     }
   };
 
