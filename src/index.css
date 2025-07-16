@@ -31,7 +31,7 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
 
     /* Muted - medium gray for less important text */
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
+    --muted-foreground: 0 0% 60%;
 
     /* Accent - same as secondary for consistency */
     --accent: 0 0% 96%;
@@ -122,7 +122,8 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
 
   /* Heavy borders for brutalist aesthetic */
   .border-brutalist {
-    border-width: 3px;
+    border-width: 2px;
     border-style: solid;
   }
+
 }
