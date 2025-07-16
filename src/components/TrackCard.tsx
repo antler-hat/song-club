@@ -81,7 +81,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
               to={`/user/${track.user_id}`}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              by @{track.profiles.username}
+              @{track.profiles.username}
             </Link>
           </div>
           

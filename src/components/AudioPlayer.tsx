@@ -1,4 +1,4 @@
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { Play, Pause, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useAudio } from "@/hooks/useAudio";
@@ -50,13 +50,6 @@ const AudioPlayer = () => {
 
           {/* Controls */}
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-brutalist"
-            >
-              <SkipBack size={16} />
-            </Button>
             
             <Button
               onClick={isPlaying ? pauseTrack : resumeTrack}
@@ -64,14 +57,6 @@ const AudioPlayer = () => {
               className="border-brutalist"
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-            </Button>
-            
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-brutalist"
-            >
-              <SkipForward size={16} />
             </Button>
           </div>
 
