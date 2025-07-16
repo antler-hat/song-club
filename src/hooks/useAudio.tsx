@@ -13,12 +13,10 @@ interface AudioContextType {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
-  volume: number;
   playTrack: (track: Track) => void;
   pauseTrack: () => void;
   resumeTrack: () => void;
   seekTo: (time: number) => void;
-  setVolume: (volume: number) => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -29,7 +27,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolumeState] = useState(1);
 
   const playTrack = (track: Track) => {
     if (audioRef.current) {
@@ -63,12 +60,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const setVolume = (vol: number) => {
-    if (audioRef.current) {
-      audioRef.current.volume = vol;
-      setVolumeState(vol);
-    }
-  };
 
   return (
     <AudioContext.Provider value={{
@@ -76,12 +67,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
       isPlaying,
       currentTime,
       duration,
-      volume,
       playTrack,
       pauseTrack,
       resumeTrack,
-      seekTo,
-      setVolume
+      seekTo
     }}>
       {children}
       <audio
