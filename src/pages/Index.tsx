@@ -163,12 +163,9 @@ const Index = () => {
         {loading ? (
           <div className="text-center py-8">Loading ...</div>
         ) : filteredTracks.length === 0 ? (
-          <div className="text-center py-8">
-            <h3 className="text-xl font-bold mb-2">
-              {searchQuery ? "NO RESULTS" : "NO TRACKS YET"}
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery ? `No tracks found for "${searchQuery}"` : "Be the first to share a track!"}
+          <div className="py-8">
+            <p className="mb-2">
+              {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
             </p>
             {!searchQuery && (user ? (
               <UploadModal onUploadComplete={fetchAllTracks} />
