@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAudio } from "@/hooks/useAudio";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +35,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const isCurrentTrack = currentTrack?.id === track.id;
   const isTrackPlaying = isCurrentTrack && isPlaying;
@@ -191,25 +193,43 @@ const TrackCard = ({ track }: TrackCardProps) => {
               ))
             )}
           </div>
-          {/* Comment Input */}
+          {/* Add a comment button and modal */}
           {user ? (
-            <div className="border-t-brutalist pt-4 space-y-3 mt-4">
-              <Textarea
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="border-brutalist resize-none"
-                rows={3}
-              />
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleSubmitComment}
-                  disabled={!newComment.trim() || submitting}
-                  className="border-brutalist"
-                >
-                  <span>Post</span>
-                </Button>
-              </div>
+            <div className="">
+              <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                <DialogTrigger asChild>
+                  <button
+                    className="text-muted-foreground text-sm hover:underline transition"
+                    type="button"
+                  >
+                    + comment
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="border-brutalist max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-bold text-base">Add Comment</DialogTitle>
+                  </DialogHeader>
+                  <Textarea
+                    placeholder="Write your comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="border-brutalist resize-none"
+                    rows={3}
+                  />
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={async () => {
+                        await handleSubmitComment();
+                        setModalOpen(false);
+                      }}
+                      disabled={!newComment.trim() || submitting}
+                      className="border-brutalist"
+                    >
+                      <span>Post</span>
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           ) : null}
         </div>

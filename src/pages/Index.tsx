@@ -101,8 +101,7 @@ const Index = () => {
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Music className="w-8 h-8" />
-              <h1 className="text-2xl font-bold">SONG CLUB</h1>
+              <h1 className="text-2xl font-bold">Song Club</h1>
             </div>
           </div>
           
@@ -162,7 +161,7 @@ const Index = () => {
           </div>
         )}
         {loading ? (
-          <div className="text-center py-8">LOADING TRACKS...</div>
+          <div className="text-center py-8">Loading ...</div>
         ) : filteredTracks.length === 0 ? (
           <div className="text-center py-8">
             <h3 className="text-xl font-bold mb-2">
