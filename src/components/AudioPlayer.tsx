@@ -1,4 +1,4 @@
-import { Play, Pause, Volume2 } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useAudio } from "@/hooks/useAudio";
@@ -9,11 +9,9 @@ const AudioPlayer = () => {
     isPlaying,
     currentTime,
     duration,
-    volume,
     pauseTrack,
     resumeTrack,
     seekTo,
-    setVolume,
   } = useAudio();
 
   if (!currentTrack) return null;
@@ -26,10 +24,6 @@ const AudioPlayer = () => {
 
   const handleProgressChange = (value: number[]) => {
     seekTo((value[0] / 100) * duration);
-  };
-
-  const handleVolumeChange = (value: number[]) => {
-    setVolume(value[0] / 100);
   };
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -71,18 +65,6 @@ const AudioPlayer = () => {
               className="flex-1"
             />
             <span className="text-xs">{formatTime(duration)}</span>
-          </div>
-
-          {/* Volume */}
-          <div className="flex items-center gap-2">
-            <Volume2 size={16} />
-            <Slider
-              value={[volume * 100]}
-              onValueChange={handleVolumeChange}
-              max={100}
-              step={1}
-              className="w-20"
-            />
           </div>
         </div>
       </div>
