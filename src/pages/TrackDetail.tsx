@@ -3,11 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import TrackCard from "@/components/TrackCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import UploadModal from "@/components/UploadModal";
-import { User, LogIn, Search, X } from "lucide-react";
+import { User, LogIn } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
+import SearchBar from "@/components/SearchBar";
 
 interface Track {
   id: string;
@@ -29,10 +29,6 @@ const TrackDetail = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -114,29 +110,18 @@ const TrackDetail = () => {
             </div>
           </div>
           
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md relative">
-            <Input
-              placeholder="Search titles or users"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-brutalist pr-20"
-            />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  onClick={clearSearch}
-                  className="h-6 w-6 p-0"
-                >
-                  <X size={14} />
-                </Button>
-              )}
-              <Search size={16} className="text-muted-foreground" />
-            </div>
-          </div>
+          
           
           <div className="flex items-center gap-2">
+            {/* Search Bar */}
+            <div className="flex-1 max-w-md">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search titles or users"
+              />
+            </div>
+            
             {user ? (
               <>
                 <UploadModal onUploadComplete={() => {}} />

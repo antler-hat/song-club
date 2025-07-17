@@ -108,12 +108,12 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
       <DialogTrigger asChild>
         <Button>
           <Upload size={16} className="mr-1" />
-          Upload a Song
+          Upload
         </Button>
       </DialogTrigger>
       <DialogContent className="border-brutalist">
         <DialogHeader>
-          <DialogTitle className="font-bold">Upload a song</DialogTitle>
+          <DialogTitle className="font-bold">Upload</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleUpload} className="space-y-4">

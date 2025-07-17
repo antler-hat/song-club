@@ -3,8 +3,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Link, useNavigate } from "react-router-dom";
 import { Music, User, LogIn, Search, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import SearchBar from "@/components/SearchBar";
 import { supabase } from "@/integrations/supabase/client";
 import TrackCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
@@ -31,9 +31,7 @@ interface Track {
 
 const Index = () => {
   const { user, signOut } = useAuth();
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,9 +100,6 @@ const Index = () => {
     }
   }, [searchQuery, tracks]);
 
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
 
   // Refresh handler for TrackCard
   const handleTrackChanged = () => {
@@ -116,125 +111,53 @@ const Index = () => {
       {/* Header */}
       <header className="p-4 pb-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-          {isMobile && mobileSearchOpen ? (
-            // Mobile: Only show search bar, hide title and right-side buttons
-            <div className="flex-1 max-w-full relative flex items-center">
-              <Input
-                autoFocus
-                placeholder="Search titles or users"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-brutalist pr-20"
-              />
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                {searchQuery && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={clearSearch}
-                    className="h-6 w-6 p-0"
-                    aria-label="Clear search"
-                  >
-                    <X size={14} />
-                  </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setMobileSearchOpen(false)}
-                  className="h-6 w-6 p-0"
-                  aria-label="Close search"
-                >
-                  <X size={16} />
-                </Button>
-              </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
             </div>
-          ) : (
-            <>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
-                </div>
-              </div>
-
-              {/* Search Bar / Icon */}
-              {!isMobile ? (
-                <div className="flex-1 max-w-md relative">
-                  <Input
-                    placeholder="Search titles or users"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="border-brutalist pr-20"
-                  />
-                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                    {searchQuery && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={clearSearch}
-                        className="h-6 w-6 p-0"
-                        aria-label="Clear search"
-                      >
-                        <X size={14} />
-                      </Button>
-                    )}
-                    <Search size={16} className="text-muted-foreground" />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex-1" />
-              )}
-
-              <div className="flex items-center gap-2">
-                {isMobile && !mobileSearchOpen && (
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label="Open search"
-                    onClick={() => setMobileSearchOpen(true)}
-                    className="border-brutalist h-9 w-9"
-                  >
-                    <Search size={20} />
-                  </Button>
-                )}
-                {user ? (
-                  <>
-                    <UploadModal onUploadComplete={fetchAllTracks} />
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="border-brutalist">
-                          <User size={16} />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link to="/profile">
-                            My songs
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={async () => {
-                            await signOut();
-                            navigate("/auth");
-                          }}
-                        >
-                          <LogOut size={16} className="mr-2" />
-                          Log out
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                ) : (
-                  <Link to="/auth">
-                    <Button variant="outline" size="sm" className="border-brutalist">
-                      <LogIn size={16} />
-                      Log in
+          </div>
+          <div className="flex items-center gap-2">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search titles or users"
+            />
+            {user ? (
+              <>
+                <UploadModal onUploadComplete={fetchAllTracks} />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="border-brutalist">
+                      <User size={16} />
                     </Button>
-                  </Link>
-                )}
-              </div>
-            </>
-          )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile">
+                        My songs
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={async () => {
+                        await signOut();
+                        navigate("/auth");
+                      }}
+                    >
+                      <LogOut size={16} className="mr-2" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="border-brutalist">
+                  <LogIn size={16} />
+                  Log in
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
