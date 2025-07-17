@@ -9,7 +9,6 @@ import AudioPlayer from "@/components/AudioPlayer";
 interface Track {
   id: string;
   title: string;
-  artist?: string;
   file_url: string;
   user_id: string;
   created_at: string;
@@ -66,7 +65,6 @@ const UserProfile = () => {
         .select(`
           id,
           title,
-          artist,
           file_url,
           user_id,
           created_at

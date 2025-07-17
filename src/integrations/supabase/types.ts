@@ -91,7 +91,6 @@ export type Database = {
       }
       tracks: {
         Row: {
-          artist: string | null
           created_at: string
           duration: number | null
           file_size: number | null
@@ -103,7 +102,6 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          artist?: string | null
           created_at?: string
           duration?: number | null
           file_size?: number | null
@@ -115,7 +113,6 @@ export type Database = {
           user_id: string
         }
         Update: {
-          artist?: string | null
           created_at?: string
           duration?: number | null
           file_size?: number | null

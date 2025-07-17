@@ -19,7 +19,6 @@ import {
 interface Track {
   id: string;
   title: string;
-  artist?: string;
   file_url: string;
   user_id: string;
   created_at: string;
@@ -47,7 +46,6 @@ const Index = () => {
         .select(`
           id,
           title,
-          artist,
           file_url,
           user_id,
           created_at,
@@ -95,7 +93,6 @@ const Index = () => {
       const query = searchQuery.toLowerCase();
       const filtered = tracks.filter(track => 
         track.title.toLowerCase().includes(query) ||
-        track.artist?.toLowerCase().includes(query) ||
         track.profiles.username.toLowerCase().includes(query)
       );
       setFilteredTracks(filtered);

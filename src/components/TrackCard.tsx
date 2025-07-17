@@ -20,7 +20,6 @@ import {
 interface Track {
   id: string;
   title: string;
-  artist?: string;
   file_url: string;
   user_id: string;
   created_at: string;

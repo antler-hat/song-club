@@ -62,7 +62,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('title', title.trim());
-      if (lyrics.trim()) formData.append('artist', lyrics.trim());
+      if (lyrics.trim()) formData.append('lyrics', lyrics.trim());
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Authentication required');
