@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const Auth = () => {
   const { user, signIn, signUp } = useAuth();
@@ -60,10 +60,13 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-brutalist p-8">
+    <div className="min-h-screen flex items-center flex-col bg-background p-4">
+      <div className="mb-4 sm:mb-20">
+          <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+      </div>
+      <Card className="w-full max-w-md border-brutalist p-8 pt-0">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold">
+          <CardTitle className="text-center text-lg font-bold">
             {isSignUp ? "Sign up" : "Log in"}
           </CardTitle>
         </CardHeader>
