@@ -11,6 +11,8 @@ interface SearchBarProps {
   placeholder?: string;
   className?: string;
   inputClassName?: string;
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,17 +21,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Search...",
   className,
   inputClassName,
+  mobileOpen,
+  setMobileOpen,
 }) => {
   const isMobile = useIsMobile();
-  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Use controlled mobileOpen state if provided, otherwise fallback to internal state for desktop
+  const [internalMobileOpen, internalSetMobileOpen] = useState(false);
+  const isMobileOpen = typeof mobileOpen === "boolean" ? mobileOpen : internalMobileOpen;
+  const setMobileOpenFn = setMobileOpen || internalSetMobileOpen;
 
   if (isMobile) {
-    if (!mobileOpen) {
+    if (!isMobileOpen) {
       return (
         <Button
           variant="outline"
           aria-label="Open search"
-          onClick={() => setMobileOpen(true)}
+          onClick={() => setMobileOpenFn(true)}
           className={clsx("h-9 w-9", className)}
         >
           <Search size={20} />
@@ -37,7 +45,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       );
     }
     return (
-      <div className={clsx("flex-1 max-w-full flex items-center", className)}>
+      <div className={clsx("flex-1 max-w-full flex items-center relative", className)}>
         <Input
           type="text"
           placeholder={placeholder}
@@ -62,7 +70,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => setMobileOpenFn(false)}
             className="h-6 w-6 p-0"
             aria-label="Close search"
             tabIndex={-1}

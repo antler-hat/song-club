@@ -36,6 +36,8 @@ const Index = () => {
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const isMobile = useIsMobile();
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const fetchAllTracks = async () => {
     try {
@@ -111,53 +113,70 @@ const Index = () => {
       {/* Header */}
       <header className="p-4 pb-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+          {isMobile && mobileSearchOpen ? (
+            // Mobile: Only show search bar when open
+            <div className="flex-1">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search titles or users"
+                mobileOpen={mobileSearchOpen}
+                setMobileOpen={setMobileSearchOpen}
+              />
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search titles or users"
-            />
-            {user ? (
-              <>
-                <UploadModal onUploadComplete={fetchAllTracks} />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="border-brutalist">
-                      <User size={16} />
+          ) : (
+            <>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Search titles or users"
+                  mobileOpen={mobileSearchOpen}
+                  setMobileOpen={setMobileSearchOpen}
+                />
+                {user ? (
+                  <>
+                    <UploadModal onUploadComplete={fetchAllTracks} />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="border-brutalist">
+                          <User size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile">
+                            My songs
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={async () => {
+                            await signOut();
+                            navigate("/auth");
+                          }}
+                        >
+                          <LogOut size={16} className="mr-2" />
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                ) : (
+                  <Link to="/auth">
+                    <Button variant="outline" size="sm" className="border-brutalist">
+                      <LogIn size={16} />
+                      Log in
                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link to="/profile">
-                        My songs
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={async () => {
-                        await signOut();
-                        navigate("/auth");
-                      }}
-                    >
-                      <LogOut size={16} className="mr-2" />
-                      Log out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
-              <Link to="/auth">
-                <Button variant="outline" size="sm" className="border-brutalist">
-                  <LogIn size={16} />
-                  Log in
-                </Button>
-              </Link>
-            )}
-          </div>
+                  </Link>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </header>
 
