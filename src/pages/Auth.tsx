@@ -7,9 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Link, Navigate } from "react-router-dom";
 
 const Auth = () => {
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn, signUp, resetPassword } = useAuth();
   const { toast } = useToast();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isReset, setIsReset] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -24,7 +25,22 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
+      if (isReset) {
+        const { error } = await resetPassword(email);
+        if (error) {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Password reset email sent",
+            description: "Check your email for a link to reset your password.",
+          });
+          setIsReset(false);
+        }
+      } else if (isSignUp) {
         const { error } = await signUp(email, password, username);
         if (error) {
           toast({
@@ -71,59 +87,103 @@ const Auth = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="border-brutalist placeholder:text-muted-foreground"
-              />
-            </div>
-            
-            {isSignUp && (
+          {isReset ? (
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="border-brutalist placeholder:text-muted-foreground"
                 />
               </div>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+              >
+                {loading ? "..." : "Send reset email"}
+              </Button>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Input
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="border-brutalist placeholder:text-muted-foreground"
+                  />
+                </div>
+                
+                {isSignUp && (
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                      className="border-brutalist placeholder:text-muted-foreground"
+                    />
+                  </div>
+                )}
+                
+                <div>
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="border-brutalist placeholder:text-muted-foreground"
+                  />
+                </div>
+                
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                >
+                  {loading ? "..." : (isSignUp ? "Sign up" : "Log in")}
+                </Button>
+              </form>
+              {!isSignUp && (
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsReset(true)}
+                    className="text-sm underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+          <div className="mt-2 text-center">
+            {isReset ? (
+              <button
+                type="button"
+                onClick={() => setIsReset(false)}
+                className="text-sm underline"
+              >
+                Back to login
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-sm underline"
+              >
+                {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up?"}
+              </button>
             )}
-            
-            <div>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="border-brutalist placeholder:text-muted-foreground"
-              />
-            </div>
-            
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
-            >
-              {loading ? "..." : (isSignUp ? "Sign up" : "Log in")}
-            </Button>
-          </form>
-          
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm underline"
-            >
-              {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up?"}
-            </button>
           </div>
         </CardContent>
       </Card>
