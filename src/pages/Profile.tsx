@@ -101,17 +101,7 @@ const Profile = () => {
             <h1 className="text-2xl font-bold">Your songs</h1>
           </div>
           
-          <div className="flex items-center gap-2">
-            <UploadModal onUploadComplete={fetchUserTracks} />
-            <Button
-              onClick={handleSignOut}
-              variant="outline"
-              className="border-brutalist"
-            >
-              <LogOut size={16} />
-              Log out
-            </Button>
-          </div>
+          
         </div>
       </header>
 

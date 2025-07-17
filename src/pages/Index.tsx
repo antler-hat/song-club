@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Link } from "react-router-dom";
-import { Music, User, LogIn, Search, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Music, User, LogIn, Search, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,6 +9,12 @@ import { supabase } from "@/integrations/supabase/client";
 import TrackCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 interface Track {
   id: string;
@@ -24,8 +30,9 @@ interface Track {
 }
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
@@ -193,11 +200,29 @@ const Index = () => {
                 {user ? (
                   <>
                     <UploadModal onUploadComplete={fetchAllTracks} />
-                    <Link to="/profile">
-                      <Button variant="outline" className="border-brutalist">
-                        <User size={16} />
-                      </Button>
-                    </Link>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="border-brutalist">
+                          <User size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile">
+                            My songs
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={async () => {
+                            await signOut();
+                            navigate("/auth");
+                          }}
+                        >
+                          <LogOut size={16} className="mr-2" />
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </>
                 ) : (
                   <Link to="/auth">
