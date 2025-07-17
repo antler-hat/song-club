@@ -107,7 +107,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="border-b-brutalist p-4">
+      <header className="p-4 pb-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           {isMobile && mobileSearchOpen ? (
             // Mobile: Only show search bar, hide title and right-side buttons
@@ -215,7 +215,7 @@ const Index = () => {
 
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto p-4">
+      <main className="max-w-2xl mx-auto p-4">
         {searchQuery && (
           <div className="mb-4">
             <p className="text-sm text-muted-foreground">
