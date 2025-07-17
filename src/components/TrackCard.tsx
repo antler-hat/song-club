@@ -83,7 +83,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
           user_id
         `)
         .eq('track_id', track.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (commentsError) throw commentsError;
 
@@ -543,7 +543,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         </div>
 
         {/* Comments Section */}
-        <div className="">
+        <div className="text-sm">
           <div className="flex-1 overflow-y-auto pr-2 max-h-48">
             {loading ? (
               <div className="text-center py-4">Loading...</div>

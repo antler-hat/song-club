@@ -69,6 +69,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
       })) || [];
 
       setComments(commentsWithProfiles);
+      console.log("Fetched comments order:", commentsWithProfiles);
     } catch (error) {
       toast({
         title: "Error",
