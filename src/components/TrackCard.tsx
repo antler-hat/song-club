@@ -351,7 +351,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         resumeTrack();
       }
     } else {
-      playTrack(track);
+      playTrack({ ...track, username: track.profiles.username });
     }
   };
 

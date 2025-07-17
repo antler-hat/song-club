@@ -121,7 +121,7 @@ const Index = () => {
             <div className="flex-1 max-w-full relative flex items-center">
               <Input
                 autoFocus
-                placeholder="Search tracks, artists, users..."
+                placeholder="Search titles or users"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="border-brutalist pr-20"
@@ -161,7 +161,7 @@ const Index = () => {
               {!isMobile ? (
                 <div className="flex-1 max-w-md relative">
                   <Input
-                    placeholder="Search tracks, artists, users..."
+                    placeholder="Search titles or users"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="border-brutalist pr-20"

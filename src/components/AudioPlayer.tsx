@@ -34,12 +34,12 @@ const AudioPlayer = () => {
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
           {/* Track Info */}
           <div className="flex flex-1 min-w-0 mb-0 sm:mb-0 items-center">
-            <h4 className="font-bold truncate">{currentTrack.title}</h4>
-            {currentTrack.artist && (
-              <p className="text-sm text-muted-foreground truncate">
-                {currentTrack.artist}
+            <div className="flex flex-col min-w-0">
+              <h4 className="text-sm font-bold truncate">{currentTrack.title}</h4>
+              <p className="text-sm truncate">
+                @{currentTrack.username}
               </p>
-            )}
+            </div>
           </div>
           {/* Controls + Progress (mobile: row, desktop: keep as before) */}
           <div className="flex flex-row items-center gap-2 flex-1">

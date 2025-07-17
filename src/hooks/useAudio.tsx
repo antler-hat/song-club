@@ -3,9 +3,9 @@ import { createContext, useContext, useRef, useState, ReactNode } from "react";
 interface Track {
   id: string;
   title: string;
-  artist?: string;
   file_url: string;
   user_id: string;
+  username: string; // uploader's username
 }
 
 interface AudioContextType {

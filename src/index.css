@@ -31,7 +31,7 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
 
     /* Muted - medium gray for less important text */
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 60%;
+    --muted-foreground: 0 0% 50%;
 
     /* Accent - same as secondary for consistency */
     --accent: 0 0% 96%;

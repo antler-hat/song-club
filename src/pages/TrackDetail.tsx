@@ -117,7 +117,7 @@ const TrackDetail = () => {
           {/* Search Bar */}
           <div className="flex-1 max-w-md relative">
             <Input
-              placeholder="Search tracks, artists, users..."
+              placeholder="Search titles or users"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="border-brutalist pr-20"
@@ -125,7 +125,6 @@ const TrackDetail = () => {
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
               {searchQuery && (
                 <Button
-                  size="sm"
                   variant="ghost"
                   onClick={clearSearch}
                   className="h-6 w-6 p-0"
