@@ -31,10 +31,10 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
         });
         return;
       }
-      if (selectedFile.size > 15 * 1024 * 1024) {
+      if (selectedFile.size > 50 * 1024 * 1024) {
         toast({
           title: "File too large",
-          description: "Maximum allowed size is 15MB.",
+          description: "Maximum allowed size is 50MB.",
           variant: "destructive",
         });
         return;
@@ -58,33 +58,27 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
     setUploading(true);
 
     try {
-      // Upload file to storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('tracks')
-        .upload(fileName, file);
+      // Use secure upload edge function
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', title.trim());
+      if (lyrics.trim()) formData.append('artist', lyrics.trim());
 
-      if (uploadError) throw uploadError;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Authentication required');
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('tracks')
-        .getPublicUrl(fileName);
+      const response = await fetch(`https://rfeqlcvmeandyuakrmqf.supabase.co/functions/v1/upload-track`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: formData,
+      });
 
-      // Create track record
-      const { error: dbError } = await supabase
-        .from('tracks')
-        .insert({
-          user_id: user.id,
-          title: title.trim(),
-          lyrics: lyrics.trim() || null,
-          file_url: publicUrl,
-          file_size: file.size,
-        });
-
-      if (dbError) throw dbError;
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
 
       toast({
         title: "Upload successful",

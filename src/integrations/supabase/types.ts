@@ -97,10 +97,10 @@ export type Database = {
           file_size: number | null
           file_url: string
           id: string
+          lyrics: string | null
           title: string
           updated_at: string
           user_id: string
-          lyrics: string | null
         }
         Insert: {
           artist?: string | null
@@ -109,10 +109,10 @@ export type Database = {
           file_size?: number | null
           file_url: string
           id?: string
-          title?: string
+          lyrics?: string | null
+          title: string
           updated_at?: string
           user_id: string
-          lyrics?: string | null
         }
         Update: {
           artist?: string | null
@@ -121,10 +121,10 @@ export type Database = {
           file_size?: number | null
           file_url?: string
           id?: string
+          lyrics?: string | null
           title?: string
           updated_at?: string
           user_id?: string
-          lyrics?: string | null
         }
         Relationships: []
       }

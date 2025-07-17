@@ -83,17 +83,36 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
   const handleSubmitComment = async () => {
     if (!user || !newComment.trim()) return;
 
+    if (newComment.trim().length > 500) {
+      toast({
+        title: "Comment too long",
+        description: "Comments cannot exceed 500 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('comments')
-        .insert({
-          track_id: trackId,
-          user_id: user.id,
-          content: newComment.trim(),
-        });
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Authentication required');
 
-      if (error) throw error;
+      const response = await fetch(`https://rfeqlcvmeandyuakrmqf.supabase.co/functions/v1/create-comment`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          track_id: trackId,
+          content: newComment.trim(),
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to post comment');
+      }
 
       setNewComment("");
       await fetchComments();
@@ -103,10 +122,10 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         title: "Comment posted",
         description: "Your comment has been added to the track",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to post comment",
+        description: error.message || "Failed to post comment",
         variant: "destructive",
       });
     } finally {
@@ -173,12 +192,16 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         {user ? (
           <div className="border-t-brutalist pt-4 space-y-3">
             <Textarea
-              placeholder="Add a comment..."
+              placeholder="Add a comment... (max 500 characters)"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               className="border-brutalist resize-none"
               rows={3}
+              maxLength={500}
             />
+            <div className="text-right text-xs text-muted-foreground">
+              {newComment.length}/500
+            </div>
             <div className="flex justify-end">
               <Button
                 onClick={handleSubmitComment}
