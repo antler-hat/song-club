@@ -106,9 +106,8 @@ const UserProfile = () => {
               </Button>
             </Link>
             <div className="flex items-center gap-2">
-              <User size={20} />
-              <h1 className="text-2xl font-bold">
-                {loading ? "Loading..." : `@${profile?.username}`}
+              <h1 className="text-2xl">
+                {loading ? "Loading..." : `Songs by @${profile?.username}`}
               </h1>
             </div>
           </div>
