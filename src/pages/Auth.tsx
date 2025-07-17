@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 
 const Auth = () => {
-  const { user, signIn, signUp, resetPassword } = useAuth();
+  const { user, signIn, signUp, resetPassword, updatePassword } = useAuth();
   const { toast } = useToast();
+  const location = useLocation();
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [isReset, setIsReset] = useState(false);
   const [email, setEmail] = useState("");
@@ -16,7 +18,20 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (user) {
+  // Password reset (recovery) flow
+  const [isRecovery, setIsRecovery] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [recoverySuccess, setRecoverySuccess] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("type") === "recovery") {
+      setIsRecovery(true);
+    }
+  }, [location.search]);
+
+  if (user && !isRecovery) {
     return <Navigate to="/" replace />;
   }
 
@@ -25,7 +40,31 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isReset) {
+      if (isRecovery) {
+        if (newPassword !== confirmPassword) {
+          toast({
+            title: "Error",
+            description: "Passwords do not match.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+        const { error } = await updatePassword(newPassword);
+        if (error) {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Password updated",
+            description: "Your password has been reset. You can now use your new password.",
+          });
+          setRecoverySuccess(true);
+        }
+      } else if (isReset) {
         const { error } = await resetPassword(email);
         if (error) {
           toast({
@@ -83,11 +122,56 @@ const Auth = () => {
       <Card className="w-full max-w-md border-brutalist p-8 pt-0">
         <CardHeader>
           <CardTitle className="text-center text-lg font-bold">
-            {isSignUp ? "Sign up" : "Log in"}
+            {isRecovery
+              ? "Set New Password"
+              : isSignUp
+              ? "Sign up"
+              : "Log in"}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {isReset ? (
+          {isRecovery ? (
+            recoverySuccess ? (
+              <div className="text-center">
+                <p className="mb-4">Your password has been reset.</p>
+                <Link to="/">
+                  <Button className="border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold w-full">
+                    Go to Home
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Input
+                    type="password"
+                    placeholder="New password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="border-brutalist placeholder:text-muted-foreground"
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="border-brutalist placeholder:text-muted-foreground"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                >
+                  {loading ? "..." : "Set new password"}
+                </Button>
+              </form>
+            )
+          ) : isReset ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input
@@ -166,25 +250,27 @@ const Auth = () => {
               )}
             </>
           )}
-          <div className="mt-2 text-center">
-            {isReset ? (
-              <button
-                type="button"
-                onClick={() => setIsReset(false)}
-                className="text-sm underline"
-              >
-                Back to login
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm underline"
-              >
-                {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up?"}
-              </button>
-            )}
-          </div>
+          {!isRecovery && (
+            <div className="mt-2 text-center">
+              {isReset ? (
+                <button
+                  type="button"
+                  onClick={() => setIsReset(false)}
+                  className="text-sm underline"
+                >
+                  Back to login
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-sm underline"
+                >
+                  {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up?"}
+                </button>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
