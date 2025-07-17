@@ -61,7 +61,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-brutalist">
+      <Card className="w-full max-w-md border-brutalist p-8">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold">
             {isSignUp ? "Sign up" : "Log in"}

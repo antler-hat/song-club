@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Link } from "react-router-dom";
 import { Music, User, LogIn, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,8 @@ interface Track {
 
 const Index = () => {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,54 +109,107 @@ const Index = () => {
       {/* Header */}
       <header className="border-b-brutalist p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
-            </div>
-          </div>
-          
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md relative">
-            <Input
-              placeholder="Search tracks, artists, users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-brutalist pr-20"
-            />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-              {searchQuery && (
+          {isMobile && mobileSearchOpen ? (
+            // Mobile: Only show search bar, hide title and right-side buttons
+            <div className="flex-1 max-w-full relative flex items-center">
+              <Input
+                autoFocus
+                placeholder="Search tracks, artists, users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="border-brutalist pr-20"
+              />
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                {searchQuery && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={clearSearch}
+                    className="h-6 w-6 p-0"
+                    aria-label="Clear search"
+                  >
+                    <X size={14} />
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={clearSearch}
+                  onClick={() => setMobileSearchOpen(false)}
                   className="h-6 w-6 p-0"
+                  aria-label="Close search"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </Button>
-              )}
-              <Search size={16} className="text-muted-foreground" />
+              </div>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {user ? (
-              <>
-                <UploadModal onUploadComplete={fetchAllTracks} />
-                <Link to="/profile">
-                  <Button variant="outline" className="border-brutalist">
-                    <User size={16} />
+          ) : (
+            <>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+                </div>
+              </div>
+
+              {/* Search Bar / Icon */}
+              {!isMobile ? (
+                <div className="flex-1 max-w-md relative">
+                  <Input
+                    placeholder="Search tracks, artists, users..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="border-brutalist pr-20"
+                  />
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                    {searchQuery && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={clearSearch}
+                        className="h-6 w-6 p-0"
+                        aria-label="Clear search"
+                      >
+                        <X size={14} />
+                      </Button>
+                    )}
+                    <Search size={16} className="text-muted-foreground" />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1" />
+              )}
+
+              <div className="flex items-center gap-2">
+                {isMobile && !mobileSearchOpen && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label="Open search"
+                    onClick={() => setMobileSearchOpen(true)}
+                    className="border-brutalist h-9 w-9"
+                  >
+                    <Search size={20} />
                   </Button>
-                </Link>
-              </>
-            ) : (
-              <Link to="/auth">
-                <Button variant="outline" size="sm" className="border-brutalist">
-                  <LogIn size={16} />
-                  Log in
-                </Button>
-              </Link>
-            )}
-          </div>
+                )}
+                {user ? (
+                  <>
+                    <UploadModal onUploadComplete={fetchAllTracks} />
+                    <Link to="/profile">
+                      <Button variant="outline" className="border-brutalist">
+                        <User size={16} />
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/auth">
+                    <Button variant="outline" size="sm" className="border-brutalist">
+                      <LogIn size={16} />
+                      Log in
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </header>
 

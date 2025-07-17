@@ -358,7 +358,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
   return (
     <Card className="relative">
       <CardContent className="">
-        <div className="flex items-start gap-4 mb-3 border-brutalist p-3 relative">
+        <div className="flex items-start gap-4 mb-2 border-brutalist p-3 relative">
           <Button
             onClick={handlePlayPause}
             size="sm"
@@ -555,24 +555,23 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
                 return (
                   <div
                     key={comment.id}
-                    className={`mb-2`}
                     style={isOwn ? { position: "relative" } : {}}
                   >
-<div className="flex gap-2 items-start mb-2 flex-align-items-baseline">
-  <Link
-    to={`/user/${comment.user_id}`}
-    className="font-bold hover:underline"
-    onClick={e => e.stopPropagation()}
-  >
-    @{comment.profiles.username}
-  </Link>
-  <span
-    className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
-    onClick={isOwn ? () => handleEditComment(comment) : undefined}
-  >
-    {comment.content}
-  </span>
-</div>
+                  <div className="flex gap-2 items-start flex-align-items-baseline">
+                    <Link
+                      to={`/user/${comment.user_id}`}
+                      className="font-bold hover:underline"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      @{comment.profiles.username}
+                    </Link>
+                    <span
+                      className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
+                      onClick={isOwn ? () => handleEditComment(comment) : undefined}
+                    >
+                      {comment.content}
+                    </span>
+                  </div>
                   </div>
                 );
               })
@@ -584,12 +583,14 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
               {/* Add Comment Modal */}
               <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                 <DialogTrigger asChild>
+                  <div className="mb-6">
                   <button
                     className="text-muted-foreground text-sm hover:underline transition"
                     type="button"
                   >
                     + comment
                   </button>
+                  </div>
                 </DialogTrigger>
                 <DialogContent className="border-brutalist max-w-md">
                   <DialogHeader>
