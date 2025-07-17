@@ -118,10 +118,10 @@ const TrackDetail = () => {
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="Search titles or users"
+                placeholder="Search"
               />
             </div>
-            
+
             {user ? (
               <>
                 <UploadModal onUploadComplete={() => {}} />
@@ -133,8 +133,7 @@ const TrackDetail = () => {
               </>
             ) : (
               <Link to="/auth">
-                <Button variant="outline" size="sm" className="border-brutalist">
-                  <LogIn size={16} />
+                <Button variant="outline" className="border-brutalist">
                   Log in
                 </Button>
               </Link>
