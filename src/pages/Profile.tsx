@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ArrowLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,6 +22,7 @@ interface Track {
 
 const Profile = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>('');
@@ -78,6 +79,7 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     await signOut();
+    navigate("/auth");
   };
 
   // Refresh handler for TrackCard
