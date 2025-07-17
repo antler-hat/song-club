@@ -47,7 +47,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
           user_id
         `)
         .eq('track_id', trackId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (commentsError) throw commentsError;
 
