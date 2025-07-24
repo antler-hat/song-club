@@ -31,11 +31,11 @@ serve(async (req) => {
       )
     }
 
-    const { song_id, content } = await req.json()
+    const { track_id, content } = await req.json()
 
-    if (!song_id || !content) {
+    if (!track_id || !content) {
       return new Response(
-        JSON.stringify({ error: 'Song ID and content are required' }),
+        JSON.stringify({ error: 'Track ID and content are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -70,16 +70,16 @@ serve(async (req) => {
       )
     }
 
-    // Verify song exists
-    const { data: song, error: songError } = await supabaseClient
-      .from('songs')
+    // Verify track exists
+    const { data: track, error: trackError } = await supabaseClient
+      .from('tracks')
       .select('id')
-      .eq('id', song_id)
+      .eq('id', track_id)
       .single()
 
-    if (songError || !song) {
+    if (trackError || !track) {
       return new Response(
-        JSON.stringify({ error: 'Song not found' }),
+        JSON.stringify({ error: 'Track not found' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -89,7 +89,7 @@ serve(async (req) => {
       .from('comments')
       .insert({
         user_id: user.id,
-        song_id,
+        track_id,
         content: trimmedContent,
       })
       .select(`

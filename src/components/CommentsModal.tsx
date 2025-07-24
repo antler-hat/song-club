@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface Comment {
@@ -103,6 +103,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
+          'apikey': SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({
           track_id: trackId,

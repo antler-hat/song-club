@@ -81,7 +81,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
           created_at,
           user_id
         `)
-        .eq('song_id', song.id)
+        .eq('track_id', song.id)
         .order('created_at', { ascending: true });
 
       if (commentsError) throw commentsError;
@@ -126,7 +126,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
       const { error } = await supabase
         .from('comments')
         .insert({
-          song_id: song.id,
+          track_id: song.id,
           user_id: user.id,
           content: newComment.trim(),
         });
@@ -343,7 +343,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   };
 
   const handlePlayPause = () => {
-    if (isCurrentTrack) {
+    if (isCurrentSong) {
       if (isPlaying) {
         pauseTrack();
       } else {
