@@ -131,7 +131,7 @@ const TrackDetail = () => {
               </>
             ) : (
               <Link to="/auth">
-                <Button variant="outline" className="border-brutalist">
+                <Button variant="ghost" className="border-brutalist">
                   Log in
                 </Button>
               </Link>

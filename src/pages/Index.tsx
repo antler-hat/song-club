@@ -166,7 +166,7 @@ const Index = () => {
                 ) : (
                   <Link to="/auth">
                     <Button variant="outline" className="border-brutalist">
-                      Log in
+                      Log in to upload
                     </Button>
                   </Link>
                 )}
