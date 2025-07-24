@@ -34,7 +34,6 @@ serve(async (req) => {
     const formData = await req.formData()
     const file = formData.get('file') as File
     const title = formData.get('title') as string
-    const artist = formData.get('artist') as string
 
     if (!file || !title) {
       return new Response(
@@ -63,7 +62,7 @@ serve(async (req) => {
 
     // Rate limiting check - max 5 uploads per hour per user
     const { data: recentUploads } = await supabaseClient
-      .from('tracks')
+      .from('songs')
       .select('id')
       .eq('user_id', user.id)
       .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
@@ -93,30 +92,29 @@ serve(async (req) => {
       .from('tracks')
       .getPublicUrl(fileName)
 
-    // Create track record
-    const { data: track, error: trackError } = await supabaseClient
-      .from('tracks')
+    // Create song record
+    const { data: song, error: songError } = await supabaseClient
+      .from('songs')
       .insert({
         user_id: user.id,
         title: title.trim(),
-        artist: artist?.trim() || null,
         file_url: urlData.publicUrl,
         file_size: file.size,
       })
       .select()
       .single()
 
-    if (trackError) {
-      // Clean up uploaded file if track creation fails
+    if (songError) {
+      // Clean up uploaded file if song creation fails
       await supabaseClient.storage.from('tracks').remove([fileName])
       return new Response(
-        JSON.stringify({ error: 'Failed to create track record' }),
+        JSON.stringify({ error: 'Failed to create song record' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     return new Response(
-      JSON.stringify({ track }),
+      JSON.stringify({ song }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 

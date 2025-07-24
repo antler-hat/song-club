@@ -3,10 +3,10 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import TrackCard from "@/components/TrackCard";
+import SongCard from "@/components/TrackCard";
 import AudioPlayer from "@/components/AudioPlayer";
 
-interface Track {
+interface Song {
   id: string;
   title: string;
   file_url: string;
@@ -26,7 +26,7 @@ interface UserProfile {
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -59,9 +59,9 @@ const UserProfile = () => {
 
       setProfile(profileData);
 
-      // Fetch user tracks
-      const { data: tracksData, error: tracksError } = await supabase
-        .from('tracks')
+      // Fetch user songs
+      const { data: songsData, error: songsError } = await supabase
+        .from('songs')
         .select(`
           id,
           title,
@@ -72,14 +72,14 @@ const UserProfile = () => {
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
-      if (tracksError) throw tracksError;
+      if (songsError) throw songsError;
 
-      const tracksWithProfiles = tracksData?.map(track => ({
-        ...track,
+      const songsWithProfiles = songsData?.map(song => ({
+        ...song,
         profiles: { username: profileData.username }
       })) || [];
 
-      setTracks(tracksWithProfiles);
+      setSongs(songsWithProfiles);
     } catch (error) {
       console.error('Error fetching user profile:', error);
       setNotFound(true);
@@ -118,16 +118,16 @@ const UserProfile = () => {
           <div className="text-center py-8">Loading...</div>
         ) : (
           <>
-            {/* Tracks */}
-            {tracks.length === 0 ? (
+            {/* Songs */}
+            {songs.length === 0 ? (
               <div className="text-center py-8">
-                <h3 className="text-xl font-bold mb-2">NO TRACKS YET</h3>
-                <p className="text-muted-foreground">This user hasn't shared any tracks yet.</p>
+                <h3 className="text-xl font-bold mb-2">NO SONGS YET</h3>
+                <p className="text-muted-foreground">This user hasn't shared any songs yet.</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {tracks.map((track) => (
-                  <TrackCard key={track.id} track={track} />
+                {songs.map((song) => (
+                  <SongCard key={song.id} song={song} />
                 ))}
               </div>
             )}
