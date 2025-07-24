@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface Comment {
@@ -98,7 +98,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Authentication required');
 
-      const response = await fetch(`https://rfeqlcvmeandyuakrmqf.supabase.co/functions/v1/create-comment`, {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/create-comment`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface UploadModalProps {
@@ -67,7 +67,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Authentication required');
 
-      const response = await fetch(`https://rfeqlcvmeandyuakrmqf.supabase.co/functions/v1/upload-track`, {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/upload-track`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
