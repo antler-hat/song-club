@@ -4,11 +4,11 @@ import { ArrowLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import TrackCard from "@/components/TrackCard";
+import SongCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
 
-interface Track {
+interface Song {
   id: string;
   title: string;
   file_url: string;
@@ -22,7 +22,7 @@ interface Track {
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>('');
 
@@ -30,7 +30,7 @@ const Profile = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  const fetchUserTracks = async () => {
+  const fetchUserSongs = async () => {
     try {
       // Fetch user profile first
       const { data: profileData } = await supabase
@@ -42,9 +42,9 @@ const Profile = () => {
       const userUsername = profileData?.username || 'Unknown';
       setUsername(userUsername);
 
-      // Fetch tracks
+      // Fetch songs
       const { data, error } = await supabase
-        .from('tracks')
+        .from('songs')
         .select(`
           id,
           title,
@@ -57,22 +57,22 @@ const Profile = () => {
 
       if (error) throw error;
       
-      // Add username to each track
-      const tracksWithProfiles = (data || []).map(track => ({
-        ...track,
+      // Add username to each song
+      const songsWithProfiles = (data || []).map(song => ({
+        ...song,
         profiles: { username: userUsername }
       }));
       
-      setTracks(tracksWithProfiles);
+      setSongs(songsWithProfiles);
     } catch (error) {
-      console.error('Error fetching tracks:', error);
+      console.error('Error fetching songs:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserTracks();
+    fetchUserSongs();
   }, [user.id]);
 
   const handleSignOut = async () => {
@@ -81,8 +81,8 @@ const Profile = () => {
   };
 
   // Refresh handler for TrackCard
-  const handleTrackChanged = () => {
-    fetchUserTracks();
+  const handleSongChanged = () => {
+    fetchUserSongs();
   };
 
   return (
@@ -107,16 +107,16 @@ const Profile = () => {
       <main className="max-w-2xl mx-auto p-4">
         {loading ? (
           <div className="text-center py-8">Loading...</div>
-        ) : tracks.length === 0 ? (
+        ) : songs.length === 0 ? (
           <div className="text-center py-8">
             <h2 className="text-xl font-bold mb-2">Nothing yet</h2>
             <p className="text-muted-foreground mb-4">Upload a song?</p>
-            <UploadModal onUploadComplete={fetchUserTracks} />
+            <UploadModal onUploadComplete={fetchUserSongs} />
           </div>
         ) : (
           <div className="space-y-4">
-            {tracks.map((track) => (
-              <TrackCard key={track.id} track={track} onTrackChanged={handleTrackChanged} />
+            {songs.map((song) => (
+              <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
             ))}
           </div>
         )}

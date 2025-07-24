@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import TrackCard from "@/components/TrackCard";
+import SongCard from "@/components/TrackCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,7 +9,7 @@ import { User, LogIn } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
 import SearchBar from "@/components/SearchBar";
 
-interface Track {
+interface Song {
   id: string;
   title: string;
   file_url: string;
@@ -21,22 +21,22 @@ interface Track {
   };
 }
 
-const TrackDetail = () => {
+const SongDetail = () => {
   const { user } = useAuth();
-  const { trackId } = useParams<{ trackId: string }>();
-  const [track, setTrack] = useState<Track | null>(null);
+  const { songId } = useParams<{ songId: string }>();
+  const [song, setSong] = useState<Song | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const fetchTrack = async () => {
+    const fetchSong = async () => {
       setLoading(true);
       setNotFound(false);
       try {
-        // Fetch track
-        const { data: trackData, error: trackError } = await supabase
-          .from("tracks")
+        // Fetch song
+        const { data: songData, error: songError } = await supabase
+          .from("songs")
           .select(`
             id,
             title,
@@ -45,12 +45,12 @@ const TrackDetail = () => {
             created_at,
             lyrics
           `)
-          .eq("id", trackId)
+          .eq("id", songId)
           .single();
 
-        if (trackError || !trackData) {
+        if (songError || !songData) {
           setNotFound(true);
-          setTrack(null);
+          setSong(null);
           return;
         }
 
@@ -58,25 +58,25 @@ const TrackDetail = () => {
         const { data: profileData } = await supabase
           .from("profiles")
           .select("user_id, username")
-          .eq("user_id", trackData.user_id)
+          .eq("user_id", songData.user_id)
           .single();
 
-        setTrack({
-          ...trackData,
+        setSong({
+          ...songData,
           profiles: profileData
             ? { username: profileData.username }
             : { username: "Unknown" },
         });
       } catch (e) {
         setNotFound(true);
-        setTrack(null);
+        setSong(null);
       } finally {
         setLoading(false);
       }
     };
 
-    if (trackId) fetchTrack();
-  }, [trackId]);
+    if (songId) fetchSong();
+  }, [songId]);
 
   if (loading) {
     return (
@@ -86,10 +86,10 @@ const TrackDetail = () => {
     );
   }
 
-  if (notFound || !track) {
+  if (notFound || !song) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <div className="mb-4 text-lg font-bold">Track not found</div>
+        <div className="mb-4 text-lg font-bold">Song not found</div>
         <Link to="/">
           <Button className="border-brutalist">Back to home</Button>
         </Link>
@@ -107,8 +107,6 @@ const TrackDetail = () => {
               <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
             </div>
           </div>
-          
-          
           
           <div className="flex items-center gap-2">
             {/* Search Bar */}
@@ -140,11 +138,11 @@ const TrackDetail = () => {
         </div>
       </header>
       <main className="max-w-2xl mx-auto p-4">
-        <TrackCard track={track} showLyricsExpanded={true} />
+        <SongCard song={song} showLyricsExpanded={true} />
       </main>
       <AudioPlayer />
     </div>
   );
 };
 
-export default TrackDetail;
+export default SongDetail;

@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-interface Track {
+interface Song {
   id: string;
   title: string;
   file_url: string;
@@ -29,14 +29,14 @@ interface Track {
   };
 }
 
-interface TrackCardProps {
-  track: Track;
-  // Optionally, a callback to refresh the track list after delete/replace
-  onTrackChanged?: () => void;
+interface SongCardProps {
+  song: Song;
+  // Optionally, a callback to refresh the song list after delete/replace
+  onSongChanged?: () => void;
   showLyricsExpanded?: boolean;
 }
 
-const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps) => {
+const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) => {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -59,15 +59,15 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
 
   // Edit info modal state
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(track.title);
-  const [editedLyrics, setEditedLyrics] = useState(track.lyrics || "");
+  const [editedTitle, setEditedTitle] = useState(song.title);
+  const [editedLyrics, setEditedLyrics] = useState(song.lyrics || "");
   const [savingTitle, setSavingTitle] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const isCurrentTrack = currentTrack?.id === track.id;
-  const isTrackPlaying = isCurrentTrack && isPlaying;
-  const isOwnTrack = user && user.id === track.user_id;
+  const isCurrentSong = currentTrack?.id === song.id;
+  const isSongPlaying = isCurrentSong && isPlaying;
+  const isOwnSong = user && user.id === song.user_id;
 
   const fetchComments = async () => {
     setLoading(true);
@@ -81,7 +81,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
           created_at,
           user_id
         `)
-        .eq('track_id', track.id)
+        .eq('song_id', song.id)
         .order('created_at', { ascending: true });
 
       if (commentsError) throw commentsError;
@@ -126,7 +126,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
       const { error } = await supabase
         .from('comments')
         .insert({
-          track_id: track.id,
+          song_id: song.id,
           user_id: user.id,
           content: newComment.trim(),
         });
@@ -250,7 +250,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
     try {
       // Upload new file to storage
       const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${user.id}/${track.id}-${Date.now()}.${fileExt}`;
+      const fileName = `${user.id}/${song.id}-${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('tracks')
         .upload(fileName, selectedFile, { upsert: true });
@@ -262,11 +262,11 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         .from('tracks')
         .getPublicUrl(fileName);
 
-      // Update track record
+      // Update song record
       const { error: dbError } = await supabase
-        .from('tracks')
+        .from('songs')
         .update({ file_url: publicUrl })
-        .eq('id', track.id);
+        .eq('id', song.id);
 
       if (dbError) throw dbError;
 
@@ -275,7 +275,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         description: "The audio file has been updated.",
       });
 
-      if (onTrackChanged) onTrackChanged();
+      if (onSongChanged) onSongChanged();
     } catch (error: any) {
       toast({
         title: "Replace failed",
@@ -293,16 +293,16 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
     try {
       // Delete track from DB
       const { error: dbError } = await supabase
-        .from('tracks')
+        .from('songs')
         .delete()
-        .eq('id', track.id);
+        .eq('id', song.id);
 
       if (dbError) throw dbError;
 
       // Optionally, delete file from storage (not required, but good practice)
       // Try to extract the file path from file_url
       try {
-        const url = new URL(track.file_url);
+        const url = new URL(song.file_url);
         const path = decodeURIComponent(url.pathname.replace(/^\/storage\/v1\/object\/public\/tracks\//, ""));
         await supabase.storage.from('tracks').remove([path]);
       } catch (e) {
@@ -315,7 +315,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
       });
 
       setDeleteDialogOpen(false);
-      if (onTrackChanged) onTrackChanged();
+      if (onSongChanged) onSongChanged();
     } catch (error: any) {
       toast({
         title: "Delete failed",
@@ -330,7 +330,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
   useEffect(() => {
     fetchComments();
     // eslint-disable-next-line
-  }, [track.id]);
+  }, [song.id]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -350,7 +350,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
         resumeTrack();
       }
     } else {
-      playTrack({ ...track, username: track.profiles.username });
+      playTrack({ ...song, username: song.profiles.username });
     }
   };
 
@@ -363,29 +363,29 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
             size="sm"
             className="border-brutalist w-[50px] h-[50px]"
           >
-            {isTrackPlaying ? <Pause size={16} /> : <Play size={16} />}
+            {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
           </Button>
           <div className="flex-1">
             <h3 className="font-bold">
-              <Link to={`/track/${track.id}`} className="hover:underline">
-                {track.title}
+              <Link to={`/song/${song.id}`} className="hover:underline">
+                {song.title}
               </Link>
             </h3>
             <Link 
-              to={`/user/${track.user_id}`}
+              to={`/user/${song.user_id}`}
             >
-              @{track.profiles.username}
+              @{song.profiles.username}
             </Link>
-            {track.lyrics && (
+            {song.lyrics && (
               showLyricsExpanded ? (
-                <div className="whitespace-pre-line text-sm mt-4 mb-4">{track.lyrics}</div>
+                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
               ) : (
-                <LyricsModalButton lyrics={track.lyrics} />
+                <LyricsModalButton lyrics={song.lyrics} />
               )
             )}
           </div>
           {/* Ellipses menu for own track */}
-          {isOwnTrack && (
+          {isOwnSong && (
             <div className="absolute right-2 top-2 z-10">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -402,8 +402,8 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
                   <DropdownMenuItem
                     onSelect={(e) => {
                       e.preventDefault();
-                      setEditedTitle(track.title);
-                      setEditedLyrics(track.lyrics || "");
+                      setEditedTitle(song.title);
+                      setEditedLyrics(song.lyrics || "");
                       setEditTitleModalOpen(true);
                     }}
                   >
@@ -454,8 +454,8 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
                       variant="outline"
                       onClick={() => {
                         setEditTitleModalOpen(false);
-                        setEditedTitle(track.title);
-                        setEditedLyrics(track.lyrics || "");
+                        setEditedTitle(song.title);
+                        setEditedLyrics(song.lyrics || "");
                       }}
                       className="border-brutalist"
                       disabled={savingTitle}
@@ -464,20 +464,20 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
                     </Button>
                     <Button
                       onClick={async () => {
-                        if (!editedTitle.trim() || (editedTitle === track.title && editedLyrics === (track.lyrics || ""))) return;
+                        if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || ""))) return;
                         setSavingTitle(true);
                         try {
                           const { error } = await supabase
-                            .from('tracks')
+                            .from('songs')
                             .update({ title: editedTitle.trim(), lyrics: editedLyrics.trim() || null })
-                            .eq('id', track.id);
+                            .eq('id', song.id);
                           if (error) throw error;
                           setEditTitleModalOpen(false);
                           toast({
                             title: "Info updated",
-                            description: "The track info has been updated.",
+                            description: "The song info has been updated.",
                           });
-                          if (onTrackChanged) onTrackChanged();
+                          if (onSongChanged) onSongChanged();
                         } catch (error) {
                           toast({
                             title: "Error",
@@ -490,7 +490,7 @@ const TrackCard = ({ track, onTrackChanged, showLyricsExpanded }: TrackCardProps
                       }}
                       disabled={
                         !editedTitle.trim() ||
-                        (editedTitle === track.title && editedLyrics === (track.lyrics || "")) ||
+                        (editedTitle === song.title && editedLyrics === (song.lyrics || "")) ||
                         savingTitle
                       }
                       className="border-brutalist"
@@ -714,4 +714,4 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
   );
 };
 
-export default TrackCard;
+export default SongCard;

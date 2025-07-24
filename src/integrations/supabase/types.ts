@@ -19,7 +19,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
-          track_id: string
+          song_id: string
           updated_at: string
           user_id: string
         }
@@ -27,7 +27,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
-          track_id: string
+          song_id: string
           updated_at?: string
           user_id: string
         }
@@ -35,7 +35,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          track_id?: string
+          song_id?: string
           updated_at?: string
           user_id?: string
         }
@@ -69,21 +69,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          track_id: string
+          song_id: string
           type: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          track_id: string
+          song_id: string
           type: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
-          track_id?: string
+          song_id?: string
           type?: string
           user_id?: string
         }
@@ -122,6 +122,42 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      songs: {
+        Row: {
+          id: string
+          user_id: string | null
+          title: string
+          file_url: string
+          file_size: number | null
+          duration: number | null
+          created_at: string
+          updated_at: string
+          lyrics: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          title: string
+          file_url: string
+          file_size?: number | null
+          duration?: number | null
+          created_at?: string
+          updated_at?: string
+          lyrics?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          title?: string
+          file_url?: string
+          file_size?: number | null
+          duration?: number | null
+          created_at?: string
+          updated_at?: string
+          lyrics?: string | null
         }
         Relationships: []
       }

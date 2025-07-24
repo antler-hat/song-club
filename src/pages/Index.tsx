@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBar from "@/components/SearchBar";
 import { supabase } from "@/integrations/supabase/client";
-import TrackCard from "@/components/TrackCard";
+import SongCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
 import {
@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-interface Track {
+interface Song {
   id: string;
   title: string;
   file_url: string;
@@ -31,18 +31,18 @@ interface Track {
 const Index = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [filteredSongs, setFilteredSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const isMobile = useIsMobile();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const fetchAllTracks = async () => {
+  const fetchAllSongs = async () => {
     try {
-      // Fetch tracks
-      const { data: tracksData, error: tracksError } = await supabase
-        .from('tracks')
+      // Fetch songs
+      const { data: songsData, error: songsError } = await supabase
+        .from('songs')
         .select(`
           id,
           title,
@@ -53,10 +53,10 @@ const Index = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (tracksError) throw tracksError;
+      if (songsError) throw songsError;
 
       // Fetch profiles separately
-      const userIds = [...new Set(tracksData?.map(track => track.user_id) || [])];
+      const userIds = [...new Set(songsData?.map(song => song.user_id) || [])];
       const { data: profilesData } = await supabase
         .from('profiles')
         .select('user_id, username')
@@ -67,42 +67,42 @@ const Index = () => {
         return acc;
       }, {} as Record<string, any>) || {};
 
-      const tracksWithProfiles = tracksData?.map(track => ({
-        ...track,
-        profiles: profilesMap[track.user_id] || { username: 'Unknown' }
+      const songsWithProfiles = songsData?.map(song => ({
+        ...song,
+        profiles: profilesMap[song.user_id] || { username: 'Unknown' }
       })) || [];
 
-      setTracks(tracksWithProfiles);
-      setFilteredTracks(tracksWithProfiles);
+      setSongs(songsWithProfiles);
+      setFilteredSongs(songsWithProfiles);
     } catch (error) {
-      console.error('Error fetching tracks:', error);
+      console.error('Error fetching songs:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAllTracks();
+    fetchAllSongs();
   }, []);
 
-  // Filter tracks based on search query
+  // Filter songs based on search query
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setFilteredTracks(tracks);
+      setFilteredSongs(songs);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = tracks.filter(track => 
-        track.title.toLowerCase().includes(query) ||
-        track.profiles.username.toLowerCase().includes(query)
+      const filtered = songs.filter(song => 
+        song.title.toLowerCase().includes(query) ||
+        song.profiles.username.toLowerCase().includes(query)
       );
-      setFilteredTracks(filtered);
+      setFilteredSongs(filtered);
     }
-  }, [searchQuery, tracks]);
+  }, [searchQuery, songs]);
 
 
   // Refresh handler for TrackCard
-  const handleTrackChanged = () => {
-    fetchAllTracks();
+  const handleSongChanged = () => {
+    fetchAllSongs();
   };
 
   return (
@@ -138,7 +138,7 @@ const Index = () => {
                 />
                 {user ? (
                   <>
-                    <UploadModal onUploadComplete={fetchAllTracks} />
+                    <UploadModal onUploadComplete={fetchAllSongs} />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="border-brutalist">
@@ -182,19 +182,19 @@ const Index = () => {
         {searchQuery && (
           <div className="mb-4">
             <p className="text-sm text-muted-foreground">
-              {filteredTracks.length} result{filteredTracks.length !== 1 ? 's' : ''} for "{searchQuery}"
+              {filteredSongs.length} result{filteredSongs.length !== 1 ? 's' : ''} for "{searchQuery}"
             </p>
           </div>
         )}
         {loading ? (
           <div className="text-center py-8">Loading ...</div>
-        ) : filteredTracks.length === 0 ? (
+        ) : filteredSongs.length === 0 ? (
           <div className="py-8">
             <p className="mb-2">
               {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
             </p>
             {!searchQuery && (user ? (
-              <UploadModal onUploadComplete={fetchAllTracks} />
+              <UploadModal onUploadComplete={fetchAllSongs} />
             ) : (
               <Link to="/auth">
                 <Button className="border-brutalist">
@@ -205,8 +205,8 @@ const Index = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredTracks.map((track) => (
-              <TrackCard key={track.id} track={track} onTrackChanged={handleTrackChanged} />
+            {filteredSongs.map((song) => (
+              <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
             ))}
           </div>
         )}
