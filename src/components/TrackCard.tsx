@@ -367,7 +367,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
           </Button>
           <div className="flex-1">
             <h3 className="font-bold">
-              <Link to={`/song/${song.id}`} className="hover:underline">
+              <Link to={`/track/${song.id}`} className="hover:underline">
                 {song.title}
               </Link>
             </h3>

@@ -23,7 +23,7 @@ interface Song {
 
 const SongDetail = () => {
   const { user } = useAuth();
-  const { songId } = useParams<{ songId: string }>();
+  const { trackId } = useParams<{ trackId: string }>();
   const [song, setSong] = useState<Song | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -45,7 +45,7 @@ const SongDetail = () => {
             created_at,
             lyrics
           `)
-          .eq("id", songId)
+          .eq("id", trackId)
           .single();
 
         if (songError || !songData) {
@@ -75,8 +75,8 @@ const SongDetail = () => {
       }
     };
 
-    if (songId) fetchSong();
-  }, [songId]);
+    if (trackId) fetchSong();
+  }, [trackId]);
 
   if (loading) {
     return (
