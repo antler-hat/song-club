@@ -78,6 +78,18 @@ const SongDetail = () => {
     if (trackId) fetchSong();
   }, [trackId]);
 
+  useEffect(() => {
+    if (song) {
+      document.title = `${song.title} by ${song.profiles.username} | Song Club`;
+    } else if (loading) {
+      document.title = "Loading... | Song Club";
+    } else if (notFound) {
+      document.title = "Song not found | Song Club";
+    } else {
+      document.title = "Song Club";
+    }
+  }, [song, loading, notFound]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
