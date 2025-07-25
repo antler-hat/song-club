@@ -34,6 +34,7 @@ serve(async (req) => {
     const formData = await req.formData()
     const file = formData.get('file') as File
     const title = formData.get('title') as string
+    const lyrics = formData.get('lyrics') as string | null;
 
     if (!file || !title) {
       return new Response(
@@ -100,6 +101,7 @@ serve(async (req) => {
         title: title.trim(),
         file_url: urlData.publicUrl,
         file_size: file.size,
+        lyrics: lyrics ? lyrics.trim() : null,
       })
       .select()
       .single()
