@@ -5,19 +5,24 @@
 /* My colors */
 @layer base {
   :root {
---black: hsl(0, 0%, 0%);
---grey-darkest: hsl(0, 0%, 20%);
---grey-dark: hsl(0, 0%, 35%);
---grey-base: hsl(0, 0%, 50%);
---grey-light: hsl(0, 0%, 70%);
---grey-lightest: hsl(0, 0%, 92%);
---white: hsl(0, 0%, 100%);
+  --black: hsl(0, 0%, 0%);
+  --grey-darkest: hsl(0, 0%, 20%);
+  --grey-dark: hsl(0, 0%, 35%);
+  --grey-base: hsl(0, 0%, 50%);
+  --grey-light: hsl(0, 0%, 82%);
+  --grey-lightest: hsl(0, 0%, 92%);
+  --white: hsl(0, 0%, 100%);
 
---font-size-base: 16px;
---font-size-sm: 14px;
---font-size-xs: 12px;
---font-size-lg: 18px;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+  --font-size-lg: 18px;
 
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    .bg-secondary {
+      background-color: var(--grey-lightest);
+    }
   }
 }
 
@@ -33,14 +38,14 @@
   /* --popover-foreground: oklch(0.145 0 0); */
   /* --primary: oklch(0.205 0 0); */
   /* --primary-foreground: oklch(0.985 0 0); */
-  /* --secondary: oklch(0.97 0 0); */
+  --secondary: oklch(75.083% 0.00009 271.152);
   /* --secondary-foreground: oklch(0.205 0 0); */
   /* --muted: oklch(0.97 0 0); */
   /* --muted-foreground: oklch(0.556 0 0); */
   /* --accent: oklch(0.97 0 0); */
   /* --accent-foreground: oklch(0.205 0 0); */
   /* --destructive: oklch(0.577 0.245 27.325); */
-  --border: var(--grey-lightest);
+  --border: var(--grey-light);
   /* --input: oklch(0.922 0 0); */
   /* --ring: oklch(0.708 0 0); */
   /* --chart-1: oklch(0.646 0.222 41.116); */
@@ -98,6 +103,7 @@
     font-size: var(--font-size-base);
   }
 
+
   .border {
     border-color: var(--border);
   }
@@ -123,6 +129,10 @@
     background-color: var(--grey-darkest);
   }
 
+  .trackCard {
+    box-shadow: var(--shadow-1);
+  }
+
   .trackCard-actions button {
     font-size: var(--font-size-xs);
     color: var(--grey-base);
@@ -138,5 +148,15 @@
     padding: 4px 8px;
     border-radius: var(--radius);
   
+  }
+
+  .button-outline {
+    border: 1px solid var(--border);
+    background-color: transparent;
+    color: var(--grey-dark);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
   }
 }

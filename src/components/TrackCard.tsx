@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import AddCommentDialog from "./AddCommentDialog";
+import EditInfoDialog from "./EditInfoDialog";
+import DeleteSongDialog from "./DeleteSongDialog";
+import EditCommentDialog from "./EditCommentDialog";
 import { useAudio } from "@/hooks/useAudio";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -355,7 +359,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   };
 
   return (
-    <Card className="relative">
+    <Card className="trackCard">
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-start gap-4 relative">
           <Button
@@ -376,42 +380,24 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
             <div className="trackCard-actions flex items-center gap-2 mt-1">
               
               {/* Add Comment Button and Modal */}
-                <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-                  <DialogTrigger asChild>
-                    <div className="">
+              <AddCommentDialog
+                open={modalOpen}
+                onOpenChange={setModalOpen}
+                newComment={newComment}
+                onChange={e => setNewComment(e.target.value)}
+                onSubmit={handleSubmitComment}
+                submitting={submitting}
+                trigger={
+                  <div className="">
                     <button
                       className="text-muted-foreground text-sm hover:underline transition"
                       type="button"
                     >
                       Comment
                     </button>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="border-brutalist max-w-md">
-                    <DialogHeader>
-                      <DialogTitle className="font-bold text-base">Add Comment</DialogTitle>
-                    </DialogHeader>
-                    <Textarea
-                      placeholder="Write your comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      className="border-brutalist resize-none"
-                      rows={3}
-                    />
-                    <div className="flex justify-end">
-                      <Button
-                        onClick={async () => {
-                          await handleSubmitComment();
-                          setModalOpen(false);
-                        }}
-                        disabled={!newComment.trim() || submitting}
-                        className="border-brutalist"
-                      >
-                        <span>Post</span>
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                  </div>
+                }
+              />
               {song.lyrics && (
                 showLyricsExpanded ? (
                   <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
@@ -423,11 +409,11 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
           </div>
           {/* Ellipses menu for own track */}
           {isOwnSong && (
-            <div className="absolute right-2 top-2">
+            <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="icon"
                     className="h-8 w-8 p-0"
                     aria-label="Track options"
@@ -467,76 +453,47 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                 </DropdownMenuContent>
               </DropdownMenu>
               {/* Edit Info Modal */}
-              <Dialog open={editTitleModalOpen} onOpenChange={setEditTitleModalOpen}>
-                <DialogContent className="border-brutalist max-w-md max-h-[80vh]">
-                  <DialogHeader>
-                    <DialogTitle className="font-bold text-base">Edit Info</DialogTitle>
-                  </DialogHeader>
-                  <input
-                    type="text"
-                    className="border-brutalist w-full px-3 py-2 rounded mb-4"
-                    value={editedTitle}
-                    onChange={e => setEditedTitle(e.target.value)}
-                    autoFocus
-                  />
-                  <textarea
-                    placeholder="Lyrics (optional)"
-                    className="border-brutalist w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y h-80"
-                    rows={2}
-                    value={editedLyrics}
-                    onChange={e => setEditedLyrics(e.target.value)}
-                  />
-                  <div className="flex justify-end gap-2 mt-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setEditTitleModalOpen(false);
-                        setEditedTitle(song.title);
-                        setEditedLyrics(song.lyrics || "");
-                      }}
-                      className="border-brutalist"
-                      disabled={savingTitle}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={async () => {
-                        if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || ""))) return;
-                        setSavingTitle(true);
-                        try {
-                          const { error } = await supabase
-                            .from('songs')
-                            .update({ title: editedTitle.trim(), lyrics: editedLyrics.trim() || null })
-                            .eq('id', song.id);
-                          if (error) throw error;
-                          setEditTitleModalOpen(false);
-                          toast({
-                            title: "Info updated",
-                            description: "The song info has been updated.",
-                          });
-                          if (onSongChanged) onSongChanged();
-                        } catch (error) {
-                          toast({
-                            title: "Error",
-                            description: "Failed to update info",
-                            variant: "destructive",
-                          });
-                        } finally {
-                          setSavingTitle(false);
-                        }
-                      }}
-                      disabled={
-                        !editedTitle.trim() ||
-                        (editedTitle === song.title && editedLyrics === (song.lyrics || "")) ||
-                        savingTitle
-                      }
-                      className="border-brutalist"
-                    >
-                      {savingTitle ? "Saving..." : "Save"}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <EditInfoDialog
+                open={editTitleModalOpen}
+                onOpenChange={setEditTitleModalOpen}
+                editedTitle={editedTitle}
+                editedLyrics={editedLyrics}
+                onTitleChange={e => setEditedTitle(e.target.value)}
+                onLyricsChange={e => setEditedLyrics(e.target.value)}
+                onSave={async () => {
+                  if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || ""))) return;
+                  setSavingTitle(true);
+                  try {
+                    const { error } = await supabase
+                      .from('songs')
+                      .update({ title: editedTitle.trim(), lyrics: editedLyrics.trim() || null })
+                      .eq('id', song.id);
+                    if (error) throw error;
+                    setEditTitleModalOpen(false);
+                    toast({
+                      title: "Info updated",
+                      description: "The song info has been updated.",
+                    });
+                    if (onSongChanged) onSongChanged();
+                  } catch (error) {
+                    toast({
+                      title: "Error",
+                      description: "Failed to update info",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setSavingTitle(false);
+                  }
+                }}
+                saving={savingTitle}
+                onCancel={() => {
+                  setEditTitleModalOpen(false);
+                  setEditedTitle(song.title);
+                  setEditedLyrics(song.lyrics || "");
+                }}
+                originalTitle={song.title}
+                originalLyrics={song.lyrics || ""}
+              />
               {/* Hidden file input for replace */}
               <input
                 ref={fileInputRef}
@@ -547,33 +504,13 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                 disabled={replacing}
               />
               {/* Delete confirmation dialog */}
-              <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <DialogContent className="border-brutalist max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="font-bold text-base">Are you sure?</DialogTitle>
-                  </DialogHeader>
-                  <div className="py-2">
-                    <p>Your song will be gone for good!</p>
-                  </div>
-                  <div className="flex justify-end gap-2 mt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => setDeleteDialogOpen(false)}
-                      disabled={deleting}
-                      className="border-brutalist"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleDeleteTrack}
-                      disabled={deleting}
-                      className="bg-red-600 text-white hover:bg-red-700"
-                    >
-                      {deleting ? "Deleting..." : "Delete song"}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <DeleteSongDialog
+                open={deleteDialogOpen}
+                onOpenChange={setDeleteDialogOpen}
+                onDelete={handleDeleteTrack}
+                deleting={deleting}
+                onCancel={() => setDeleteDialogOpen(false)}
+              />
             </div>
           )}
         </div>
@@ -618,76 +555,32 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
           ) : null}
           {/* Add a comment button and modal */}
           {user ? (
-            <div className="">
-              
+              <>
               {/* Edit Comment Modal */}
-              <Dialog open={editModalOpen} onOpenChange={(open) => {
-                setEditModalOpen(open);
-                if (!open) {
+              <EditCommentDialog
+                open={editModalOpen}
+                onOpenChange={(open) => {
+                  setEditModalOpen(open);
+                  if (!open) {
+                    setEditingComment(null);
+                    setEditCommentText("");
+                  }
+                }}
+                editCommentText={editCommentText}
+                onChange={e => setEditCommentText(e.target.value)}
+                onSave={handleUpdateComment}
+                onDelete={handleDeleteComment}
+                submitting={submitting}
+                onCancel={() => {
+                  setEditModalOpen(false);
                   setEditingComment(null);
                   setEditCommentText("");
-                }
-              }}>
-                <DialogContent className="border-brutalist max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="font-bold text-base">Edit Comment</DialogTitle>
-                  </DialogHeader>
-                  <Textarea
-                    placeholder="Edit your comment..."
-                    value={editCommentText}
-                    onChange={(e) => setEditCommentText(e.target.value)}
-                    className="border-brutalist resize-none"
-                    rows={3}
-                  />
-                  <div className="flex justify-between items-center items-end mt-2">
-                    {/* Delete button bottom left */}
-                    <div>
-                      {!confirmDelete ? (
-                        <button
-                          type="button"
-                          className="text-xs text-muted-foreground hover:underline"
-                          onClick={() => setConfirmDelete(true)}
-                          disabled={submitting}
-                        >
-                          Delete comment
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="text-xs text-red-600 hover:underline"
-                          onClick={handleDeleteComment}
-                          disabled={submitting}
-                        >
-                          Yes delete this idiot comment
-                        </button>
-                      )}
-                    </div>
-                    {/* Save/Cancel right */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setEditModalOpen(false);
-                          setEditingComment(null);
-                          setEditCommentText("");
-                          setConfirmDelete(false);
-                        }}
-                        className="border-brutalist"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleUpdateComment}
-                        disabled={!editCommentText.trim() || submitting}
-                        className="border-brutalist"
-                      >
-                        <span>Save</span>
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                  setConfirmDelete(false);
+                }}
+                confirmDelete={confirmDelete}
+                setConfirmDelete={setConfirmDelete}
+              />
+            </>
           ) : null}
       </CardContent>
     </Card>
