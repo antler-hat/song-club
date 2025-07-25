@@ -2,122 +2,104 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Brutalist Music Sharing App Design System
-All colors MUST be HSL.
-Brutalist aesthetic: stark contrasts, raw typography, minimal colors
-*/
-
+/* My colors */
 @layer base {
   :root {
-    /* Base colors - stark white background */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+--black: hsl(0, 0%, 0%);
+--grey-darkest: hsl(0, 0%, 20%);
+--grey-dark: hsl(0, 0%, 35%);
+--grey-base: hsl(0, 0%, 50%);
+--grey-light: hsl(0, 0%, 70%);
+--grey-lightest: hsl(0, 0%, 92%);
+--white: hsl(0, 0%, 100%);
 
-    /* Card components - pure white with heavy borders */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+--font-size-base: 16px;
+--font-size-sm: 14px;
+--font-size-xs: 12px;
+--font-size-lg: 18px;
 
-    /* Popover components */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-
-    /* Primary - pure black for maximum contrast */
-    --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary - light gray for subtle elements */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
-
-    /* Muted - medium gray for less important text */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 50%;
-
-    /* Accent - same as secondary for consistency */
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 0%;
-
-    /* Destructive - pure red for dangerous actions */
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Borders and inputs - stark black borders */
-    --border: 0 0% 0%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 0%;
-
-    /* Sharp corners for brutalist aesthetic */
-    --radius: 0rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+/* All colors MUST be HSL. */
+@layer base {
+  :root {
+  --radius: 5px;
+  /* --background: oklch(1 0 0); */
+  /* --foreground: oklch(0.145 0 0); */
+  /* --card: oklch(1 0 0); */
+  /* --card-foreground: oklch(0.145 0 0); */
+  /* --popover: oklch(1 0 0); */
+  /* --popover-foreground: oklch(0.145 0 0); */
+  /* --primary: oklch(0.205 0 0); */
+  /* --primary-foreground: oklch(0.985 0 0); */
+  /* --secondary: oklch(0.97 0 0); */
+  /* --secondary-foreground: oklch(0.205 0 0); */
+  /* --muted: oklch(0.97 0 0); */
+  /* --muted-foreground: oklch(0.556 0 0); */
+  /* --accent: oklch(0.97 0 0); */
+  /* --accent-foreground: oklch(0.205 0 0); */
+  /* --destructive: oklch(0.577 0.245 27.325); */
+  --border: var(--grey-lightest);
+  /* --input: oklch(0.922 0 0); */
+  /* --ring: oklch(0.708 0 0); */
+  /* --chart-1: oklch(0.646 0.222 41.116); */
+  /* --chart-2: oklch(0.6 0.118 184.704); */
+  /* --chart-3: oklch(0.398 0.07 227.392); */
+  /* --chart-4: oklch(0.828 0.189 84.429); */
+  /* --chart-5: oklch(0.769 0.188 70.08); */
+  /* --sidebar: oklch(0.985 0 0); */
+  /* --sidebar-foreground: oklch(0.145 0 0); */
+  /* --sidebar-primary: oklch(0.205 0 0); */
+  /* --sidebar-primary-foreground: oklch(0.985 0 0); */
+  /* --sidebar-accent: oklch(0.97 0 0); */
+  /* --sidebar-accent-foreground: oklch(0.205 0 0); */
+  /* --sidebar-border: oklch(0.922 0 0); */
+  /* --sidebar-ring: oklch(0.708 0 0); */
+}
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+.dark {
+  /* --background: oklch(0.145 0 0); */
+  /* --foreground: oklch(0.985 0 0); */
+  /* --card: oklch(0.205 0 0); */
+  /* --card-foreground: oklch(0.985 0 0); */
+  /* --popover: oklch(0.269 0 0); */
+  /* --popover-foreground: oklch(0.985 0 0); */
+  /* --primary: oklch(0.922 0 0); */
+  /* --primary-foreground: oklch(0.205 0 0); */
+  /* --secondary: oklch(0.269 0 0); */
+  /* --secondary-foreground: oklch(0.985 0 0); */
+  /* --muted: oklch(0.269 0 0); */
+  /* --muted-foreground: oklch(0.708 0 0); */
+  /* --accent: oklch(0.371 0 0); */
+  /* --accent-foreground: oklch(0.985 0 0); */
+  /* --destructive: oklch(0.704 0.191 22.216); */
+  /* --border: oklch(1 0 0 / 10%); */
+  /* --input: oklch(1 0 0 / 15%); */
+  /* --ring: oklch(0.556 0 0); */
+  /* --chart-1: oklch(0.488 0.243 264.376); */
+  /* --chart-2: oklch(0.696 0.17 162.48); */
+  /* --chart-3: oklch(0.769 0.188 70.08); */
+  /* --chart-4: oklch(0.627 0.265 303.9); */
+  /* --chart-5: oklch(0.645 0.246 16.439); */
+  /* --sidebar: oklch(0.205 0 0); */
+  /* --sidebar-foreground: oklch(0.985 0 0); */
+  /* --sidebar-primary: oklch(0.488 0.243 264.376); */
+  /* --sidebar-primary-foreground: oklch(0.985 0 0); */
+  /* --sidebar-accent: oklch(0.269 0 0); */
+  /* --sidebar-accent-foreground: oklch(0.985 0 0); */
+  /* --sidebar-border: oklch(1 0 0 / 10%); */
+  /* --sidebar-ring: oklch(0.439 0 0); */
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  .body {
+    font-size: var(--font-size-base);
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-
-  /* Brutalist typography */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+  .border {
+    border-color: var(--border);
   }
 
   /* Heavy borders for brutalist aesthetic */
@@ -126,4 +108,35 @@ Brutalist aesthetic: stark contrasts, raw typography, minimal colors
     border-style: solid;
   }
 
+  button.playpause-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: var(--black);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button.playpause-button:hover {
+    background-color: var(--grey-darkest);
+  }
+
+  .trackCard-actions button {
+    font-size: var(--font-size-xs);
+    color: var(--grey-base);
+  }
+
+  .trackCard-lyricsButton:hover {
+    text-decoration: underline;
+  }
+
+  .trackCard-comment {
+    display: inline-block;
+    background: var(--grey-lightest);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+  
+  }
 }

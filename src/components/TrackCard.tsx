@@ -356,12 +356,11 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
 
   return (
     <Card className="relative">
-      <CardContent className="">
-        <div className="flex items-start gap-4 mb-2 border-brutalist p-3 relative">
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex items-start gap-4 relative">
           <Button
             onClick={handlePlayPause}
-            size="sm"
-            className="border-brutalist w-[50px] h-[50px]"
+            className="playpause-button"
           >
             {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
           </Button>
@@ -371,18 +370,56 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                 {song.title}
               </Link>
             </h3>
-            <Link 
-              to={`/user/${song.user_id}`}
-            >
+            <Link to={`/user/${song.user_id}`} className="hover:underline">
               {song.profiles.username}
             </Link>
-            {song.lyrics && (
-              showLyricsExpanded ? (
-                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-              ) : (
-                <LyricsModalButton lyrics={song.lyrics} />
-              )
-            )}
+            <div className="trackCard-actions flex items-center gap-2 mt-1">
+              
+              {/* Add Comment Button and Modal */}
+                <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                  <DialogTrigger asChild>
+                    <div className="">
+                    <button
+                      className="text-muted-foreground text-sm hover:underline transition"
+                      type="button"
+                    >
+                      Comment
+                    </button>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="border-brutalist max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="font-bold text-base">Add Comment</DialogTitle>
+                    </DialogHeader>
+                    <Textarea
+                      placeholder="Write your comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      className="border-brutalist resize-none"
+                      rows={3}
+                    />
+                    <div className="flex justify-end">
+                      <Button
+                        onClick={async () => {
+                          await handleSubmitComment();
+                          setModalOpen(false);
+                        }}
+                        disabled={!newComment.trim() || submitting}
+                        className="border-brutalist"
+                      >
+                        <span>Post</span>
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              {song.lyrics && (
+                showLyricsExpanded ? (
+                  <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+                ) : (
+                  <LyricsModalButton lyrics={song.lyrics} />
+                )
+              )}
+            </div>
           </div>
           {/* Ellipses menu for own track */}
           {isOwnSong && (
@@ -542,80 +579,47 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
         </div>
 
         {/* Comments Section */}
-        <div className="text-sm">
-          <div className="flex-1 overflow-y-auto pr-2 max-h-48">
-            {loading ? (
-              <div className="text-center py-4">Loading...</div>
-            ) : comments.length === 0 ? (
-              null
-            ) : (
-              comments.map((comment) => {
-                const isOwn = user && comment.user_id === user.id;
-                return (
-                  <div
-                    key={comment.id}
-                    style={isOwn ? { position: "relative" } : {}}
-                  >
-                  <div className="flex gap-2 items-start flex-align-items-baseline">
-                    <Link
-                      to={`/user/${comment.user_id}`}
-                      className="font-bold hover:underline"
-                      onClick={e => e.stopPropagation()}
+        { comments.length > 0 ? (
+          <div className="flex flex-col gap-2 text-sm">
+            <div className="flex-1 overflow-y-auto pr-2 max-h-48">
+              {loading ? (
+                <div className="text-center py-4">Loading...</div>
+              ) : comments.length === 0 ? (
+                null
+              ) : (
+                comments.map((comment) => {
+                  const isOwn = user && comment.user_id === user.id;
+                  return (
+                    <div
+                      key={comment.id}
+                      style={isOwn ? { position: "relative" } : {}}
                     >
-                      {comment.profiles.username}
-                    </Link>
-                    <span
-                      className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
-                      onClick={isOwn ? () => handleEditComment(comment) : undefined}
-                    >
-                      {comment.content}
-                    </span>
-                  </div>
-                  </div>
-                );
-              })
-            )}
+                    <div className="trackCard-comment">
+                      <Link
+                        to={`/user/${comment.user_id}`}
+                        className="font-bold hover:underline mr-2"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {comment.profiles.username}
+                      </Link>
+                      <span
+                        className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
+                        onClick={isOwn ? () => handleEditComment(comment) : undefined}
+                      >
+                        {comment.content}
+                      </span>
+                    </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
+          ) : null}
           {/* Add a comment button and modal */}
           {user ? (
             <div className="">
-              {/* Add Comment Modal */}
-              <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-                <DialogTrigger asChild>
-                  <div className="mb-6">
-                  <button
-                    className="text-muted-foreground text-sm hover:underline transition"
-                    type="button"
-                  >
-                    + comment
-                  </button>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="border-brutalist max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="font-bold text-base">Add Comment</DialogTitle>
-                  </DialogHeader>
-                  <Textarea
-                    placeholder="Write your comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    className="border-brutalist resize-none"
-                    rows={3}
-                  />
-                  <div className="flex justify-end">
-                    <Button
-                      onClick={async () => {
-                        await handleSubmitComment();
-                        setModalOpen(false);
-                      }}
-                      disabled={!newComment.trim() || submitting}
-                      className="border-brutalist"
-                    >
-                      <span>Post</span>
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              
               {/* Edit Comment Modal */}
               <Dialog open={editModalOpen} onOpenChange={(open) => {
                 setEditModalOpen(open);
@@ -685,7 +689,6 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
               </Dialog>
             </div>
           ) : null}
-        </div>
       </CardContent>
     </Card>
   );
@@ -694,10 +697,9 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
 const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
   const [open, setOpen] = useState(false);
   return (
-    <>
+    <div>
       <button
-        className="text-xs text-muted-foreground hover:underline mt-1"
-        style={{ display: "block" }}
+        className="trackCard-lyricsButton"
         onClick={() => setOpen(true)}
         type="button"
       >
@@ -710,7 +712,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
