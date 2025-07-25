@@ -179,7 +179,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
             comments.map((comment) => (
               <div key={comment.id} className="border-brutalist p-3">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="font-bold text-sm">@{comment.profiles.username}</span>
+                  <span className="font-bold text-sm">{comment.profiles.username}</span>
                   <span className="text-xs text-muted-foreground">
                     {formatDate(comment.created_at)}
                   </span>

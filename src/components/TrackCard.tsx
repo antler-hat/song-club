@@ -374,7 +374,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
             <Link 
               to={`/user/${song.user_id}`}
             >
-              @{song.profiles.username}
+              {song.profiles.username}
             </Link>
             {song.lyrics && (
               showLyricsExpanded ? (
@@ -386,7 +386,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
           </div>
           {/* Ellipses menu for own track */}
           {isOwnSong && (
-            <div className="absolute right-2 top-2 z-10">
+            <div className="absolute right-2 top-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -562,7 +562,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                       className="font-bold hover:underline"
                       onClick={e => e.stopPropagation()}
                     >
-                      @{comment.profiles.username}
+                      {comment.profiles.username}
                     </Link>
                     <span
                       className={`text whitespace-pre-line${isOwn ? " hover:underline cursor-pointer" : ""}`}
