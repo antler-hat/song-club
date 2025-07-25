@@ -1,0 +1,21 @@
+
+  .trackCard {
+    box-shadow: var(--shadow-1);
+  }
+
+  .trackCard-actions button {
+    font-size: var(--font-size-xs);
+    color: var(--grey-base);
+  }
+
+  .trackCard-lyricsButton:hover {
+    text-decoration: underline;
+  }
+
+  .trackCard-comment {
+    display: inline-block;
+    background: var(--grey-lightest);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+  
+  }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import './TrackCard.scss';
 import { Play, Pause, Send, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
