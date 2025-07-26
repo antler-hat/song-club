@@ -13,12 +13,20 @@
   --grey-lightest: hsl(0, 0%, 92%);
   --white: hsl(0, 0%, 100%);
 
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-base: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+
   --font-size-base: 16px;
   --font-size-sm: 14px;
   --font-size-xs: 12px;
   --font-size-lg: 18px;
 
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 1px 8px rgba(0, 0, 0, 0.05);
 
     .bg-secondary {
       background-color: var(--grey-lightest);
@@ -30,7 +38,7 @@
 @layer base {
   :root {
   --radius: 5px;
-  /* --background: oklch(1 0 0); */
+  --background: hsl(0, 0%, 100%);
   /* --foreground: oklch(0.145 0 0); */
   /* --card: oklch(1 0 0); */
   /* --card-foreground: oklch(0.145 0 0); */
