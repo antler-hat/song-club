@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import './TrackCard.scss';
-import { Play, Pause, Send, MoreHorizontal } from "lucide-react";
+import { Play, Pause, Send, MoreHorizontal, NotebookPen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -378,35 +378,15 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
             <Link to={`/user/${song.user_id}`} className="hover:underline">
               {song.profiles.username}
             </Link>
-            <div className="trackCard-actions flex items-center gap-2 mt-1">
-              
-              {/* Add Comment Button and Modal */}
-              <AddCommentDialog
-                open={modalOpen}
-                onOpenChange={setModalOpen}
-                newComment={newComment}
-                onChange={e => setNewComment(e.target.value)}
-                onSubmit={handleSubmitComment}
-                submitting={submitting}
-                trigger={
-                  <div className="">
-                    <button
-                      className="text-muted-foreground text-sm hover:underline transition"
-                      type="button"
-                    >
-                      Comment
-                    </button>
-                  </div>
-                }
-              />
-              {song.lyrics && (
-                showLyricsExpanded ? (
-                  <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-                ) : (
-                  <LyricsModalButton lyrics={song.lyrics} />
-                )
-              )}
-            </div>
+
+            {/* Song lyrics button */}
+            {song.lyrics && (
+              showLyricsExpanded ? (
+                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+              ) : (
+                <LyricsModalButton lyrics={song.lyrics} />
+              )
+            )}
           </div>
           {/* Ellipses menu for own track */}
           {isOwnSong && (
@@ -583,6 +563,26 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
               />
             </>
           ) : null}
+           
+            {/* Add Comment Button and Modal */}
+            <AddCommentDialog
+              open={modalOpen}
+              onOpenChange={setModalOpen}
+              newComment={newComment}
+              onChange={e => setNewComment(e.target.value)}
+              onSubmit={handleSubmitComment}
+              submitting={submitting}
+              trigger={
+                <div className="">
+                  <button
+                    className="trackCard-addCommentButton"
+                    type="button"
+                  >
+                    Comment
+                  </button>
+                </div>
+              }
+            />
       </CardContent>
     </Card>
   );
@@ -597,7 +597,8 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
         onClick={() => setOpen(true)}
         type="button"
       >
-        See lyrics
+        <NotebookPen size={14} />
+        Lyrics
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md">

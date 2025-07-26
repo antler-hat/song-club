@@ -1,21 +1,40 @@
-
-  .trackCard {
+.trackCard {
     box-shadow: var(--shadow-sm);
-  }
+    border-radius: 8px !important;
+}
 
-  .trackCard-actions button {
+.trackCard-lyricsButton {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    margin-top: var(--spacing-xs);
+}
+
+.trackCard-lyricsButton,
+.trackCard-addCommentButton {
     font-size: var(--font-size-xs);
-    color: var(--grey-base);
-  }
+    color: var(--grey-dark);
 
-  .trackCard-lyricsButton:hover {
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.trackCard-lyricsButton:hover {
     text-decoration: underline;
-  }
+}
 
-  .trackCard-comment {
+.trackCard-comment {
     display: inline-block;
     background: var(--grey-lightest);
-    padding: 4px 8px;
-    border-radius: var(--radius);
-  
-  }
+    padding: 0.25rem 1rem;
+    border-radius: 2px 100px 100px 100px;
+    margin-right: 0.5rem;
+}
+
+div:has(>.trackCard-comment) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: start;
+}
