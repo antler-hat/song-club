@@ -1,7 +1,8 @@
-.trackCard {
+.trackCard.card {
     box-shadow: var(--shadow-sm);
     border-radius: 8px !important;
     padding: 0;
+    border: 1px solid var(--grey-light);
 }
 
 .trackCard-mainContent {
