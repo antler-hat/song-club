@@ -600,7 +600,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
         See lyrics
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-brutalist max-w-md">
+        <DialogContent className="max-w-md">
           <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto">
             {lyrics}
           </div>

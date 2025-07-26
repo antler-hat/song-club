@@ -99,7 +99,7 @@ const UserProfile = () => {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <Button variant="outline" size="sm" className="border-brutalist">
+              <Button variant="outline" size="sm" className="">
                 <ArrowLeft size={16} />
               </Button>
             </Link>

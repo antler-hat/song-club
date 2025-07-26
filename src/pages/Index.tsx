@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Link, useNavigate } from "react-router-dom";
 import { Music, User, LogIn, Search, X, LogOut } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBar from "@/components/SearchBar";
@@ -116,7 +117,6 @@ const Index = () => {
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="Search"
                 mobileOpen={mobileSearchOpen}
                 setMobileOpen={setMobileSearchOpen}
               />
@@ -132,7 +132,6 @@ const Index = () => {
                 <SearchBar
                   value={searchQuery}
                   onChange={setSearchQuery}
-                  placeholder="Search"
                   mobileOpen={mobileSearchOpen}
                   setMobileOpen={setMobileSearchOpen}
                 />
@@ -141,12 +140,18 @@ const Index = () => {
                     <UploadModal onUploadComplete={fetchAllSongs} />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="border-brutalist">
-                          <User size={16} />
-                        </Button>
+                    <Button variant="ghost">
+                      <Avatar>
+                        <AvatarFallback>
+                          {user?.user_metadata?.username?.[0]?.toUpperCase() ||
+                            user?.email?.[0]?.toUpperCase() ||
+                            "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild>  
                           <Link to="/profile">
                             My songs
                           </Link>
@@ -165,7 +170,7 @@ const Index = () => {
                   </>
                 ) : (
                   <Link to="/auth">
-                    <Button variant="outline" className="border-brutalist">
+                    <Button variant="outline" className="">
                       Log in to upload
                     </Button>
                   </Link>
@@ -197,7 +202,7 @@ const Index = () => {
               <UploadModal onUploadComplete={fetchAllSongs} />
             ) : (
               <Link to="/auth">
-                <Button className="border-brutalist">
+                <Button className="">
                   Get started
                 </Button>
               </Link>

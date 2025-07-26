@@ -30,20 +30,20 @@ const EditInfoDialog: React.FC<EditInfoDialogProps> = ({
   originalLyrics,
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="border-brutalist max-w-md max-h-[80vh]">
+    <DialogContent className="max-w-md max-h-[80vh]">
       <DialogHeader>
         <DialogTitle className="font-bold text-base">Edit Info</DialogTitle>
       </DialogHeader>
       <input
         type="text"
-        className="border-brutalist w-full px-3 py-2 rounded mb-4"
+        className="w-full px-3 py-2 rounded mb-4"
         value={editedTitle}
         onChange={onTitleChange}
         autoFocus
       />
       <textarea
         placeholder="Lyrics (optional)"
-        className="border-brutalist w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y h-80"
+        className="w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y h-80"
         rows={2}
         value={editedLyrics}
         onChange={onLyricsChange}
@@ -52,7 +52,7 @@ const EditInfoDialog: React.FC<EditInfoDialogProps> = ({
         <Button
           variant="outline"
           onClick={onCancel}
-          className="border-brutalist"
+          className=""
           disabled={saving}
         >
           Cancel
@@ -64,7 +64,7 @@ const EditInfoDialog: React.FC<EditInfoDialogProps> = ({
             (editedTitle === originalTitle && editedLyrics === (originalLyrics || "")) ||
             saving
           }
-          className="border-brutalist"
+          className=""
         >
           {saving ? "Saving..." : "Save"}
         </Button>

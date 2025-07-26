@@ -155,14 +155,14 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
         <Button
           variant="outline"
           size="sm"
-          className="border-brutalist"
+          className=""
         >
           <MessageSquare size={14} />
           <span className="ml-1 text-xs">{commentsCount}</span>
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="border-brutalist max-w-2xl max-h-[80vh] flex flex-col">
+      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="font-bold">COMMENTS</DialogTitle>
         </DialogHeader>
@@ -177,7 +177,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
             </div>
           ) : (
             comments.map((comment) => (
-              <div key={comment.id} className="border-brutalist p-3">
+              <div key={comment.id} className="p-3">
                 <div className="flex justify-between items-start mb-2">
                   <span className="font-bold text-sm">{comment.profiles.username}</span>
                   <span className="text-xs text-muted-foreground">
@@ -197,7 +197,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
               placeholder="Add a comment... (max 500 characters)"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              className="border-brutalist resize-none"
+              className="resize-none"
               rows={3}
               maxLength={500}
             />
@@ -208,7 +208,7 @@ const CommentsModal = ({ trackId, commentsCount, onCommentsChange }: CommentsMod
               <Button
                 onClick={handleSubmitComment}
                 disabled={!newComment.trim() || submitting}
-                className="border-brutalist"
+                className=""
               >
                 <Send size={14} />
                 <span className="ml-2">POST</span>

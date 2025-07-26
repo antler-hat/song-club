@@ -29,7 +29,7 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
   setConfirmDelete,
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="border-brutalist max-w-md">
+    <DialogContent className="max-w-md">
       <DialogHeader>
         <DialogTitle className="font-bold text-base">Edit Comment</DialogTitle>
       </DialogHeader>
@@ -37,7 +37,7 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
         placeholder="Edit your comment..."
         value={editCommentText}
         onChange={onChange}
-        className="border-brutalist resize-none"
+        className="resize-none"
         rows={3}
       />
       <div className="flex justify-between items-center items-end mt-2">
@@ -68,14 +68,14 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
           <Button
             variant="outline"
             onClick={onCancel}
-            className="border-brutalist"
+            className=""
           >
             Cancel
           </Button>
           <Button
             onClick={onSave}
             disabled={!editCommentText.trim() || submitting}
-            className="border-brutalist"
+            className=""
           >
             <span>Save</span>
           </Button>

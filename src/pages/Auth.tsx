@@ -119,7 +119,7 @@ const Auth = () => {
       <div className="mb-4 sm:mb-20">
           <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
       </div>
-      <Card className="w-full max-w-md border-brutalist p-8 pt-0">
+      <Card className="w-full max-w-md  p-8 pt-0">
         <CardHeader>
           <CardTitle className="text-center text-lg font-bold">
             {isRecovery
@@ -135,7 +135,7 @@ const Auth = () => {
               <div className="text-center">
                 <p className="mb-4">Your password has been reset.</p>
                 <Link to="/">
-                  <Button className="border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold w-full">
+                  <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold w-full">
                     Go to Home
                   </Button>
                 </Link>
@@ -149,7 +149,7 @@ const Auth = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
-                    className="border-brutalist placeholder:text-muted-foreground"
+                    className="placeholder:text-muted-foreground"
                   />
                 </div>
                 <div>
@@ -159,13 +159,13 @@ const Auth = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="border-brutalist placeholder:text-muted-foreground"
+                    className="placeholder:text-muted-foreground"
                   />
                 </div>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                  className="w-full  bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                 >
                   {loading ? "..." : "Set new password"}
                 </Button>
@@ -180,13 +180,13 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="border-brutalist placeholder:text-muted-foreground"
+                  className="placeholder:text-muted-foreground"
                 />
               </div>
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                className="w-full  bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
               >
                 {loading ? "..." : "Send reset email"}
               </Button>
@@ -201,7 +201,7 @@ const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="border-brutalist placeholder:text-muted-foreground"
+                    className="placeholder:text-muted-foreground"
                   />
                 </div>
                 
@@ -213,7 +213,7 @@ const Auth = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
-                      className="border-brutalist placeholder:text-muted-foreground"
+                      className="placeholder:text-muted-foreground"
                     />
                   </div>
                 )}
@@ -225,14 +225,14 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="border-brutalist placeholder:text-muted-foreground"
+                    className="placeholder:text-muted-foreground"
                   />
                 </div>
                 
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full border-brutalist bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                  className="w-full  bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                 >
                   {loading ? "..." : (isSignUp ? "Sign up" : "Log in")}
                 </Button>

@@ -29,7 +29,7 @@ const AudioPlayer = () => {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-brutalist border-r-0 border-l-0 border-b-0  p-2 pb-8 sm:p-4 sm:pb-4">
+    <div className="fixed bottom-0 left-0 right-0 bg-background  border-r-0 border-l-0 border-b-0  p-2 pb-8 sm:p-4 sm:pb-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
           {/* Track Info */}
@@ -47,7 +47,7 @@ const AudioPlayer = () => {
             <Button
               onClick={isPlaying ? pauseTrack : resumeTrack}
               size="sm"
-              className="border-brutalist"
+              className=""
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>

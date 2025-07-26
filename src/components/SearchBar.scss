@@ -1,0 +1,23 @@
+:root {
+  --search-bar-placeholder-color: var(--grey-base);
+}
+input.searchBar-input {
+  padding-right: 5rem;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--search-bar-placeholder-color);
+  }
+  &::-webkit-input-placeholder {
+    color: var(--search-bar-placeholder-color);
+  }
+  &::-moz-placeholder {
+    color: var(--search-bar-placeholder-color);
+  }
+  &:-ms-input-placeholder {
+    color: var(--search-bar-placeholder-color);
+  }
+  &::-ms-input-placeholder {
+    color: var(--search-bar-placeholder-color);
+  }
+}

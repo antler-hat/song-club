@@ -26,7 +26,7 @@ const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
     <DialogTrigger asChild>
       {trigger}
     </DialogTrigger>
-    <DialogContent className="border-brutalist max-w-md">
+    <DialogContent className="max-w-md">
       <DialogHeader>
         <DialogTitle className="font-bold text-base">Add Comment</DialogTitle>
       </DialogHeader>
@@ -34,7 +34,7 @@ const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
         placeholder="Write your comment..."
         value={newComment}
         onChange={onChange}
-        className="border-brutalist resize-none"
+        className="resize-none"
         rows={3}
       />
       <div className="flex justify-end">
@@ -44,7 +44,7 @@ const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
             onOpenChange(false);
           }}
           disabled={!newComment.trim() || submitting}
-          className="border-brutalist"
+          className=""
         >
           <span>Post</span>
         </Button>

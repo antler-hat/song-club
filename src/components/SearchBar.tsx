@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import clsx from "clsx";
 import { useIsMobile } from "@/hooks/use-mobile";
+import './SearchBar.scss';
 
 interface SearchBarProps {
   value: string;
@@ -52,7 +53,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           value={value}
           onChange={e => onChange(e.target.value)}
           autoFocus
-          className={clsx("pr-20 border-brutalist w-full", inputClassName)}
+          className={clsx("searchBar-input", inputClassName)}
         />
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           {value && (
@@ -90,7 +91,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
-        className={clsx("pr-20 border-brutalist", inputClassName)}
+        className={clsx("searchBar-input", inputClassName)}
       />
       <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
         {value && (

@@ -103,7 +103,7 @@ const SongDetail = () => {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="mb-4 text-lg font-bold">Song not found</div>
         <Link to="/">
-          <Button className="border-brutalist">Back to home</Button>
+          <Button className="">Back to home</Button>
         </Link>
       </div>
     );
@@ -126,7 +126,6 @@ const SongDetail = () => {
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="Search"
               />
             </div>
 
@@ -134,14 +133,14 @@ const SongDetail = () => {
               <>
                 <UploadModal onUploadComplete={() => {}} />
                 <Link to="/profile">
-                  <Button variant="outline" className="border-brutalist">
+                  <Button variant="outline" className="">
                     <User size={16} />
                   </Button>
                 </Link>
               </>
             ) : (
               <Link to="/auth">
-                <Button variant="ghost" className="border-brutalist">
+                <Button variant="ghost" className="">
                   Log in
                 </Button>
               </Link>

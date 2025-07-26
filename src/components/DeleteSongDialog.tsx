@@ -18,7 +18,7 @@ const DeleteSongDialog: React.FC<DeleteSongDialogProps> = ({
   onCancel,
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="border-brutalist max-w-md">
+    <DialogContent className="max-w-md">
       <DialogHeader>
         <DialogTitle className="font-bold text-base">Are you sure?</DialogTitle>
       </DialogHeader>
@@ -30,7 +30,7 @@ const DeleteSongDialog: React.FC<DeleteSongDialogProps> = ({
           variant="outline"
           onClick={onCancel}
           disabled={deleting}
-          className="border-brutalist"
+          className=""
         >
           Cancel
         </Button>
