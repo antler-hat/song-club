@@ -1,6 +1,15 @@
 .trackCard {
     box-shadow: var(--shadow-sm);
     border-radius: 8px !important;
+    padding: 0;
+}
+
+.trackCard-mainContent {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-base);
+    position: relative;
+    padding-bottom: var(--spacing-base);
 }
 
 .trackCard-lyricsButton {
@@ -15,26 +24,43 @@
     font-size: var(--font-size-xs);
     color: var(--grey-dark);
 
-    &:hover {
+    &:hover, &:focus, &:focus-visible {
         text-decoration: underline;
     }
 }
 
-.trackCard-lyricsButton:hover {
-    text-decoration: underline;
+.trackCard-commentsContainer {
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
 }
 
-.trackCard-comment {
-    display: inline-block;
-    background: var(--grey-lightest);
-    padding: 0.25rem 1rem;
-    border-radius: 2px 100px 100px 100px;
-    margin-right: 0.5rem;
-}
-
-div:has(>.trackCard-comment) {
+.trackCard-commentSection {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
     align-items: start;
+}
+
+button.playpause-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: var(--black);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+&:hover {
+    background-color: var(--grey-darkest);
+}
+
+&:focus,
+&:focus-visible {
+    outline-offset: 2px;
+    background: var(--grey-darkest);
+}
 }

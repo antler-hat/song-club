@@ -72,7 +72,7 @@
 }
 
 .dark {
-  /* --background: oklch(0.145 0 0); */
+  --background: oklch(0.145 0 0);
   /* --foreground: oklch(0.985 0 0); */
   /* --card: oklch(0.205 0 0); */
   /* --card-foreground: oklch(0.985 0 0); */
@@ -111,24 +111,17 @@
     font-size: var(--font-size-base);
   }
 
-
+  a {
+    &:hover, &:focus, &:focus-visible {
+        text-decoration: underline;
+    }
+  }
   .border {
     border-color: var(--border);
   }
 
-  button.playpause-button {
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
-    background-color: var(--black);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  button.playpause-button:hover {
-    background-color: var(--grey-darkest);
+  .bg-background {
+    background-color: var(--background);
   }
 
 }
