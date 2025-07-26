@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Link, useNavigate } from "react-router-dom";
-import { Music, User, LogIn, Search, X, LogOut } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import SearchBar from "@/components/SearchBar";
 import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/TrackCard";
-import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/Navbar";
+import UploadModal from "@/components/UploadModal";
+import { Button } from "@/components/ui/button";
 
 interface Song {
   id: string;
@@ -108,79 +100,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="p-4 pb-6">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-          {isMobile && mobileSearchOpen ? (
-            // Mobile: Only show search bar when open
-            <div className="flex-1">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                mobileOpen={mobileSearchOpen}
-                setMobileOpen={setMobileSearchOpen}
-              />
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <SearchBar
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  mobileOpen={mobileSearchOpen}
-                  setMobileOpen={setMobileSearchOpen}
-                />
-                {user ? (
-                  <>
-                    <UploadModal onUploadComplete={fetchAllSongs} />
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
-                      <Avatar>
-                        <AvatarFallback>
-                          {user?.user_metadata?.username?.[0]?.toUpperCase() ||
-                            user?.email?.[0]?.toUpperCase() ||
-                            "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>  
-                          <Link to="/profile">
-                            My songs
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={async () => {
-                            await signOut();
-                            navigate("/auth");
-                          }}
-                        >
-                          <LogOut size={16} className="mr-2" />
-                          Log out
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                ) : (
-                  <Link to="/auth">
-                    <Button variant="outline" className="">
-                      Log in to upload
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-      </header>
-
+      <Navbar
+        user={user}
+        signOut={signOut}
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showUpload={true}
+        onUploadComplete={fetchAllSongs}
+        showLoginButton={true}
+        mobileSearch={mobileSearchOpen}
+        setMobileSearchOpen={setMobileSearchOpen}
+      />
 
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
-import { ArrowLeft, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useParams, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/TrackCard";
 import AudioPlayer from "@/components/AudioPlayer";
+import SimpleHeader from "@/components/SimpleHeader";
 
 interface Song {
   id: string;
@@ -95,22 +94,7 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="border-b-brutalist p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link to="/">
-              <Button variant="outline" size="sm" className="">
-                <ArrowLeft size={16} />
-              </Button>
-            </Link>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl">
-                {loading ? "Loading..." : `Songs by @${profile?.username}`}
-              </h1>
-            </div>
-          </div>
-        </div>
-      </header>
+      <SimpleHeader title={loading ? "Loading..." : `Songs by @${profile?.username}`} />
 
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">

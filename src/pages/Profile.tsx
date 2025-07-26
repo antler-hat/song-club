@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { ArrowLeft, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
+import SimpleHeader from "@/components/SimpleHeader";
 
 interface Song {
   id: string;
@@ -88,20 +87,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="border-b-brutalist p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link to="/">
-              <Button variant="outline" size="sm" className="">
-                <ArrowLeft size={16} />
-              </Button>
-            </Link>
-            <h1 className="text-2xl font-bold">Your songs</h1>
-          </div>
-          
-          
-        </div>
-      </header>
+      <SimpleHeader title="Your songs" />
 
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">
