@@ -1,6 +1,29 @@
+.dropdownMenu-trigger {
+    &:focus {
+        outline: none;
+    }
+}
+
+.dropdownMenu-content {
+    background: var(--white) !important;
+}
+
 .dropdownMenu-item {
-  @apply relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50;
+  position: relative;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-base);
+  font-size: var(--font-size-sm);
+  color: var(--grey-dark);
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
   &:hover {
+  outline: 0;
     background-color: var(--grey-lightest);
   }
-}   
+}

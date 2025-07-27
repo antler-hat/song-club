@@ -407,7 +407,7 @@ const SongCard = ({song, onSongChanged, showLyricsExpanded} : SongCardProps) => 
                           <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                   <Button
-                                      variant="outline"
+                                      variant="secondary"
                                       size="icon"
                                       className="h-8 w-8 p-0"
                                       aria-label="Track options">
