@@ -107,11 +107,11 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Upload size={16} className="mr-1" />
+          <Upload size={16} />
           Upload
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-brutalist">
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle className="font-bold">Upload</DialogTitle>
         </DialogHeader>
@@ -124,7 +124,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="border-brutalist placeholder:text-muted-foreground"
+              className="placeholder:text-muted-foreground"
             />
           </div>
           <div>
@@ -132,7 +132,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               placeholder="Lyrics (optional)"
               value={lyrics}
               onChange={(e) => setLyrics(e.target.value)}
-              className="border-brutalist w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y"
+              className="w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y"
               rows={4}
             />
           </div>
@@ -141,7 +141,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
               type="file"
               accept="audio/*"
               onChange={handleFileChange}
-              className="block w-full text-sm border-brutalist p-2 bg-background"
+              className="block w-full text-sm  p-2 bg-background"
               required
             />
           </div>
@@ -149,7 +149,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
           <Button
             type="submit"
             disabled={uploading || !file || !title.trim()}
-            className="w-full border-brutalist font-bold"
+            className="w-full  font-bold"
           >
             {uploading ? "Uploading..." : "Upload"}
           </Button>

@@ -1,0 +1,20 @@
+.audioPlayer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    border-top: 1px solid var(--black);
+    padding: var(--spacing-base);
+    @media screen and (max-width: 640px) {
+        padding-bottom: var(--spacing-lg);
+    }
+}
+
+button.audioPlayer-playPauseButton {
+    background: var(--black);
+    color: var(--white);
+    &:hover {
+        background: var(--grey-darkest);
+    }
+}

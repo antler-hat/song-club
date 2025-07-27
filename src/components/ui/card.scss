@@ -1,0 +1,12 @@
+.card {
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.cardFooter {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-base);
+}

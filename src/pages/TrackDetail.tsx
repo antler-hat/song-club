@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SongCard from "@/components/TrackCard";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import UploadModal from "@/components/UploadModal";
-import { User, LogIn } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
-import SearchBar from "@/components/SearchBar";
+import Navbar from "@/components/Navbar";
 
 interface Song {
   id: string;
@@ -78,6 +75,18 @@ const SongDetail = () => {
     if (trackId) fetchSong();
   }, [trackId]);
 
+  useEffect(() => {
+    if (song) {
+      document.title = `${song.title} by ${song.profiles.username} | Song Club`;
+    } else if (loading) {
+      document.title = "Loading... | Song Club";
+    } else if (notFound) {
+      document.title = "Song not found | Song Club";
+    } else {
+      document.title = "Song Club";
+    }
+  }, [song, loading, notFound]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -90,53 +99,25 @@ const SongDetail = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="mb-4 text-lg font-bold">Song not found</div>
-        <Link to="/">
-          <Button className="border-brutalist">Back to home</Button>
-        </Link>
+        {/* Back to home button */}
+        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+          Back to home
+        </a>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="border-b-brutalist p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {/* Search Bar */}
-            <div className="flex-1 max-w-md">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Search"
-              />
-            </div>
-
-            {user ? (
-              <>
-                <UploadModal onUploadComplete={() => {}} />
-                <Link to="/profile">
-                  <Button variant="outline" className="border-brutalist">
-                    <User size={16} />
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <Link to="/auth">
-                <Button variant="ghost" className="border-brutalist">
-                  Log in
-                </Button>
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+      <Navbar
+        user={user}
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showUpload={true}
+        onUploadComplete={() => {}}
+        showLoginButton={true}
+      />
       <main className="max-w-2xl mx-auto p-4">
         <SongCard song={song} showLyricsExpanded={true} />
       </main>
