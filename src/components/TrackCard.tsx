@@ -393,15 +393,16 @@ const SongCard = ({song, onSongChanged, showLyricsExpanded} : SongCardProps) => 
                             </Link>
                         </h3>
                         {/* Song lyrics button */}
-                        {song.lyrics && (showLyricsExpanded
-                            ? (
-                                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-                            )
-                            : (<LyricsModalButton lyrics={song.lyrics}/>))}
+                        {song.lyrics && !showLyricsExpanded &&
+                            (<LyricsModalButton lyrics={song.lyrics}/>)}
                       </div>
                       <Link to={`/user/${song.user_id}`} className="hover:underline">
                           {song.profiles.username}
                       </Link>
+                      {/* Song lyrics expanded */}
+                        {song.lyrics && showLyricsExpanded &&
+                                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+      }
                   </div>
                   {/* Ellipses menu for own track */}
                   {isOwnSong && (
