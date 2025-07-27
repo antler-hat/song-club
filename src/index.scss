@@ -10,7 +10,7 @@
   --grey-dark: hsl(0, 0%, 35%);
   --grey-base: hsl(0, 0%, 50%);
   --grey-light: hsl(0, 0%, 82%);
-  --grey-lightest: hsl(0, 0%, 92%);
+  --grey-lightest: hsl(0, 0%, 95%);
   --white: hsl(0, 0%, 100%);
 
   --spacing-xs: 4px;
@@ -37,7 +37,7 @@
 /* All colors MUST be HSL. */
 @layer base {
   :root {
-  --radius: 0;
+  --radius: 3px;
   --background: hsl(0, 0%, 100%);
   /* --foreground: oklch(0.145 0 0); */
   /* --card: oklch(1 0 0); */

@@ -386,20 +386,22 @@ const SongCard = ({song, onSongChanged, showLyricsExpanded} : SongCardProps) => 
                           : <Play size={16}/>}
                   </Button>
                   <div className="flex-1">
-                      <h3 className="font-bold">
-                          <Link to={`/track/${song.id}`} className="hover:underline">
-                              {song.title}
-                          </Link>
-                      </h3>
+                      <div className="trackCard-titleGroup">
+                        <h3 className="font-bold">
+                            <Link to={`/track/${song.id}`} className="hover:underline">
+                                {song.title}
+                            </Link>
+                        </h3>
+                        {/* Song lyrics button */}
+                        {song.lyrics && (showLyricsExpanded
+                            ? (
+                                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+                            )
+                            : (<LyricsModalButton lyrics={song.lyrics}/>))}
+                      </div>
                       <Link to={`/user/${song.user_id}`} className="hover:underline">
                           {song.profiles.username}
                       </Link>
-                      {/* Song lyrics button */}
-                      {song.lyrics && (showLyricsExpanded
-                          ? (
-                              <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-                          )
-                          : (<LyricsModalButton lyrics={song.lyrics}/>))}
                   </div>
                   {/* Ellipses menu for own track */}
                   {isOwnSong && (
@@ -602,7 +604,7 @@ const SongCard = ({song, onSongChanged, showLyricsExpanded} : SongCardProps) => 
                     submitting={submitting}
                     trigger={
                     <button className="trackCard-addCommentButton" type="button">
-                      Comment
+                      + comment
                     </button>
                     }/>
             </CardContent>
@@ -616,13 +618,13 @@ const LyricsModalButton = ({lyrics} : {
     const [open,
         setOpen] = useState(false);
     return (
-        <div>
+        <div className="trackCard-lyricsButtonGroup" >
+            <span>–</span>
             <button
                 className="trackCard-lyricsButton"
                 onClick={() => setOpen(true)}
                 type="button">
-                <NotebookPen size={14}/>
-                Lyrics
+                lyrics
             </button>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-md">
