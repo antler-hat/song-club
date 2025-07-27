@@ -100,8 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         }
                       }}
                     >
-                      <LogOut size={16} className="mr-2" />
-                      Log out
+                      Sign out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
