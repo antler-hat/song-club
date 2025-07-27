@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import UploadModal from "@/components/UploadModal";
 import SearchBar from "@/components/SearchBar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import "./Navbar.scss";
+import "./navbar.scss";
 import React, { useState } from "react";
 
 interface NavbarProps {
