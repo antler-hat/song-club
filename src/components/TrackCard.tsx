@@ -4,12 +4,9 @@ import {Play, Pause, Send, MoreHorizontal, NotebookPen} from "lucide-react";
 import {Link} from "react-router-dom";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
-import {Textarea} from "@/components/ui/textarea";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import AddCommentDialog from "./AddCommentDialog";
 import EditInfoDialog from "./EditInfoDialog";
 import DeleteSongDialog from "./DeleteSongDialog";
-import EditCommentDialog from "./EditCommentDialog";
 import {useAudio} from "@/hooks/useAudio";
 import {useAuth} from "@/hooks/useAuth";
 import {supabase} from "@/integrations/supabase/client";
@@ -504,110 +501,6 @@ const SongCard = ({song, onSongChanged, showLyricsExpanded} : SongCardProps) => 
                       </div>
                   )}
                 </div>
-                {/* Comments Section */}
-                {comments.length > 0
-                    ? (
-                        <div className="trackCard-commentsContainer">
-                            <div className="flex-1 overflow-y-auto pr-2 max-h-48">
-                                {loading
-                                    ? (
-                                        <div className="text-center py-4">Loading...</div>
-                                    )
-                                    : comments.length === 0
-                                        ? (null)
-                                        : (comments.map((comment) => {
-                                            const isOwn = user && comment.user_id === user.id;
-                                            return (
-                                                <div
-                                                    key={comment.id}
-                                                    style={isOwn
-                                                    ? {
-                                                        position: "relative"
-                                                    }
-                                                    : {}}>
-                                                    <div className="trackCard-comment">
-                                                        <Link
-                                                            to={`/user/${comment.user_id}`}
-                                                            className="font-bold hover:underline mr-2"
-                                                            onClick={e => e.stopPropagation()}>
-                                                            {comment.profiles.username}
-                                                        </Link>
-                                                        <span
-                                                            className={`text whitespace-pre-line${isOwn
-                                                            ? " hover:underline cursor-pointer"
-                                                            : ""}`}
-                                                            onClick={isOwn
-                                                            ? () => handleEditComment(comment)
-                                                            : undefined}>
-                                                            {comment.content}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            );
-                                        }))}
-                            </div>
-                        </div>
-                    )
-                    : null}
-                {/* Add a comment button and modal */}
-                {user
-                    ? (<> {/* Edit Comment Modal */
-                    } < EditCommentDialog open = {
-                        editModalOpen
-                    }
-                    onOpenChange = {
-                        (open) => {
-                            setEditModalOpen(open);
-                            if (!open) {
-                                setEditingComment(null);
-                                setEditCommentText("");
-                            }
-                        }
-                    }
-                    editCommentText = {
-                        editCommentText
-                    }
-                    onChange = {
-                        e => setEditCommentText(e.target.value)
-                    }
-                    onSave = {
-                        handleUpdateComment
-                    }
-                    onDelete = {
-                        handleDeleteComment
-                    }
-                    submitting = {
-                        submitting
-                    }
-                    onCancel = {
-                        () => {
-                            setEditModalOpen(false);
-                            setEditingComment(null);
-                            setEditCommentText("");
-                            setConfirmDelete(false);
-                        }
-                    }
-                    confirmDelete = {
-                        confirmDelete
-                    }
-                    setConfirmDelete = {
-                        setConfirmDelete
-                    } /> </>)
-                    : null}
-
-                {/* Add Comment Button and Modal */}
-                <AddCommentDialog
-                    open={modalOpen}
-                    onOpenChange={setModalOpen}
-                    newComment={newComment}
-                    onChange={e => setNewComment(e.target.value)}
-                    onSubmit={handleSubmitComment}
-                    submitting={submitting}
-                    trigger={
-                    <button className="trackCard-addCommentButton" type="button">
-                      + comment
-                    </button>
-                    }/>
             </CardContent>
         </Card>
     );
