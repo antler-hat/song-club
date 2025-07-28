@@ -6,12 +6,13 @@ import { cn } from "@/lib/utils"
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & { size?: number }
+>(({ className, size = 1, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
       "avatar-root",
+      `avatar-size-${size}`,
       className
     )}
     {...props}
