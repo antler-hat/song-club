@@ -1,10 +1,14 @@
 /* SCSS for Button component. Add your styles here. */
 
-  .button-outline {
-    border: 1px solid var(--border);
-    background-color: transparent;
-    color: var(--grey-dark);
-    padding: 8px 16px;
-    border-radius: var(--radius);
-    cursor: pointer;
+.button-outline {
+  border: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--grey-dark);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--grey-lightest);
   }
+}
