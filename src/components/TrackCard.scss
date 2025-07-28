@@ -26,24 +26,10 @@
         margin-top: var(--spacing-xs);
     }
 
-    &-lyricsButtonGroup {
-        font-size: var(--font-size-sm);
-        color: var(--grey-base);
+    &-actions {
         display: flex;
-        align-items: baseline;
-        gap: var(--spacing-sm);
-    }
-
-    &-lyricsButton,
-    &-addCommentButton {
-        font-size: var(--font-size-sm);
-        color: var(--grey-base);
-
-        &:hover,
-        &:focus,
-        &:focus-visible {
-            text-decoration: underline;
-        }
+        flex-direction: row;
+        gap: var(--spacing-xs);
     }
 
     &-commentsContainer {

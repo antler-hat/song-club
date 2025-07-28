@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import './TrackCard.scss';
-import { Play, Pause, Send, MoreHorizontal, NotebookPen } from "lucide-react";
+import { Play, Pause, MoreHorizontal, NotebookText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface Song {
     id: string;
@@ -391,125 +392,127 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                                     {song.title}
                                 </Link>
                             </h3>
-                            {/* Song lyrics button */}
-                            {song.lyrics && !showLyricsExpanded &&
-                                (<LyricsModalButton lyrics={song.lyrics} />)}
                         </div>
                         <Link to={`/user/${song.user_id}`} className="hover:underline">
                             {song.profiles.username}
                         </Link>
-                        {/* Song lyrics expanded */}
-                        {song.lyrics && showLyricsExpanded &&
-                            <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-                        }
-                    </div>
-                    {/* Ellipses menu for own track */}
-                    {isOwnSong && (
-                        <div>
-                            <DropdownMenu open={open} onOpenChange={setOpen}>
-                                <DropdownMenuTrigger
-                                    asChild
-                                    {...(isTouchDevice
-                                        ? {
-                                            onPointerDown: (e) => e.preventDefault(),
-                                            onClick: () => setOpen(!open)
-                                        }
-                                        : undefined)}
-                                >
-                                    <Button
-                                        variant="secondary"
-                                        size="icon"
-                                        className="h-8 w-8 p-0"
-                                        aria-label="Track options">
-                                        <MoreHorizontal size={20} />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem
-                                        onSelect={(e) => {
-                                            e.preventDefault();
+                        </div>
+                        <div className="trackCard-actions">
+                            {/* Song lyrics expanded */}
+                            {song.lyrics && showLyricsExpanded &&
+                                <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+                            }
+                            {/* Ellipses menu for own track */}
+                            {/* Song lyrics button */}
+                            {song.lyrics && !showLyricsExpanded &&
+                                (<LyricsModalButton lyrics={song.lyrics} />)}
+                            {isOwnSong && (
+                                <div>
+                                    <DropdownMenu open={open} onOpenChange={setOpen}>
+                                        <DropdownMenuTrigger
+                                            asChild
+                                            {...(isTouchDevice
+                                                ? {
+                                                    onPointerDown: (e) => e.preventDefault(),
+                                                    onClick: () => setOpen(!open)
+                                                }
+                                                : undefined)}
+                                        >
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="h-8 w-8 p-0"
+                                                aria-label="Track options">
+                                                <MoreHorizontal size={20} />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                                onSelect={(e) => {
+                                                    e.preventDefault();
+                                                    setEditedTitle(song.title);
+                                                    setEditedLyrics(song.lyrics || "");
+                                                    setEditTitleModalOpen(true);
+                                                }}>
+                                                Edit info
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onSelect={(e) => {
+                                                    e.preventDefault();
+                                                    handleReplaceAudioClick();
+                                                }}
+                                                disabled={replacing}>
+                                                Replace the audio file
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onSelect={(e) => {
+                                                    e.preventDefault();
+                                                    setDeleteDialogOpen(true);
+                                                }}
+                                                className="text-red-600 focus:text-red-600">
+                                                Delete this song
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                    {/* Edit Info Modal */}
+                                    <EditInfoDialog
+                                        open={editTitleModalOpen}
+                                        onOpenChange={setEditTitleModalOpen}
+                                        editedTitle={editedTitle}
+                                        editedLyrics={editedLyrics}
+                                        onTitleChange={e => setEditedTitle(e.target.value)}
+                                        onLyricsChange={e => setEditedLyrics(e.target.value)}
+                                        onSave={async () => {
+                                            if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || "")))
+                                                return;
+                                            setSavingTitle(true);
+                                            try {
+                                                const { error } = await supabase
+                                                    .from('songs')
+                                                    .update({
+                                                        title: editedTitle.trim(),
+                                                        lyrics: editedLyrics.trim() || null
+                                                    })
+                                                    .eq('id', song.id);
+                                                if (error)
+                                                    throw error;
+                                                setEditTitleModalOpen(false);
+                                                toast({ title: "Info updated", description: "The song info has been updated." });
+                                                if (onSongChanged)
+                                                    onSongChanged();
+                                            }
+                                            catch (error) {
+                                                toast({ title: "Error", description: "Failed to update info", variant: "destructive" });
+                                            } finally {
+                                                setSavingTitle(false);
+                                            }
+                                        }}
+                                        saving={savingTitle}
+                                        onCancel={() => {
+                                            setEditTitleModalOpen(false);
                                             setEditedTitle(song.title);
                                             setEditedLyrics(song.lyrics || "");
-                                            setEditTitleModalOpen(true);
-                                        }}>
-                                        Edit info
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onSelect={(e) => {
-                                            e.preventDefault();
-                                            handleReplaceAudioClick();
                                         }}
-                                        disabled={replacing}>
-                                        Replace the audio file
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onSelect={(e) => {
-                                            e.preventDefault();
-                                            setDeleteDialogOpen(true);
+                                        originalTitle={song.title}
+                                        originalLyrics={song.lyrics || ""} /> {/* Hidden file input for replace */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="audio/*"
+                                        style={{
+                                            display: "none"
                                         }}
-                                        className="text-red-600 focus:text-red-600">
-                                        Delete this song
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            {/* Edit Info Modal */}
-                            <EditInfoDialog
-                                open={editTitleModalOpen}
-                                onOpenChange={setEditTitleModalOpen}
-                                editedTitle={editedTitle}
-                                editedLyrics={editedLyrics}
-                                onTitleChange={e => setEditedTitle(e.target.value)}
-                                onLyricsChange={e => setEditedLyrics(e.target.value)}
-                                onSave={async () => {
-                                    if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || "")))
-                                        return;
-                                    setSavingTitle(true);
-                                    try {
-                                        const { error } = await supabase
-                                            .from('songs')
-                                            .update({
-                                                title: editedTitle.trim(),
-                                                lyrics: editedLyrics.trim() || null
-                                            })
-                                            .eq('id', song.id);
-                                        if (error)
-                                            throw error;
-                                        setEditTitleModalOpen(false);
-                                        toast({ title: "Info updated", description: "The song info has been updated." });
-                                        if (onSongChanged)
-                                            onSongChanged();
-                                    }
-                                    catch (error) {
-                                        toast({ title: "Error", description: "Failed to update info", variant: "destructive" });
-                                    } finally {
-                                        setSavingTitle(false);
-                                    }
-                                }}
-                                saving={savingTitle}
-                                onCancel={() => {
-                                    setEditTitleModalOpen(false);
-                                    setEditedTitle(song.title);
-                                    setEditedLyrics(song.lyrics || "");
-                                }}
-                                originalTitle={song.title}
-                                originalLyrics={song.lyrics || ""} /> {/* Hidden file input for replace */}
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="audio/*"
-                                style={{
-                                    display: "none"
-                                }}
-                                onChange={handleReplaceAudioFile}
-                                disabled={replacing} /> {/* Delete confirmation dialog */}
-                            <DeleteSongDialog
-                                open={deleteDialogOpen}
-                                onOpenChange={setDeleteDialogOpen}
-                                onDelete={handleDeleteTrack}
-                                deleting={deleting}
-                                onCancel={() => setDeleteDialogOpen(false)} />
-                        </div>
-                    )}
+                                        onChange={handleReplaceAudioFile}
+                                        disabled={replacing} /> {/* Delete confirmation dialog */}
+                                    <DeleteSongDialog
+                                        open={deleteDialogOpen}
+                                        onOpenChange={setDeleteDialogOpen}
+                                        onDelete={handleDeleteTrack}
+                                        deleting={deleting}
+                                        onCancel={() => setDeleteDialogOpen(false)} />
+                                </div>
+                            )}
+                    </div>
                 </div>
             </CardContent>
         </Card>
@@ -522,17 +525,25 @@ const LyricsModalButton = ({ lyrics }: {
     const [open,
         setOpen] = useState(false);
     return (
-        <div className="trackCard-lyricsButtonGroup" >
-            <span>–</span>
-            <button
-                className="trackCard-lyricsButton"
-                onClick={() => setOpen(true)}
-                type="button">
-                lyrics
-            </button>
+        <div>
+            <Tooltip delayDuration={0}>
+                <TooltipTrigger>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 p-0"
+                        aria-label="View lyrics"
+                        onClick={() => setOpen(true)}>
+                        <NotebookText size={16} />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    View lyrics
+                </TooltipContent>
+            </Tooltip>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-md">
-                    <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto">
+                <DialogContent className="max-w-md" showOverflowHint={true}>
+                    <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto pb-10">
                         {lyrics}
                     </div>
                 </DialogContent>

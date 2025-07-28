@@ -3,3 +3,11 @@
     box-shadow: var(--shadow-lg);
     padding: var(--spacing-lg);
 }
+.overflowHint {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to top, var(--white) 0%, transparent 100%);
+}
