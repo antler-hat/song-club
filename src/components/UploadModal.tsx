@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
 
 interface UploadModalProps {
   onUploadComplete: () => void;
@@ -118,9 +120,9 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
         
         <form onSubmit={handleUpload} className="space-y-4">
           <div>
+            <Label htmlFor="title">Title*</Label>
             <Input
               type="text"
-              placeholder="Title*"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -128,11 +130,11 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
             />
           </div>
           <div>
-            <textarea
-              placeholder="Lyrics (optional)"
+            <Label htmlFor="lyrics">Lyrics (optional)</Label>
+            <Textarea
               value={lyrics}
               onChange={(e) => setLyrics(e.target.value)}
-              className="w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y"
+              className=""
               rows={4}
             />
           </div>
@@ -149,7 +151,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
           <Button
             type="submit"
             disabled={uploading || !file || !title.trim()}
-            className="w-full  font-bold"
+            className="w-full"
           >
             {uploading ? "Uploading..." : "Upload"}
           </Button>

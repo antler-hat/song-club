@@ -12,7 +12,7 @@ $screen-desktop-min: 769px;
 @layer base {
   :root {
   --black: hsl(0, 0%, 0%);
-  --grey-darkest: hsl(0, 0%, 20%);
+  --grey-darkest: hsl(0, 0%, 25%);
   --grey-dark: hsl(0, 0%, 35%);
   --grey-base: hsl(0, 0%, 50%);
   --grey-light: hsl(0, 0%, 82%);
@@ -50,10 +50,11 @@ $screen-desktop-min: 769px;
   /* --card-foreground: oklch(0.145 0 0); */
   /* --popover: oklch(1 0 0); */
   /* --popover-foreground: oklch(0.145 0 0); */
-  /* --primary: oklch(0.205 0 0); */
-  /* --primary-foreground: oklch(0.985 0 0); */
-  --secondary: oklch(75.083% 0.00009 271.152);
-  /* --secondary-foreground: oklch(0.205 0 0); */
+  --primary: var(--black);
+  --primary-light: var(--grey-darkest);
+  --primary-foreground: var(--white);
+  --secondary: var(--grey-lightest);
+  --secondary-foreground: var(--black);
   /* --muted: oklch(0.97 0 0); */
   /* --muted-foreground: oklch(0.556 0 0); */
   /* --accent: oklch(0.97 0 0); */

@@ -1,4 +1,21 @@
-/* SCSS for Button component. Add your styles here. */
+.button-default {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  
+  &:hover {
+    background-color: var(--primary-light);
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+  }
+}
 
 .button-outline {
   border: 1px solid var(--border);
