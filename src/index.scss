@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+$screen-mobile-max: 640px;
+$screen-tablet-min: 641px;
+$screen-tablet-max: 768px;
+$screen-desktop-min: 769px;
+
 /* My colors */
 @layer base {
   :root {
@@ -124,4 +130,13 @@
     background-color: var(--background);
   }
 
+  .pageContainer {
+    min-height: 100vh;
+    background-color: var(--background);
+    padding-bottom: 5rem; /* Adjust as needed for footer */
+
+    @media screen and (max-width: $screen-mobile-max) {
+      padding-bottom: 9rem; /* Adjust for smaller screens */
+    }
+  }
 }
