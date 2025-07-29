@@ -108,7 +108,8 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button
+        variant="outline">
           <Upload size={16} />
           Upload
         </Button>

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & { size?: number }
->(({ className, size = 1, ...props }, ref) => (
+>(({ className, size = 3, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
@@ -26,7 +26,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    className={cn("avatar-image aspect-square h-full w-full", className)}
     {...props}
   />
 ))

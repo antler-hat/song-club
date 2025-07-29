@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               {showSearch && (
                 <SearchBar
                   value={searchQuery}

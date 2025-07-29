@@ -1,8 +1,8 @@
 .trackCard {
     &.card {
         box-shadow: none;
-        padding: 0;
         border: 1px solid var(--black);
+        position: relative;
     }
 
     &-titleGroup {
@@ -30,6 +30,9 @@
         display: flex;
         flex-direction: row;
         gap: var(--spacing-xs);
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 
     &-commentsContainer {
