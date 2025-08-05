@@ -527,7 +527,7 @@ const LyricsModalButton = ({ lyrics }: {
     return (
         <div>
             <Tooltip delayDuration={0}>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                     <Button
                         variant="outline"
                         size="icon"
