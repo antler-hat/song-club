@@ -4,6 +4,7 @@ import { Play, Pause, MoreHorizontal, NotebookText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import EditInfoDialog from "./EditInfoDialog";
 import DeleteSongDialog from "./DeleteSongDialog";
@@ -402,6 +403,9 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                         }
                         </div>
                         <div className="trackCard-actions">
+                            <div className="trackCard-themeChip">
+                                <Chip text="test" variant="outline" className="h-8">Test</Chip>
+                            </div>
                             {/* Ellipses menu for own track */}
                             {/* Song lyrics button */}
                             {song.lyrics && !showLyricsExpanded &&
