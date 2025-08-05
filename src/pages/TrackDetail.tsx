@@ -85,6 +85,11 @@ const SongDetail = () => {
     } else {
       document.title = "Song Club";
     }
+
+    const ogTitleTag = document.querySelector('meta[property="og:title"]');
+    if (ogTitleTag) {
+      ogTitleTag.setAttribute('content', document.title);
+    }
   }, [song, loading, notFound]);
 
   if (loading) {
