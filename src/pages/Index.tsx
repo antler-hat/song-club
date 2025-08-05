@@ -8,6 +8,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
 import UploadModal from "@/components/UploadModal";
 import { Button } from "@/components/ui/button";
+import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
 
 interface Song {
   id: string;
@@ -123,7 +124,11 @@ const Index = () => {
           </div>
         )}
         {loading ? (
-          <div className="text-center py-8">Loading ...</div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <SkeletonTrackCard key={i} />
+            ))}
+          </div>
         ) : filteredSongs.length === 0 ? (
           <div className="py-8">
             <p className="mb-2">

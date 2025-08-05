@@ -6,6 +6,7 @@ import SongCard from "@/components/TrackCard";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
 import SimpleHeader from "@/components/SimpleHeader";
+import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
 
 interface Song {
   id: string;
@@ -92,7 +93,11 @@ const Profile = () => {
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">
         {loading ? (
-          <div className="text-center py-8">Loading...</div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <SkeletonTrackCard key={i} />
+            ))}
+          </div>
         ) : songs.length === 0 ? (
           <div className="text-center py-8">
             <h2 className="text-xl font-bold mb-2">Nothing yet</h2>
