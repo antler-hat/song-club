@@ -1,4 +1,4 @@
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useAudio } from "@/hooks/useAudio";
@@ -8,6 +8,7 @@ const AudioPlayer = () => {
   const {
     currentTrack,
     isPlaying,
+    isLoading,
     currentTime,
     duration,
     pauseTrack,
@@ -46,11 +47,16 @@ const AudioPlayer = () => {
           <div className="flex flex-row items-center gap-2 flex-1">
             {/* Controls */}
             <Button
-              onClick={isPlaying ? pauseTrack : resumeTrack}
+              onClick={isLoading ? undefined : (isPlaying ? pauseTrack : resumeTrack)}
               size="sm"
               className="audioPlayer-playPauseButton"
             >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+              {isLoading
+                ? <Loader2 size={16} className="animate-spin" />
+                : isPlaying
+                  ? <Pause size={16} />
+                  : <Play size={16} />
+              }
             </Button>
             {/* Progress */}
             <div className="flex flex-1 items-center gap-2">

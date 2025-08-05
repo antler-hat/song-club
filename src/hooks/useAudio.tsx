@@ -17,6 +17,7 @@ interface AudioContextType {
   pauseTrack: () => void;
   resumeTrack: () => void;
   seekTo: (time: number) => void;
+  isLoading: boolean;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -27,8 +28,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const playTrack = (track: Track) => {
+    setIsLoading(true);
     if (audioRef.current) {
       if (currentTrack?.id !== track.id) {
         audioRef.current.src = track.file_url;
@@ -47,6 +50,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resumeTrack = () => {
+    setIsLoading(true);
     if (audioRef.current) {
       audioRef.current.play();
       setIsPlaying(true);
@@ -62,22 +66,28 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AudioContext.Provider value={{
-      currentTrack,
-      isPlaying,
-      currentTime,
-      duration,
-      playTrack,
-      pauseTrack,
-      resumeTrack,
-      seekTo
-    }}>
+      <AudioContext.Provider value={{
+        currentTrack,
+        isPlaying,
+        isLoading,
+        currentTime,
+        duration,
+        playTrack,
+        pauseTrack,
+        resumeTrack,
+        seekTo
+      }}>
       {children}
       <audio
         ref={audioRef}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          setIsLoading(false);
+        }}
+        onWaiting={() => setIsLoading(true)}
+        onCanPlayThrough={() => setIsLoading(false)}
         style={{ display: 'none' }}
       />
     </AudioContext.Provider>
