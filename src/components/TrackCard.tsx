@@ -61,26 +61,26 @@ const isTouchDevice = useIsMobile();
   const isSongPlaying = isCurrentSong && isPlaying;
   const isOwnSong = user?.id === song.user_id;
 
-  const fetchComments = async () => {
-    setLoading(true);
-    try {
-      const { data: commentsData, error: commentsError } = await supabase
-        .from('comments')
-        .select('id, content, created_at, user_id')
-        .eq('track_id', song.id)
-        .order('created_at', { ascending: true });
-      if (commentsError) throw commentsError;
-      setComments(commentsData || []);
-    } catch {
-      toast({ title: "Error", description: "Failed to load comments", variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchComments = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const { data: commentsData, error: commentsError } = await supabase
+  //       .from('comments')
+  //       .select('id, content, created_at, user_id')
+  //       .eq('track_id', song.id)
+  //       .order('created_at', { ascending: true });
+  //     if (commentsError) throw commentsError;
+  //     setComments(commentsData || []);
+  //   } catch {
+  //     toast({ title: "Error", description: "Failed to load comments", variant: "destructive" });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchComments();
-  }, [song.id]);
+  // useEffect(() => {
+  //   fetchComments();
+  // }, [song.id]);
 
   const handlePlayPause = () => {
     if (isCurrentSong) {
