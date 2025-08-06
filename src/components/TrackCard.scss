@@ -71,12 +71,9 @@
         }
     }
 
-    &-footer {
-        margin-top: var(--spacing-base);
-        font-size: var(--font-size-sm);
-    }
-
     &-themeText {
-        color: var(--grey-base);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        text-transform: uppercase;
     }
 }

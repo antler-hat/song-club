@@ -12,6 +12,8 @@ import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
 import TrackDetail from "./pages/TrackDetail";
 
+import ThemePage from "./pages/ThemePage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -28,6 +30,7 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/user/:userId" element={<UserProfile />} />
               <Route path="/track/:trackId" element={<TrackDetail />} />
+              <Route path="/theme/:themeId" element={<ThemePage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

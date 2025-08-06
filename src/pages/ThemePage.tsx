@@ -20,6 +20,7 @@ interface Song {
     username: string;
   };
   theme_id?: string | null;
+  theme?: { name: string };
 }
 
 const ThemePage = () => {
@@ -40,7 +41,7 @@ const ThemePage = () => {
         // Fetch theme details
         const { data: themeData, error: themeError } = await (supabase as any)
           .from("themes")
-          .select<Theme>("id, name")
+          .select("id, name")
           .eq("id", themeId)
           .single();
         if (themeError || !themeData) {
@@ -60,7 +61,8 @@ const ThemePage = () => {
             user_id,
             created_at,
             lyrics,
-            theme_id
+            theme_id,
+            theme:themes(name)
           `)
           .eq("theme_id", themeId)
           .order("created_at", { ascending: false });
@@ -68,11 +70,11 @@ const ThemePage = () => {
           setSongs([]);
         } else {
           // Fetch profiles for songs
-          const userIds = Array.from(new Set(songsData.map(s => s.user_id)));
+          const userIds = Array.from(new Set(songsData.map(s => s.user_id).filter((u): u is string => !!u)));
           const { data: profilesData } = await supabase
             .from("profiles")
             .select("user_id, username")
-            .in("user_id", userIds);
+            .in("user_id", userIds as string[]);
           const profilesMap = (profilesData || []).reduce((acc, p) => {
             acc[p.user_id] = p.username;
             return acc;
