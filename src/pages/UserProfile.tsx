@@ -15,7 +15,7 @@ interface Song {
   user_id: string;
   created_at: string;
   theme?: { name: string };
-    theme_id?: string | null;
+  theme_id?: string | null;
   profiles: {
     username: string;
   };
@@ -109,7 +109,7 @@ const UserProfile = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         showUpload={true}
-        onUploadComplete={() => {}}
+        onUploadComplete={() => { }}
         showLoginButton={true}
       />
 

@@ -107,7 +107,7 @@ const Index = () => {
       setFilteredSongs(songs);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = songs.filter(song => 
+      const filtered = songs.filter(song =>
         song.title.toLowerCase().includes(query) ||
         song.profiles.username.toLowerCase().includes(query)
       );
