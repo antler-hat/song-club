@@ -14,6 +14,8 @@ interface Song {
   file_url: string;
   user_id: string;
   created_at: string;
+  theme?: { name: string };
+    theme_id?: string | null;
   profiles: {
     username: string;
   };
@@ -33,6 +35,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [themes, setThemes] = useState<{ id: string; name: string; created_at: string }[]>([]);
 
   useEffect(() => {
     if (!userId) {
@@ -71,7 +74,9 @@ const UserProfile = () => {
           title,
           file_url,
           user_id,
-          created_at
+          created_at,
+          theme_id,
+          theme:themes(name)
         `)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
