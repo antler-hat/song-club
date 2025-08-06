@@ -5,9 +5,13 @@
 }
 .overflowHint {
     position: absolute;
-    bottom: 2rem;
-    left: 0;
-    right: 0;
-    height: 40px;
+    bottom:  var(--spacing-lg);
+    left:  var(--spacing-lg);
+    right:  var(--spacing-lg);
+    height: 20px;
     background: linear-gradient(to top, var(--white) 0%, transparent 100%);
+}
+
+.overflowHint + div {
+    padding-bottom: 20px;
 }

@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/TrackCard";
+import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 import SimpleHeader from "@/components/SimpleHeader";
 import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Song {
   id: string;
@@ -24,11 +26,13 @@ interface UserProfile {
 }
 
 const UserProfile = () => {
+  const { user } = useAuth();
   const { userId } = useParams<{ userId: string }>();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!userId) {
@@ -94,13 +98,21 @@ const UserProfile = () => {
 
   return (
     <div className="pageContainer">
-      {/* Header */}
-      <SimpleHeader title={loading ? "Loading..." : `Songs by @${profile?.username}`} />
+      <Navbar
+        user={user}
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showUpload={true}
+        onUploadComplete={() => {}}
+        showLoginButton={true}
+      />
 
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">
         {loading ? (
           <div className="space-y-4">
+            <h2>Loading...</h2>
             {[1, 2, 3].map((i) => (
               <SkeletonTrackCard key={i} />
             ))}
@@ -108,6 +120,7 @@ const UserProfile = () => {
         ) : (
           <>
             {/* Songs */}
+            <h2>Songs by {profile.username}</h2>
             {songs.length === 0 ? (
               <div className="text-center py-8">
                 <h3 className="text-xl font-bold mb-2">NO SONGS YET</h3>

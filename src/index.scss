@@ -35,6 +35,7 @@ $screen-desktop-min: 769px;
   --font-size-sm: 14px;
   --font-size-xs: 12px;
   --font-size-lg: 18px;
+  --font-size-xl: 24px;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 1px 8px rgba(0, 0, 0, 0.05);
@@ -121,6 +122,11 @@ $screen-desktop-min: 769px;
 @layer base {
   .body {
     font-size: var(--font-size-base);
+  }
+
+  h1, h2, h3 {
+    font-weight: bold;
+    margin-bottom: 1rem;
   }
 
   a {

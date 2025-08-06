@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import SongCard from "@/components/TrackCard";
+import TrackCard from "@/components/TrackCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -109,7 +109,7 @@ const SongDetail = () => {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="mb-4 text-lg font-bold">Song not found</div>
         {/* Back to home button */}
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+        <a href="/" className="underline">
           Back to home
         </a>
       </div>
@@ -128,7 +128,7 @@ const SongDetail = () => {
         showLoginButton={true}
       />
       <main className="max-w-2xl mx-auto p-4">
-        <SongCard song={song} showLyricsExpanded={true} />
+        <TrackCard song={song} showLyricsExpanded={true} />
       </main>
       <AudioPlayer />
     </div>

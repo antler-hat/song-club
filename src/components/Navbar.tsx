@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+                <Link to="/"><h1 className="navbar-title">Song Club</h1></Link>
               </div>
             </div>
             <div className="flex items-center gap-4">

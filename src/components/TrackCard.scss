@@ -71,9 +71,13 @@
         }
     }
 
-    &-themeText {
+    &-themeLink {
         font-size: var(--font-size-xs);
-        font-weight: 600;
-        text-transform: uppercase;
+
+        color: var(--grey-dark);
+    }
+
+    &-songTitle {
+        margin-bottom: 0;
     }
 }
