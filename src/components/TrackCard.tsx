@@ -39,7 +39,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
-const isTouchDevice = useIsMobile();
+  const isTouchDevice = useIsMobile();
 
   const [themeId, setThemeId] = useState<string>(song.theme_id || "");
 
@@ -275,7 +275,7 @@ const isTouchDevice = useIsMobile();
     </Card>
   );
 
-  
+
 };
 const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
   const [open, setOpen] = useState(false);
@@ -290,7 +290,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
         <TooltipContent>View lyrics</TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent  showOverflowHint={true} className="max-w-md">
+        <DialogContent showOverflowHint={true} className="max-w-md">
           <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto">{lyrics}</div>
         </DialogContent>
       </Dialog>

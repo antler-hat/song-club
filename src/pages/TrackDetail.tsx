@@ -124,7 +124,7 @@ const SongDetail = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         showUpload={true}
-        onUploadComplete={() => {}}
+        onUploadComplete={() => { }}
         showLoginButton={true}
       />
       <main className="max-w-2xl mx-auto p-4">
