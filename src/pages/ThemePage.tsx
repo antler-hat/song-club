@@ -118,7 +118,7 @@ const ThemePage = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         showUpload={true}
-        onUploadComplete={() => {}}
+        onUploadComplete={() => { }}
         showLoginButton={true}
       />
       <main className="max-w-2xl mx-auto p-4">
@@ -130,7 +130,7 @@ const ThemePage = () => {
         ) : (
           <div className="space-y-4">
             {songs.map(song => (
-              <SongCard key={song.id} song={song} onSongChanged={() => {}} />
+              <SongCard key={song.id} song={song} onSongChanged={() => { }} />
             ))}
           </div>
         )}
