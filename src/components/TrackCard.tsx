@@ -43,10 +43,9 @@ const isTouchDevice = useIsMobile();
 
   const [themeId, setThemeId] = useState<string>(song.theme_id || "");
 
-  const [comments, setComments] = useState<any[]>([]);
-  const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  // const [comments, setComments] = useState<any[]>([]);
+  // const [loading, setLoading] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(song.title);
   const [editedLyrics, setEditedLyrics] = useState(song.lyrics || "");
