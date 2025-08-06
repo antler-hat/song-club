@@ -56,13 +56,13 @@ const Profile = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
+
       // Add username to each song
       const songsWithProfiles = (data || []).map(song => ({
         ...song,
         profiles: { username: userUsername }
       }));
-      
+
       setSongs(songsWithProfiles);
     } catch (error) {
       console.error('Error fetching songs:', error);
