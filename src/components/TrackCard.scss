@@ -70,4 +70,13 @@
             background: var(--grey-darkest);
         }
     }
+
+    &-footer {
+        margin-top: var(--spacing-base);
+        font-size: var(--font-size-sm);
+    }
+
+    &-themeText {
+        color: var(--grey-base);
+    }
 }

@@ -1,11 +1,10 @@
 .chip {
-    display: flex;
+    display: inline-flex;
     padding: 0.15rem 0.5rem;
     font-size: var(--font-size-xs);
     border-radius: var(--radius);
-    background: var(--yellow-light);
+    background: var(--yellow);
     color: var(--yellow-darkest);
-    border: 1px solid var(--yellow-dark);
     align-items: center;
     justify-content: center;
 }
