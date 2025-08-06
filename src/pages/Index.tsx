@@ -18,7 +18,6 @@ interface Song {
   created_at: string;
   lyrics?: string | null;
   theme_id?: string | null;
-  theme?: { name: string };
   profiles: {
     username: string;
   };
@@ -33,6 +32,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const isMobile = useIsMobile();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [themes, setThemes] = useState<{ id: string; name: string; created_at: string }[]>([]);
+  const [themesLoading, setThemesLoading] = useState(true);
 
   const fetchAllSongs = async () => {
     try {
@@ -46,8 +47,7 @@ const Index = () => {
           user_id,
           created_at,
           lyrics,
-          theme_id,
-          theme:themes(name)
+          theme_id
         `)
         .order('created_at', { ascending: false });
 
@@ -79,8 +79,24 @@ const Index = () => {
     }
   };
 
+  const fetchThemes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('themes')
+        .select('id, name, created_at')
+        .order('name');
+      if (error) throw error;
+      setThemes(data || []);
+    } catch (error) {
+      console.error('Error fetching themes:', error);
+    } finally {
+      setThemesLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchAllSongs();
+    fetchThemes();
   }, []);
 
   // Filter songs based on search query
@@ -120,6 +136,18 @@ const Index = () => {
 
       {/* Content */}
       <main className="max-w-2xl mx-auto p-4">
+        <div className="themeLinks">
+          {themesLoading ? (
+            <p>Loading themes…</p>
+          ) : (
+            themes.map((theme) => (
+              <Link key={theme.id} to={`/theme/${theme.id}`} className="themeLinks-theme">
+                {theme.name}
+              </Link>
+            ))
+          )}
+        </div>
+
         {searchQuery && (
           <div className="mb-4">
             <p className="text-sm text-muted-foreground">

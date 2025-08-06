@@ -152,3 +152,16 @@ $screen-desktop-min: 769px;
     }
   }
 }
+
+// Home page styles
+
+.themeLinks {
+  display: flex;
+  gap: var(--spacing-base);
+  margin-bottom: var(--spacing-lg);
+
+&-theme {
+  font-size: var(--font-size-xs);
+}
+
+}
