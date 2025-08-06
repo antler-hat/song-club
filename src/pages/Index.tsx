@@ -17,6 +17,7 @@ interface Song {
   user_id: string;
   created_at: string;
   lyrics?: string | null;
+  theme?: { name: string };
   theme_id?: string | null;
   profiles: {
     username: string;
@@ -47,7 +48,8 @@ const Index = () => {
           user_id,
           created_at,
           lyrics,
-          theme_id
+          theme_id,
+          theme:themes(name)
         `)
         .order('created_at', { ascending: false });
 
