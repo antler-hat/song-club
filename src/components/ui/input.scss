@@ -2,8 +2,8 @@
 --input-placeholder-color: var(--grey-base);
 }
 
-.input, .textarea {
-  @apply flex h-10 w-full border border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+.input, .textarea, .select {
+  @apply flex h-10 w-full border border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
   padding: .5rem .75rem;
   border-radius: var(--radius);
   background-color: var(--background);
@@ -27,10 +27,32 @@
 }
 
 .textarea {
-  min-height: 80px;
+  min-height: 200px;
+  resize: none;
 }
 
 .label + .input,
- .label + .textarea{
+ .label + .textarea,
+ .label + .select {
     margin-top: var(--spacing-xs);
+}
+
+.select-content {
+  background-color: white;
+}
+
+.select-item {
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+  color: var(--foreground);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--grey-lightest);
+  }
+
+  &[data-disabled] {
+    color: var(--grey-base);
+    cursor: not-allowed;
+  }
 }

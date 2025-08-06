@@ -1,6 +1,17 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import React from "react";
+import { Label } from "@/components/ui/label";
+import { useThemes } from "@/hooks/useThemes";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface EditInfoDialogProps {
   open: boolean;
@@ -14,6 +25,9 @@ interface EditInfoDialogProps {
   onCancel: () => void;
   originalTitle: string;
   originalLyrics: string | null;
+  originalThemeId: string;
+  themeId: string;
+  onThemeChange: (value: string) => void;
 }
 
 const EditInfoDialog: React.FC<EditInfoDialogProps> = ({
@@ -28,49 +42,78 @@ const EditInfoDialog: React.FC<EditInfoDialogProps> = ({
   onCancel,
   originalTitle,
   originalLyrics,
-}) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-md max-h-[80vh]">
-      <DialogHeader>
-        <DialogTitle className="font-bold text-base">Edit Info</DialogTitle>
-      </DialogHeader>
-      <input
-        type="text"
-        className="w-full px-3 py-2 rounded mb-4"
-        value={editedTitle}
-        onChange={onTitleChange}
-        autoFocus
-      />
-      <textarea
-        placeholder="Lyrics (optional)"
-        className="w-full p-2 rounded placeholder:text-muted-foreground text-sm bg-background resize-y h-80"
-        rows={2}
-        value={editedLyrics}
-        onChange={onLyricsChange}
-      />
-      <div className="flex justify-end gap-2 mt-2">
-        <Button
-          variant="outline"
-          onClick={onCancel}
-          className=""
-          disabled={saving}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={onSave}
-          disabled={
-            !editedTitle.trim() ||
-            (editedTitle === originalTitle && editedLyrics === (originalLyrics || "")) ||
-            saving
-          }
-          className=""
-        >
-          {saving ? "Saving..." : "Save"}
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+  originalThemeId,
+  themeId,
+  onThemeChange,
+}) => {
+  const themes = useThemes();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg max-h-[80vh]">
+        <DialogHeader>
+          <DialogTitle className="font-bold text-base">Edit Info</DialogTitle>
+        </DialogHeader>
+        <div className="input-group">
+          <Label htmlFor="title">Title*</Label>
+          <Input
+            id="title"
+            type="text"
+            value={editedTitle}
+            onChange={onTitleChange}
+            autoFocus
+          />
+        </div>
+        <div className="input-group">
+          <Label htmlFor="theme">Theme*</Label>
+          <Select value={themeId} onValueChange={onThemeChange}>
+            <SelectTrigger id="theme" className="w-full">
+              <SelectValue placeholder="Select theme" />
+            </SelectTrigger>
+            <SelectContent>
+              {themes.map((theme) => (
+                <SelectItem key={theme.id} value={theme.id}>
+                  {theme.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="input-group">
+          <Label htmlFor="lyrics">Lyrics (Optional)</Label>
+          <Textarea
+            id="lyrics"
+            className="w-full"
+            rows={6}
+            value={editedLyrics}
+            onChange={onLyricsChange}
+          />
+        </div>
+        <div className="flex justify-end gap-2 mt-2">
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            disabled={saving}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={onSave}
+            disabled={
+              !editedTitle.trim() ||
+              (
+                editedTitle === originalTitle &&
+                editedLyrics === (originalLyrics || "") &&
+                themeId === originalThemeId
+              ) ||
+              saving
+            }
+          >
+            {saving ? "Saving..." : "Save"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default EditInfoDialog;

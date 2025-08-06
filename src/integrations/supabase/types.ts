@@ -89,7 +89,7 @@ export type Database = {
         }
         Relationships: []
       }
-      tracks: {
+      songs: {
         Row: {
           created_at: string
           duration: number | null
@@ -99,7 +99,8 @@ export type Database = {
           lyrics: string | null
           title: string
           updated_at: string
-          user_id: string
+          user_id: string | null
+          theme_id: string | null
         }
         Insert: {
           created_at?: string
@@ -110,7 +111,8 @@ export type Database = {
           lyrics?: string | null
           title: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
+          theme_id?: string | null
         }
         Update: {
           created_at?: string
@@ -121,43 +123,26 @@ export type Database = {
           lyrics?: string | null
           title?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
+          theme_id?: string | null
         }
         Relationships: []
       }
-      songs: {
+      themes: {
         Row: {
           id: string
-          user_id: string | null
-          title: string
-          file_url: string
-          file_size: number | null
-          duration: number | null
+          name: string
           created_at: string
-          updated_at: string
-          lyrics: string | null
         }
         Insert: {
           id?: string
-          user_id?: string | null
-          title: string
-          file_url: string
-          file_size?: number | null
-          duration?: number | null
+          name: string
           created_at?: string
-          updated_at?: string
-          lyrics?: string | null
         }
         Update: {
           id?: string
-          user_id?: string | null
-          title?: string
-          file_url?: string
-          file_size?: number | null
-          duration?: number | null
+          name?: string
           created_at?: string
-          updated_at?: string
-          lyrics?: string | null
         }
         Relationships: []
       }
@@ -272,7 +257,7 @@ export type Enums<
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never

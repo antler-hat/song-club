@@ -17,6 +17,8 @@ interface Song {
   user_id: string;
   created_at: string;
   lyrics?: string | null;
+  theme_id?: string | null;
+  theme?: { name: string };
   profiles: {
     username: string;
   };
@@ -43,7 +45,9 @@ const Index = () => {
           file_url,
           user_id,
           created_at,
-          lyrics
+          lyrics,
+          theme_id,
+          theme:themes(name)
         `)
         .order('created_at', { ascending: false });
 

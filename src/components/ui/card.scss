@@ -3,10 +3,13 @@
     background: var(--white);
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
+}
+
+.card-content {
     padding: var(--spacing-base);
 }
 
-.cardFooter {
+.card-footer {
     display: flex;
     align-items: center;
     padding: var(--spacing-base);
