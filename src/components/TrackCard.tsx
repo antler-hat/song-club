@@ -135,30 +135,31 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   };
 
   return (
-    <Card className="trackCard">
-      <CardContent>
-        <div className="trackCard-mainContent">
-          <Button onClick={handlePlayPause} className="playpause-button">
+    <div className="trackCard">
+      <div>
+        <div className="trackCard-mainContent" onClick={handlePlayPause} >
+          <Button onClick={handlePlayPause}
+            className="playpause-button"
+          >
             {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
           </Button>
-          <div className="flex-1">
-
-            <Link to={`/theme/${song.theme_id}`} className="trackCard-themeLink">
-              {song.theme?.name || "No theme"}
-            </Link>
-            <h3 className="trackCard-songTitle">
-              <Link to={`/track/${song.id}`} className="hover:underline">{song.title}</Link>
-            </h3>
-            <Link to={`/user/${song.user_id}`} className="hover:underline">{song.profiles.username}</Link>
-            {song.lyrics && showLyricsExpanded && (
-              <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-            )}
+          <h3 className="trackCard-songTitle">
+            <Link to={`/track/${song.id}`}>{song.title}</Link>
+          </h3>
+          <div className="trackCard-username">
+            <Link to={`/user/${song.user_id}`}>{song.profiles.username}</Link>
           </div>
+          <div className="trackCard-theme">
+            <Link to={`/theme/${song.theme_id}`} className="trackCard-themeLink">{song.theme?.name || "No theme"}</Link>
+          </div>
+          {/* {song.lyrics && showLyricsExpanded && (
+              <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
+            )} */}
+          {/* Ellipses menu for own track */}
+          {/* Song lyrics button */}
+          {song.lyrics && !showLyricsExpanded &&
+            (<LyricsModalButton lyrics={song.lyrics} />)}
           <div className="trackCard-actions">
-            {/* Ellipses menu for own track */}
-            {/* Song lyrics button */}
-            {song.lyrics && !showLyricsExpanded &&
-              (<LyricsModalButton lyrics={song.lyrics} />)}
             {isOwnSong && (
               <div>
                 <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -172,7 +173,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                       : undefined)}
                   >
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="icon"
                       className="h-8 w-8 p-0"
                       aria-label="Track options">
@@ -271,8 +272,8 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div >
   );
 
 
@@ -283,7 +284,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
     <>
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
-          <Button className="h-8 w-8 p-0" variant="outline" size="icon" onClick={() => setOpen(true)}>
+          <Button className="h-8 w-8 p-0" variant="ghost" size="icon" onClick={() => setOpen(true)}>
             <NotebookText size={20} />
           </Button>
         </TooltipTrigger>

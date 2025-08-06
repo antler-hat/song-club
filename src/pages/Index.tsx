@@ -137,7 +137,7 @@ const Index = () => {
       />
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="max-w-4xl mx-auto p-4">
         <div className="themeLinks">
           {themesLoading ? (
             <p>Loading themes…</p>
@@ -179,7 +179,16 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
+            <div className="trackCard">
+              <div className="trackCard-mainContent">
+                <div></div>
+                <span className="text-xs font-bold">Title</span>
+                <span className="text-xs font-bold">Artist</span>
+                <span className="text-xs font-bold">Theme</span>
+                <span className="text-xs font-bold">Lyrics</span>
+              </div>
+            </div>
             {filteredSongs.map((song) => (
               <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
             ))}

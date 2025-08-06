@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 
-$screen-mobile-max: 640px;
-$screen-tablet-min: 641px;
-$screen-tablet-max: 768px;
-$screen-desktop-min: 769px;
+@import 'globals.scss'
 
 /* My colors */
 @layer base {
