@@ -291,7 +291,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
         <TooltipContent>View lyrics</TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent  showOverflowHint={true} className="max-w-md">
           <div className="whitespace-pre-line text-sm max-h-80 overflow-y-auto">{lyrics}</div>
         </DialogContent>
       </Dialog>

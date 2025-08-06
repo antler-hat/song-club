@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import SongCard from "@/components/TrackCard";
+import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 
 interface Theme {
@@ -24,11 +26,13 @@ interface Song {
 }
 
 const ThemePage = () => {
+  const { user } = useAuth();
   const { themeId } = useParams<{ themeId: string }>();
   const [theme, setTheme] = useState<Theme | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -108,8 +112,17 @@ const ThemePage = () => {
 
   return (
     <div className="pageContainer">
+      <Navbar
+        user={user}
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showUpload={true}
+        onUploadComplete={() => {}}
+        showLoginButton={true}
+      />
       <main className="max-w-2xl mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4">{theme.name}</h2>
+        <h2>{theme.name} songs</h2>
         {songs.length === 0 ? (
           <div className="text-center py-8">
             <h3 className="text-xl font-bold mb-2">No songs for this theme</h3>
