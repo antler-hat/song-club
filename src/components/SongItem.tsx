@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import './TrackCard.scss';
+import './SongItem.scss';
 import { Play, Pause, MoreHorizontal, NotebookText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -135,35 +135,40 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   };
 
   return (
-    <Card className="trackCard">
-      <CardContent>
-        <div className="trackCard-mainContent">
-          <Button onClick={handlePlayPause} className="playpause-button">
-            {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
-          </Button>
-          <div className="flex-1">
-
-            <Link to={`/theme/${song.theme_id}`} className="trackCard-themeLink">
-              {song.theme?.name || "No theme"}
-            </Link>
-            <h3 className="trackCard-songTitle">
-              <Link to={`/track/${song.id}`} className="hover:underline">{song.title}</Link>
-            </h3>
-            <Link to={`/user/${song.user_id}`} className="hover:underline">{song.profiles.username}</Link>
-            {song.lyrics && showLyricsExpanded && (
-              <div className="whitespace-pre-line text-sm mt-4 mb-4">{song.lyrics}</div>
-            )}
+    <div className="songItem">
+      <div>
+        <div className="songItem-mainContent" >
+          <div className="songItem-playpause">
+            <Button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
+              className="playpause-button"
+            >
+              {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
+            </Button>
           </div>
-          <div className="trackCard-actions">
-            {/* Ellipses menu for own track */}
-            {/* Song lyrics button */}
-            {song.lyrics && !showLyricsExpanded &&
-              (<LyricsModalButton lyrics={song.lyrics} />)}
+          <div className="songItem-mainDetails">
+            <h3 className="songItem-songTitle">
+              <Link to={`/track/${song.id}`} onClick={e => e.stopPropagation()}>{song.title}</Link>
+            </h3>
+            <div className="songItem-username">
+              <Link to={`/user/${song.user_id}`} onClick={e => e.stopPropagation()}>{song.profiles.username}</Link>
+            </div>
+            <div className="songItem-theme">
+              <Link to={`/theme/${song.theme_id}`} className="songItem-themeLink" onClick={e => e.stopPropagation()}>{song.theme?.name || "No theme"}</Link>
+            </div>
+          </div>
+
+          {/* Ellipses menu for own track */}
+          <div className="songItem-actions">
+            <div>
+              {/* Song lyrics button */}
+              {song.lyrics && !showLyricsExpanded &&
+                (<LyricsModalButton lyrics={song.lyrics} />)}
+            </div>
             {isOwnSong && (
               <div>
                 <DropdownMenu open={open} onOpenChange={setOpen}>
                   <DropdownMenuTrigger
-                    asChild
+                    asChild onClick={e => e.stopPropagation()}
                     {...(isTouchDevice
                       ? {
                         onPointerDown: (e) => e.preventDefault(),
@@ -172,7 +177,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
                       : undefined)}
                   >
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="icon"
                       className="h-8 w-8 p-0"
                       aria-label="Track options">
@@ -271,8 +276,8 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div >
   );
 
 
@@ -283,7 +288,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
     <>
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
-          <Button className="h-8 w-8 p-0" variant="outline" size="icon" onClick={() => setOpen(true)}>
+          <Button className="h-8 w-8 p-0" variant="ghost" size="icon" onClick={e => { e.stopPropagation(); setOpen(true); }}>
             <NotebookText size={20} />
           </Button>
         </TooltipTrigger>

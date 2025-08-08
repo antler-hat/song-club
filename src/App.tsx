@@ -10,7 +10,7 @@ import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
-import TrackDetail from "./pages/TrackDetail";
+import TrackDetail from "./pages/SongDetail";
 
 import ThemePage from "./pages/ThemePage";
 

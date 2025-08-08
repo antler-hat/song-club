@@ -137,7 +137,7 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
           <DialogTitle className="font-bold">Upload</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleUpload} className="space-y-4">
+        <form onSubmit={handleUpload}>
           <div>
             <Label htmlFor="title">Title*</Label>
             <Input

@@ -43,8 +43,8 @@ const Navbar: React.FC<NavbarProps> = ({
   const setEffectiveMobileSearchOpen = setMobileSearchOpen || setMobileSearchOpenInternal;
 
   return (
-    <header className="p-4 pb-6 border-b-brutalist">
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+    <header className="">
+      <div className="p-4 pb-6 max-w-4xl mx-auto flex items-center justify-between gap-4">
         {isMobile && showSearch && effectiveMobileSearchOpen ? (
           <div className="flex-1">
             <SearchBar

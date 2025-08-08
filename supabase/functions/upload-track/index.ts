@@ -47,7 +47,7 @@ serve(async (req) => {
     // Server-side file validation
     const maxSize = 50 * 1024 * 1024 // 50MB
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/m4a']
-    
+
     if (file.size > maxSize) {
       return new Response(
         JSON.stringify({ error: 'File size exceeds 50MB limit' }),

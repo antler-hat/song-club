@@ -1,5 +1,27 @@
 .button {
   border-radius: var(--radius);
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &-sm {
+    font-size: var(--font-size-sm);
+    height: 2.25rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  &-xs {
+    font-size: var(--font-size-xs);
+    height: 1.75rem;
+    padding: 0.125rem 0.5rem;
+  }
+
 }
 
 .button-default {
@@ -8,7 +30,7 @@
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   border: none;
-  
+
   &:hover {
     background-color: var(--primary-light);
   }
@@ -26,6 +48,13 @@
   color: var(--grey-dark);
   padding: 8px 16px;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--grey-lightest);
+  }
+}
+
+.button-ghost {
 
   &:hover {
     background-color: var(--grey-lightest);

@@ -1,11 +1,13 @@
 .dropdownMenu-trigger {
-    &:focus {
-        outline: none;
-    }
+  &:focus {
+    outline: none;
+  }
 }
 
 .dropdownMenu-content {
-    background: var(--white) !important;
+  background: var(--white) !important;
+  border-radius: var(--radius);
+  border: 1px solid var(--grey-lighter);
 }
 
 .dropdownMenu-item {
@@ -23,7 +25,7 @@
   }
 
   &:hover {
-  outline: 0;
+    outline: 0;
     background-color: var(--grey-lightest);
   }
 }

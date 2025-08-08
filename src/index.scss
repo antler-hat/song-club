@@ -1,12 +1,10 @@
+@use 'globals.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-$screen-mobile-max: 640px;
-$screen-tablet-min: 641px;
-$screen-tablet-max: 768px;
-$screen-desktop-min: 769px;
 
 /* My colors */
 @layer base {
@@ -16,6 +14,7 @@ $screen-desktop-min: 769px;
     --grey-dark: hsl(0, 0%, 35%);
     --grey-base: hsl(0, 0%, 50%);
     --grey-light: hsl(0, 0%, 60%);
+    --grey-lighter: hsl(0, 0%, 80%);
     --grey-lightest: hsl(0, 0%, 95%);
     --white: hsl(0, 0%, 100%);
 
@@ -24,6 +23,7 @@ $screen-desktop-min: 769px;
     --yellow-darkest: #655A17;
     --yellow-light: #FFF5B7;
 
+    --spacing-xxs: 2px;
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-base: 16px;
@@ -119,45 +119,49 @@ $screen-desktop-min: 769px;
   }
 }
 
-@layer base {
-  .body {
-    font-size: var(--font-size-base);
+// Global styles
+.body {
+  font-size: var(--font-size-base);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+a {
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    text-decoration: underline;
   }
+}
 
-  h1,
-  h2,
-  h3 {
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
+.border {
+  border-color: var(--border);
+}
 
-  a {
+.bg-background {
+  background-color: var(--background);
+}
 
-    &:hover,
-    &:focus,
-    &:focus-visible {
-      text-decoration: underline;
-    }
-  }
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--background);
+}
 
-  .border {
-    border-color: var(--border);
-  }
+.container {
+  max-width: 900px;
+  padding: var(--spacing-base);
+  padding-bottom: 6rem;
+  margin-left: auto;
+  margin-right: auto;
 
-  .bg-background {
-    background-color: var(--background);
-  }
-
-  .pageContainer {
-    min-height: 100vh;
-    background-color: var(--background);
-    padding-bottom: 5rem;
-    /* Adjust as needed for footer */
-
-    @media screen and (max-width: $screen-mobile-max) {
-      padding-bottom: 9rem;
-      /* Adjust for smaller screens */
-    }
+  @media screen and (max-width: globals.$screen-mobile-max) {
+    padding-bottom: 9rem;
   }
 }
 
@@ -165,11 +169,18 @@ $screen-desktop-min: 769px;
 
 .themeLinks {
   display: flex;
-  gap: var(--spacing-base);
+  gap: var(--spacing-xs);
   margin-bottom: var(--spacing-lg);
 
   &-theme {
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    border-radius: var(--radius);
     font-size: var(--font-size-xs);
+
+    &:hover {
+      background: var(--grey-lightest);
+      text-decoration: none;
+    }
   }
 
 }

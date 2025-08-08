@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import SongCard from "@/components/TrackCard";
+import SongCard from "@/components/SongItem";
 import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 import SimpleHeader from "@/components/SimpleHeader";
-import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
+import SkeletonTrackCard from "@/components/SongItemSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 
 interface Song {
@@ -14,8 +14,9 @@ interface Song {
   file_url: string;
   user_id: string;
   created_at: string;
-  theme?: { name: string };
+  lyrics?: string | null;
   theme_id?: string | null;
+  theme?: { name: string };
   profiles: {
     username: string;
   };
@@ -43,19 +44,16 @@ const UserProfile = () => {
       setLoading(false);
       return;
     }
-
     fetchUserProfile();
   }, [userId]);
 
   const fetchUserProfile = async () => {
     if (!userId) return;
-
     try {
-      // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
         .single();
 
       if (profileError || !profileData) {
@@ -63,34 +61,41 @@ const UserProfile = () => {
         setLoading(false);
         return;
       }
-
       setProfile(profileData);
 
-      // Fetch user songs
       const { data: songsData, error: songsError } = await supabase
-        .from('songs')
+        .from("songs")
         .select(`
           id,
           title,
           file_url,
           user_id,
           created_at,
+          lyrics,
           theme_id,
           theme:themes(name)
         `)
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
       if (songsError) throw songsError;
 
-      const songsWithProfiles = songsData?.map(song => ({
-        ...song,
-        profiles: { username: profileData.username }
-      })) || [];
+      const songsWithProfiles = (songsData || []).map((song) => {
+        const rawTheme = (song as any).theme;
+        let themeObj: { name: string } | undefined;
+        if (rawTheme && typeof rawTheme === "object" && "name" in rawTheme) {
+          themeObj = rawTheme as { name: string };
+        }
+        return {
+          ...song,
+          theme: themeObj,
+          profiles: { username: profileData.username },
+        };
+      });
 
       setSongs(songsWithProfiles);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error("Error fetching user profile:", error);
       setNotFound(true);
     } finally {
       setLoading(false);
@@ -113,10 +118,9 @@ const UserProfile = () => {
         showLoginButton={true}
       />
 
-      {/* Content */}
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="container">
         {loading ? (
-          <div className="space-y-4">
+          <div>
             <h2>Loading...</h2>
             {[1, 2, 3].map((i) => (
               <SkeletonTrackCard key={i} />
@@ -124,15 +128,16 @@ const UserProfile = () => {
           </div>
         ) : (
           <>
-            {/* Songs */}
-            <h2>Songs by {profile.username}</h2>
+            <h2>Songs by {profile?.username}</h2>
             {songs.length === 0 ? (
               <div className="text-center py-8">
                 <h3 className="text-xl font-bold mb-2">NO SONGS YET</h3>
-                <p className="text-muted-foreground">This user hasn't shared any songs yet.</p>
+                <p className="text-muted-foreground">
+                  This user hasn't shared any songs yet.
+                </p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div>
                 {songs.map((song) => (
                   <SongCard key={song.id} song={song} />
                 ))}

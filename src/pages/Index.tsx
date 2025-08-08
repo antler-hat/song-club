@@ -3,12 +3,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import SongCard from "@/components/TrackCard";
+import SongCard from "@/components/SongItem";
 import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
 import UploadModal from "@/components/UploadModal";
 import { Button } from "@/components/ui/button";
-import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import SkeletonTrackCard from "@/components/SongItemSkeleton";
 
 interface Song {
   id: string;
@@ -137,58 +138,75 @@ const Index = () => {
       />
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="container">
         <div className="themeLinks">
           {themesLoading ? (
-            <p>Loading themes…</p>
+            <div className="flex gap-4">
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+            </div>
           ) : (
             themes.map((theme) => (
-              <Link key={theme.id} to={`/theme/${theme.id}`} className="themeLinks-theme">
+              <Link key={theme.id} to={`/theme/${theme.id}`} className="button button-ghost button-xs">
                 {theme.name}
               </Link>
             ))
           )}
         </div>
 
-        {searchQuery && (
-          <div className="mb-4">
-            <p className="text-sm text-muted-foreground">
-              {filteredSongs.length} result{filteredSongs.length !== 1 ? 's' : ''} for "{searchQuery}"
-            </p>
-          </div>
-        )}
-        {loading ? (
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <SkeletonTrackCard key={i} />
-            ))}
-          </div>
-        ) : filteredSongs.length === 0 ? (
-          <div className="py-8">
-            <p className="mb-2">
-              {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
-            </p>
-            {!searchQuery && (user ? (
-              <UploadModal onUploadComplete={fetchAllSongs} />
-            ) : (
-              <Link to="/auth">
-                <Button className="">
-                  Get started
-                </Button>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredSongs.map((song) => (
-              <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
-            ))}
-          </div>
-        )}
-      </main>
+        {
+          searchQuery && (
+            <div className="mb-4">
+              <p className="text-sm text-muted-foreground">
+                {filteredSongs.length} result{filteredSongs.length !== 1 ? 's' : ''} for "{searchQuery}"
+              </p>
+            </div>
+          )
+        }
+        {
+          loading ? (
+            <div className="pt-10">
+              {[1, 2, 3].map((i) => (
+                <SkeletonTrackCard key={i} />
+              ))}
+            </div>
+          ) : filteredSongs.length === 0 ? (
+            <div className="py-8">
+              <p className="mb-2">
+                {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
+              </p>
+              {!searchQuery && (user ? (
+                <UploadModal onUploadComplete={fetchAllSongs} />
+              ) : (
+                <Link to="/auth">
+                  <Button className="">
+                    Get started
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <div className="songItem-tableHeader">
+
+                <span className="text-xs font-bold">Title</span>
+                <span className="text-xs font-bold">Artist</span>
+                <span className="text-xs font-bold">Theme</span>
+                <span className="text-xs font-bold">Lyrics</span>
+              </div>
+              {filteredSongs.map((song) => (
+                <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
+              ))}
+            </div>
+          )
+        }
+      </main >
 
       <AudioPlayer />
-    </div>
+    </div >
   );
 };
 
