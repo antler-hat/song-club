@@ -171,6 +171,7 @@ a {
   display: flex;
   gap: var(--spacing-xs);
   margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
 
   &-theme {
     padding: var(--spacing-xxs) var(--spacing-sm);
