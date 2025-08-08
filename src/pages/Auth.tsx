@@ -117,16 +117,16 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center flex-col bg-background p-4">
       <div className="mb-4 sm:mb-20">
-          <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
+        <Link to="/"><h1 className="text-2xl font-bold">Song Club</h1></Link>
       </div>
-      <Card className="w-full max-w-md  p-8 pt-0">
+      <Card className="w-full max-w-md  p-8">
         <CardHeader>
           <CardTitle className="text-center text-lg font-bold">
             {isRecovery
               ? "Set New Password"
               : isSignUp
-              ? "Sign up"
-              : "Log in"}
+                ? "Sign up"
+                : "Log in"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -135,7 +135,7 @@ const Auth = () => {
               <div className="text-center">
                 <p className="mb-4">Your password has been reset.</p>
                 <Link to="/">
-                  <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold w-full">
+                  <Button>
                     Go to Home
                   </Button>
                 </Link>
@@ -186,14 +186,15 @@ const Auth = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full  bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                variant="default"
+                className="w-full"
               >
                 {loading ? "..." : "Send reset email"}
               </Button>
             </form>
           ) : (
             <>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 mb-8">
                 <div>
                   <Input
                     type="email"
@@ -204,7 +205,7 @@ const Auth = () => {
                     className="placeholder:text-muted-foreground"
                   />
                 </div>
-                
+
                 {isSignUp && (
                   <div>
                     <Input
@@ -217,7 +218,7 @@ const Auth = () => {
                     />
                   </div>
                 )}
-                
+
                 <div>
                   <Input
                     type="password"
@@ -228,11 +229,12 @@ const Auth = () => {
                     className="placeholder:text-muted-foreground"
                   />
                 </div>
-                
+
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full  bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                  variant="default"
+                  className="w-full"
                 >
                   {loading ? "..." : (isSignUp ? "Sign up" : "Log in")}
                 </Button>
@@ -266,7 +268,7 @@ const Auth = () => {
                   onClick={() => setIsSignUp(!isSignUp)}
                   className="text-sm underline"
                 >
-                  {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up?"}
+                  {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up"}
                 </button>
               )}
             </div>
