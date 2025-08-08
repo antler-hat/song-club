@@ -55,6 +55,7 @@ $button-size: 40px;
         border-bottom: 1px solid var(--grey-lightest);
         position: relative;
         font-size: var(--font-size-sm);
+        gap: var(--spacing-base);
 
         &>span:first-child {
             grid-column-start: 2;
