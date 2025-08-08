@@ -39,7 +39,7 @@ const AudioPlayer = () => {
             <div className="flex flex-col min-w-0">
               <h4 className="text-sm font-bold truncate">{currentTrack.title}</h4>
               <p className="text-sm truncate">
-                @{currentTrack.username}
+                {currentTrack.username}
               </p>
             </div>
           </div>

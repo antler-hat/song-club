@@ -137,7 +137,7 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   return (
     <div className="songItem">
       <div>
-        <div className="songItem-mainContent" onClick={handlePlayPause} >
+        <div className="songItem-mainContent" >
           <div className="songItem-playpause">
             <Button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
               className="playpause-button"

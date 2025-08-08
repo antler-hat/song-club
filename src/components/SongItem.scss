@@ -8,11 +8,6 @@ $button-size: 40px;
     position: relative;
     font-size: var(--font-size-sm);
 
-    &:hover {
-        background: rgba($color: #000000, $alpha: 0.03);
-        cursor: pointer;
-    }
-
     &:hover button.playpause-button {
         outline: 2px solid var(--black);
         outline-offset: 2px;
@@ -115,6 +110,7 @@ $button-size: 40px;
         grid-template-columns: $button-size 2fr 1fr 1fr 150px;
         align-items: center;
         padding: var(--spacing-base);
+        border-bottom: 1px solid var(--grey-lightest);
     }
 
     // &-commentsContainer {
