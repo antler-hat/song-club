@@ -14,6 +14,7 @@
     --grey-dark: hsl(0, 0%, 35%);
     --grey-base: hsl(0, 0%, 50%);
     --grey-light: hsl(0, 0%, 60%);
+    --grey-lighter: hsl(0, 0%, 80%);
     --grey-lightest: hsl(0, 0%, 95%);
     --white: hsl(0, 0%, 100%);
 
@@ -165,6 +166,7 @@
 .container {
   max-width: 900px;
   padding: var(--spacing-base);
+  padding-bottom: 96px;
   margin-left: auto;
   margin-right: auto;
 }

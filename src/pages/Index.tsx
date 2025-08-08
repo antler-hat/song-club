@@ -150,59 +150,63 @@ const Index = () => {
             </div>
           ) : (
             themes.map((theme) => (
-              <Link key={theme.id} to={`/theme/${theme.id}`} className="themeLinks-theme">
+              <Link key={theme.id} to={`/theme/${theme.id}`} className="button button-ghost button-xs">
                 {theme.name}
               </Link>
             ))
           )}
         </div>
 
-        {searchQuery && (
-          <div className="mb-4">
-            <p className="text-sm text-muted-foreground">
-              {filteredSongs.length} result{filteredSongs.length !== 1 ? 's' : ''} for "{searchQuery}"
-            </p>
-          </div>
-        )}
-        {loading ? (
-          <div className="pt-10">
-            {[1, 2, 3].map((i) => (
-              <SkeletonTrackCard key={i} />
-            ))}
-          </div>
-        ) : filteredSongs.length === 0 ? (
-          <div className="py-8">
-            <p className="mb-2">
-              {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
-            </p>
-            {!searchQuery && (user ? (
-              <UploadModal onUploadComplete={fetchAllSongs} />
-            ) : (
-              <Link to="/auth">
-                <Button className="">
-                  Get started
-                </Button>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div>
-            <div className="songItem-tableHeader">
-
-              <span className="text-xs font-bold">Title</span>
-              <span className="text-xs font-bold">Artist</span>
-              <span className="text-xs font-bold">Theme</span>
-              <span className="text-xs font-bold">Lyrics</span>
+        {
+          searchQuery && (
+            <div className="mb-4">
+              <p className="text-sm text-muted-foreground">
+                {filteredSongs.length} result{filteredSongs.length !== 1 ? 's' : ''} for "{searchQuery}"
+              </p>
             </div>
-            {filteredSongs.map((song) => (
-              <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
-            ))}
-          </div>
-        )}
-      </main>
+          )
+        }
+        {
+          loading ? (
+            <div className="pt-10">
+              {[1, 2, 3].map((i) => (
+                <SkeletonTrackCard key={i} />
+              ))}
+            </div>
+          ) : filteredSongs.length === 0 ? (
+            <div className="py-8">
+              <p className="mb-2">
+                {searchQuery ? `Nothing found for "${searchQuery}"` : "Nothing yet"}
+              </p>
+              {!searchQuery && (user ? (
+                <UploadModal onUploadComplete={fetchAllSongs} />
+              ) : (
+                <Link to="/auth">
+                  <Button className="">
+                    Get started
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <div className="songItem-tableHeader">
+
+                <span className="text-xs font-bold">Title</span>
+                <span className="text-xs font-bold">Artist</span>
+                <span className="text-xs font-bold">Theme</span>
+                <span className="text-xs font-bold">Lyrics</span>
+              </div>
+              {filteredSongs.map((song) => (
+                <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
+              ))}
+            </div>
+          )
+        }
+      </main >
 
       <AudioPlayer />
-    </div>
+    </div >
   );
 };
 

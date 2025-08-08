@@ -77,11 +77,20 @@ $button-size: 40px;
         display: inline;
     }
 
-    &-themeLink {
-        font-size: var(--font-size-sm);
+    &-theme {
+        @media screen and (max-width: globals.$screen-mobile-max) {
+            margin-top: var(--spacing-xs);
+        }
     }
 
-    &-theme {}
+    &-themeLink {
+        font-size: var(--font-size-sm);
+
+        @media screen and (max-width: globals.$screen-mobile-max) {
+            color: var(--grey-base);
+            font-size: var(--font-size-xs);
+        }
+    }
 
     &-lyricsButton {
         display: flex;
@@ -94,6 +103,7 @@ $button-size: 40px;
         display: grid;
         grid-template-columns: 1fr 50px;
         gap: var(--spacing-base);
+        align-items: center;
         justify-content: end;
 
         @media screen and (max-width: globals.$screen-mobile-max) {

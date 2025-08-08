@@ -50,8 +50,11 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resumeTrack = () => {
-    setIsLoading(true);
     if (audioRef.current) {
+      // Only set loading if audio is not ready to play
+      if (audioRef.current.readyState < 3) { // HAVE_FUTURE_DATA
+        setIsLoading(true);
+      }
       audioRef.current.play();
       setIsPlaying(true);
     }
@@ -66,17 +69,17 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-      <AudioContext.Provider value={{
-        currentTrack,
-        isPlaying,
-        isLoading,
-        currentTime,
-        duration,
-        playTrack,
-        pauseTrack,
-        resumeTrack,
-        seekTo
-      }}>
+    <AudioContext.Provider value={{
+      currentTrack,
+      isPlaying,
+      isLoading,
+      currentTime,
+      duration,
+      playTrack,
+      pauseTrack,
+      resumeTrack,
+      seekTo
+    }}>
       {children}
       <audio
         ref={audioRef}

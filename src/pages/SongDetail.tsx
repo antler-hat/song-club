@@ -1,11 +1,23 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import SongItem from "@/components/SongItem";
+
+import { useEffect, useState, useRef } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
 import './SongDetail.scss';
+import { Pause, Play, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import EditInfoDialog from "@/components/EditInfoDialog";
+import DeleteSongDialog from "@/components/DeleteSongDialog";
+import { useToast } from "@/hooks/use-toast";
+import { useAudio } from "@/hooks/useAudio";
 
 interface Song {
   id: string;
@@ -24,17 +36,89 @@ interface Song {
 const SongDetail = () => {
   const { user } = useAuth();
   const { trackId } = useParams<{ trackId: string }>();
+  const { toast } = useToast();
+  const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
+
   const [song, setSong] = useState<Song | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedLyrics, setEditedLyrics] = useState("");
+  const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
+  const [savingTitle, setSavingTitle] = useState(false);
+  const [themeId, setThemeId] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [replacing, setReplacing] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Determine if current user owns the song
+  const isOwnSong = user?.id === song?.user_id;
+
+  useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  const handlePlayPause = () => {
+    if (!song) return;
+    if (currentTrack?.id === song.id) {
+      if (isPlaying) {
+        pauseTrack();
+      } else {
+        resumeTrack();
+      }
+    } else {
+      playTrack({
+        id: song.id,
+        title: song.title,
+        file_url: song.file_url,
+        user_id: song.user_id,
+        username: song.profiles.username,
+      });
+    }
+  };
+
+  const handleReplaceAudioClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleReplaceAudioFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    setReplacing(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast({ title: "Audio replaced", description: "Audio file updated." });
+    } catch {
+      toast({ title: "Error", description: "Failed to replace audio", variant: "destructive" });
+    } finally {
+      setReplacing(false);
+    }
+  };
+
+  const handleDeleteTrack = async () => {
+    setDeleting(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast({ title: "Deleted", description: "Song has been deleted." });
+      setDeleteDialogOpen(false);
+    } catch {
+      toast({ title: "Error", description: "Failed to delete song", variant: "destructive" });
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSong = async () => {
       setLoading(true);
       setNotFound(false);
       try {
-        // Fetch song
         const { data: songData, error: songError } = await supabase
           .from("songs")
           .select(`
@@ -56,14 +140,12 @@ const SongDetail = () => {
           return;
         }
 
-        // Fetch profile
         const { data: profileData } = await supabase
           .from("profiles")
           .select("user_id, username")
           .eq("user_id", songData.user_id)
           .single();
 
-        // Extract only the { name } shape from theme, ignore null or error shapes
         const rawTheme = songData.theme as unknown;
         let themeObj: { name: string } | undefined;
         if (rawTheme !== null && typeof rawTheme === "object" && "name" in rawTheme) {
@@ -123,7 +205,6 @@ const SongDetail = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="mb-4 text-lg font-bold">Song not found</div>
-        {/* Back to home button */}
         <a href="/" className="underline">
           Back to home
         </a>
@@ -132,7 +213,7 @@ const SongDetail = () => {
   }
 
   return (
-    <div className="pageContainer">
+    <>
       <Navbar
         user={user}
         showSearch={true}
@@ -143,14 +224,143 @@ const SongDetail = () => {
         showLoginButton={true}
       />
       <main className="container">
-        <SongItem song={song} showLyricsExpanded={true} />
-        {song.lyrics && (
-          <div className="songDetail-lyrics">{song.lyrics}</div>
-        )}
+        <div className="songDetail">
+          <div className="songDetail-playpause">
+            <Button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
+              className="playpause-button"
+            >
+              {currentTrack?.id === song.id && isPlaying ? <Pause size={32} /> : <Play size={32} />}
+            </Button>
+          </div>
+          <div className="songDetail-mainDetails">
+            <h3 className="songDetail-songTitle">
+              <Link to={`/track/${song.id}`} onClick={e => e.stopPropagation()}>{song.title}</Link>
+            </h3>
+            <div className="songDetail-username">
+              <Link to={`/user/${song.user_id}`} onClick={e => e.stopPropagation()}>{song.profiles.username}</Link>
+            </div>
+            <div className="songDetail-theme">
+              <Link to={`/theme/${song.theme_id}`} className="songDetail-themeLink" onClick={e => e.stopPropagation()}>{song.theme?.name || "No theme"}</Link>
+            </div>
+            {song.lyrics && (
+              <div className="songDetail-lyrics">{song.lyrics}</div>
+            )}
+          </div>
+          <div className="songDetail-actions">
+            {isOwnSong && (
+              <div>
+                <DropdownMenu open={open} onOpenChange={setOpen}>
+                  <DropdownMenuTrigger
+                    asChild onClick={e => e.stopPropagation()}
+                    {...(isTouchDevice
+                      ? {
+                        onPointerDown: (e) => e.preventDefault(),
+                        onClick: () => setOpen(!open)
+                      }
+                      : undefined)}
+                  >
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 p-0"
+                      aria-label="Track options">
+                      <MoreHorizontal size={20} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        setEditedTitle(song.title);
+                        setEditedLyrics(song.lyrics || "");
+                        setEditTitleModalOpen(true);
+                      }}>
+                      Edit info
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        handleReplaceAudioClick();
+                      }}
+                      disabled={replacing}>
+                      Replace the audio file
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        setDeleteDialogOpen(true);
+                      }}
+                      className="text-red-600 focus:text-red-600">
+                      Delete this song
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <EditInfoDialog
+                  open={editTitleModalOpen}
+                  onOpenChange={setEditTitleModalOpen}
+                  editedTitle={editedTitle}
+                  editedLyrics={editedLyrics}
+                  onTitleChange={e => setEditedTitle(e.target.value)}
+                  onLyricsChange={e => setEditedLyrics(e.target.value)}
+                  onSave={async () => {
+                    if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || "")))
+                      return;
+                    setSavingTitle(true);
+                    try {
+                      const { error } = await supabase
+                        .from('songs')
+                        .update({
+                          title: editedTitle.trim(),
+                          lyrics: editedLyrics.trim() || null
+                        })
+                        .eq('id', song.id);
+                      if (error)
+                        throw error;
+                      setEditTitleModalOpen(false);
+                      toast({ title: "Info updated", description: "The song info has been updated." });
+                    }
+                    catch (error) {
+                      toast({ title: "Error", description: "Failed to update info", variant: "destructive" });
+                    } finally {
+                      setSavingTitle(false);
+                    }
+                  }}
+                  saving={savingTitle}
+                  onCancel={() => {
+                    setEditTitleModalOpen(false);
+                    setEditedTitle(song.title);
+                    setEditedLyrics(song.lyrics || "");
+                  }}
+                  originalTitle={song.title}
+                  originalLyrics={song.lyrics || ""}
+                  originalThemeId={song.theme_id || ""}
+                  themeId={themeId}
+                  onThemeChange={setThemeId}
+                />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="audio/*"
+                  style={{
+                    display: "none"
+                  }}
+                  onChange={handleReplaceAudioFile}
+                  disabled={replacing} />
+                <DeleteSongDialog
+                  open={deleteDialogOpen}
+                  onOpenChange={setDeleteDialogOpen}
+                  onDelete={handleDeleteTrack}
+                  deleting={deleting}
+                  onCancel={() => setDeleteDialogOpen(false)} />
+              </div>
+            )}
+          </div>
+        </div>
       </main>
       <AudioPlayer />
-    </div>
+    </>
   );
 };
+
 
 export default SongDetail;
