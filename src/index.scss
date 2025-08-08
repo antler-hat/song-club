@@ -1,9 +1,10 @@
+@use 'globals.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@import 'globals.scss'
 
 /* My colors */
 @layer base {
@@ -21,6 +22,7 @@
     --yellow-darkest: #655A17;
     --yellow-light: #FFF5B7;
 
+    --spacing-xxs: 2px;
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-base: 16px;
@@ -151,22 +153,38 @@
     padding-bottom: 5rem;
     /* Adjust as needed for footer */
 
-    @media screen and (max-width: $screen-mobile-max) {
+    @media screen and (max-width: globals.$screen-mobile-max) {
       padding-bottom: 9rem;
       /* Adjust for smaller screens */
     }
   }
 }
 
+// Global styles
+
+.container {
+  max-width: 900px;
+  padding: var(--spacing-base);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 // Home page styles
 
 .themeLinks {
   display: flex;
-  gap: var(--spacing-base);
+  gap: var(--spacing-xs);
   margin-bottom: var(--spacing-lg);
 
   &-theme {
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    border-radius: var(--radius);
     font-size: var(--font-size-xs);
+
+    &:hover {
+      background: var(--grey-lightest);
+      text-decoration: none;
+    }
   }
 
 }

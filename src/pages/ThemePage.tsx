@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import SongCard from "@/components/TrackCard";
+import SongCard from "@/components/SongItem";
 import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 
@@ -121,7 +121,7 @@ const ThemePage = () => {
         onUploadComplete={() => { }}
         showLoginButton={true}
       />
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="container">
         <h2>{theme.name} songs</h2>
         {songs.length === 0 ? (
           <div className="text-center py-8">

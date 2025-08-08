@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import TrackCard from "@/components/TrackCard";
+import SongItem from "@/components/SongItem";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
+import './SongDetail.scss';
 
 interface Song {
   id: string;
@@ -62,8 +63,22 @@ const SongDetail = () => {
           .eq("user_id", songData.user_id)
           .single();
 
+        // Extract only the { name } shape from theme, ignore null or error shapes
+        const rawTheme = songData.theme as unknown;
+        let themeObj: { name: string } | undefined;
+        if (rawTheme !== null && typeof rawTheme === "object" && "name" in rawTheme) {
+          themeObj = rawTheme as { name: string };
+        }
+
         setSong({
-          ...songData,
+          id: songData.id,
+          title: songData.title,
+          file_url: songData.file_url,
+          user_id: songData.user_id,
+          created_at: songData.created_at,
+          lyrics: songData.lyrics,
+          theme_id: songData.theme_id,
+          theme: themeObj,
           profiles: profileData
             ? { username: profileData.username }
             : { username: "Unknown" },
@@ -127,8 +142,11 @@ const SongDetail = () => {
         onUploadComplete={() => { }}
         showLoginButton={true}
       />
-      <main className="max-w-2xl mx-auto p-4">
-        <TrackCard song={song} showLyricsExpanded={true} />
+      <main className="container">
+        <SongItem song={song} showLyricsExpanded={true} />
+        {song.lyrics && (
+          <div className="songDetail-lyrics">{song.lyrics}</div>
+        )}
       </main>
       <AudioPlayer />
     </div>

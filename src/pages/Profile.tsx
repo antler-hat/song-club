@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import SongCard from "@/components/TrackCard";
+import SongCard from "@/components/SongItem";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
 import SimpleHeader from "@/components/SimpleHeader";
-import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
+import SkeletonTrackCard from "@/components/SongItemSkeleton";
 
 interface Song {
   id: string;
@@ -14,6 +14,9 @@ interface Song {
   file_url: string;
   user_id: string;
   created_at: string;
+  lyrics?: string | null;
+  theme_id?: string | null;
+  theme?: { name: string };
   profiles: {
     username: string;
   };
@@ -24,7 +27,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
 
   if (!user) {
     return <Navigate to="/auth" replace />;
@@ -34,38 +37,49 @@ const Profile = () => {
     try {
       // Fetch user profile first
       const { data: profileData } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('user_id', user.id)
+        .from("profiles")
+        .select("username")
+        .eq("user_id", user.id)
         .single();
 
-      const userUsername = profileData?.username || 'Unknown';
+      const userUsername = profileData?.username || "Unknown";
       setUsername(userUsername);
 
-      // Fetch songs
+      // Fetch songs with lyrics and theme
       const { data, error } = await supabase
-        .from('songs')
+        .from("songs")
         .select(`
           id,
           title,
           file_url,
           user_id,
-          created_at
+          created_at,
+          lyrics,
+          theme_id,
+          theme:themes(name)
         `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      // Add username to each song
-      const songsWithProfiles = (data || []).map(song => ({
-        ...song,
-        profiles: { username: userUsername }
-      }));
+      // Normalize theme object and add username
+      const songsWithProfiles = (data || []).map((song) => {
+        const rawTheme = (song as any).theme;
+        let themeObj: { name: string } | undefined;
+        if (rawTheme && typeof rawTheme === "object" && "name" in rawTheme) {
+          themeObj = (rawTheme as { name: string });
+        }
+        return {
+          ...song,
+          theme: themeObj,
+          profiles: { username: userUsername },
+        };
+      });
 
       setSongs(songsWithProfiles);
     } catch (error) {
-      console.error('Error fetching songs:', error);
+      console.error("Error fetching songs:", error);
     } finally {
       setLoading(false);
     }
@@ -87,11 +101,8 @@ const Profile = () => {
 
   return (
     <div className="pageContainer">
-      {/* Header */}
       <SimpleHeader title="Your songs" />
-
-      {/* Content */}
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="container">
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
@@ -112,7 +123,6 @@ const Profile = () => {
           </div>
         )}
       </main>
-
       <AudioPlayer />
     </div>
   );

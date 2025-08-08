@@ -3,12 +3,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import SongCard from "@/components/TrackCard";
+import SongCard from "@/components/SongItem";
 import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
 import UploadModal from "@/components/UploadModal";
 import { Button } from "@/components/ui/button";
-import SkeletonTrackCard from "@/components/ui/SkeletonTrackCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import SkeletonTrackCard from "@/components/SongItemSkeleton";
 
 interface Song {
   id: string;
@@ -137,10 +138,16 @@ const Index = () => {
       />
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto p-4">
+      <main className="container">
         <div className="themeLinks">
           {themesLoading ? (
-            <p>Loading themes…</p>
+            <div className="flex gap-4">
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+              <Skeleton className="h-3 w-8 rounded-full" />
+            </div>
           ) : (
             themes.map((theme) => (
               <Link key={theme.id} to={`/theme/${theme.id}`} className="themeLinks-theme">
@@ -158,7 +165,7 @@ const Index = () => {
           </div>
         )}
         {loading ? (
-          <div className="space-y-4">
+          <div className="pt-10">
             {[1, 2, 3].map((i) => (
               <SkeletonTrackCard key={i} />
             ))}
@@ -180,14 +187,12 @@ const Index = () => {
           </div>
         ) : (
           <div>
-            <div className="trackCard">
-              <div className="trackCard-mainContent">
-                <div></div>
-                <span className="text-xs font-bold">Title</span>
-                <span className="text-xs font-bold">Artist</span>
-                <span className="text-xs font-bold">Theme</span>
-                <span className="text-xs font-bold">Lyrics</span>
-              </div>
+            <div className="songItem-tableHeader">
+
+              <span className="text-xs font-bold">Title</span>
+              <span className="text-xs font-bold">Artist</span>
+              <span className="text-xs font-bold">Theme</span>
+              <span className="text-xs font-bold">Lyrics</span>
             </div>
             {filteredSongs.map((song) => (
               <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
