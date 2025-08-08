@@ -119,56 +119,50 @@
   }
 }
 
-@layer base {
-  .body {
-    font-size: var(--font-size-base);
-  }
+// Global styles
+.body {
+  font-size: var(--font-size-base);
+}
 
-  h1,
-  h2,
-  h3 {
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
+h1,
+h2,
+h3 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
 
-  a {
+a {
 
-    &:hover,
-    &:focus,
-    &:focus-visible {
-      text-decoration: underline;
-    }
-  }
-
-  .border {
-    border-color: var(--border);
-  }
-
-  .bg-background {
-    background-color: var(--background);
-  }
-
-  .pageContainer {
-    min-height: 100vh;
-    background-color: var(--background);
-    padding-bottom: 5rem;
-    /* Adjust as needed for footer */
-
-    @media screen and (max-width: globals.$screen-mobile-max) {
-      padding-bottom: 9rem;
-      /* Adjust for smaller screens */
-    }
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    text-decoration: underline;
   }
 }
 
-// Global styles
+.border {
+  border-color: var(--border);
+}
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--background);
+}
 
 .container {
   max-width: 900px;
   padding: var(--spacing-base);
-  padding-bottom: 96px;
+  padding-bottom: 6rem;
   margin-left: auto;
   margin-right: auto;
+
+  @media screen and (max-width: globals.$screen-mobile-max) {
+    padding-bottom: 9rem;
+  }
 }
 
 // Home page styles

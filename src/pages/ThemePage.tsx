@@ -128,7 +128,7 @@ const ThemePage = () => {
             <h3 className="text-xl font-bold mb-2">No songs for this theme</h3>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
             {songs.map(song => (
               <SongCard key={song.id} song={song} onSongChanged={() => { }} />
             ))}

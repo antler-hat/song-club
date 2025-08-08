@@ -120,7 +120,7 @@ const UserProfile = () => {
 
       <main className="container">
         {loading ? (
-          <div className="space-y-4">
+          <div>
             <h2>Loading...</h2>
             {[1, 2, 3].map((i) => (
               <SkeletonTrackCard key={i} />
@@ -137,7 +137,7 @@ const UserProfile = () => {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div>
                 {songs.map((song) => (
                   <SongCard key={song.id} song={song} />
                 ))}

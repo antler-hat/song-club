@@ -1,11 +1,12 @@
+
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import SongCard from "@/components/SongItem";
+import SongItem from "@/components/SongItem";
 import UploadModal from "@/components/UploadModal";
 import AudioPlayer from "@/components/AudioPlayer";
-import SimpleHeader from "@/components/SimpleHeader";
+import Navbar from "@/components/Navbar";
 import SkeletonTrackCard from "@/components/SongItemSkeleton";
 
 interface Song {
@@ -25,9 +26,11 @@ interface Song {
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   if (!user) {
     return <Navigate to="/auth" replace />;
@@ -101,10 +104,18 @@ const Profile = () => {
 
   return (
     <div className="pageContainer">
-      <SimpleHeader title="Your songs" />
+      <Navbar
+        user={user}
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showUpload={true}
+        onUploadComplete={() => { }}
+        showLoginButton={true}
+      />
       <main className="container">
         {loading ? (
-          <div className="space-y-4">
+          <div>
             {[1, 2, 3].map((i) => (
               <SkeletonTrackCard key={i} />
             ))}
@@ -116,9 +127,10 @@ const Profile = () => {
             <UploadModal onUploadComplete={fetchUserSongs} />
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
+            <h2>Your songs</h2>
             {songs.map((song) => (
-              <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
+              <SongItem key={song.id} song={song} onSongChanged={handleSongChanged} />
             ))}
           </div>
         )}
