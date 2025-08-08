@@ -106,6 +106,7 @@ const Profile = () => {
     <div className="pageContainer">
       <Navbar
         user={user}
+        signOut={handleSignOut}
         showSearch={true}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
