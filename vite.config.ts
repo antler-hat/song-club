@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
     componentTagger(),
   ].filter(Boolean),
   build: {
-    outDir: "docs",
+    outDir: "dist",
   },
   resolve: {
     alias: {
