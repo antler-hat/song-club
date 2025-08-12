@@ -36,6 +36,7 @@
     --font-size-xs: 12px;
     --font-size-lg: 18px;
     --font-size-xl: 24px;
+    --font-size-xxl: 32px;
 
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 1px 8px rgba(0, 0, 0, 0.05);
@@ -163,6 +164,14 @@ a {
   @media screen and (max-width: globals.$screen-mobile-max) {
     padding-bottom: 9rem;
   }
+}
+
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+
+.text-xxl {
+  font-size: var(--font-size-xxl);
 }
 
 // Home page styles

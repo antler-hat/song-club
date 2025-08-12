@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/SongItem";
 import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
-import SimpleHeader from "@/components/SimpleHeader";
 import SkeletonTrackCard from "@/components/SongItemSkeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface Song {
   id: string;
@@ -128,10 +128,18 @@ const UserProfile = () => {
           </div>
         ) : (
           <>
-            <h2>Songs by {profile?.username}</h2>
+            <div className="flex items-center row gap-4 mb-6">
+              <Avatar size="xl">
+                <AvatarFallback>
+                  {user?.user_metadata?.username?.[0]?.toUpperCase() ||
+                    user?.email?.[0]?.toUpperCase() ||
+                    "U"}
+                </AvatarFallback>
+              </Avatar>
+              <h2 className="grow-0 text-xxl font-medium">{profile?.username}</h2>
+            </div>
             {songs.length === 0 ? (
               <div className="text-center py-8">
-                <h3 className="text-xl font-bold mb-2">NO SONGS YET</h3>
                 <p className="text-muted-foreground">
                   This user hasn't shared any songs yet.
                 </p>
