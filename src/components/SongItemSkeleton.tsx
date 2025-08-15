@@ -6,7 +6,7 @@ import './SongItem.scss';
 export function SkeletonTrackCard() {
   return (
     <div className="songItem-skeleton">
-      <Skeleton className="h-[40px] w-[40px] rounded-full" />
+      <Skeleton className="h-[30px] w-[30px] rounded-full" />
       <Skeleton className="h-3 rounded-full" />
       <Skeleton className="h-3 rounded-full" />
       <Skeleton className="h-3 rounded-full" />

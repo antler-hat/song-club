@@ -33,9 +33,11 @@ interface SongCardProps {
   song: Song;
   onSongChanged?: () => void;
   showLyricsExpanded?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
-const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) => {
+const SongCard = ({ song, onSongChanged, showLyricsExpanded, selected = false, onClick }: SongCardProps) => {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = useAudio();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -135,12 +137,15 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded }: SongCardProps) =>
   };
 
   return (
-    <div className="songItem">
+    <div
+      className={`songItem${selected ? " is-selected" : ""}`}
+      onClick={onClick}
+    >
       <div>
         <div className="songItem-mainContent" >
           <div className="songItem-playpause">
             <Button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
-              className="playpause-button"
+              className={`playpause-button${isSongPlaying ? " is-paused" : ""}`}
             >
               {isSongPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>
@@ -289,7 +294,7 @@ const LyricsModalButton = ({ lyrics }: { lyrics: string }) => {
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
           <Button className="h-8 w-8 p-0" variant="ghost" size="icon" onClick={e => { e.stopPropagation(); setOpen(true); }}>
-            <NotebookText size={20} />
+            <NotebookText size={16} />
           </Button>
         </TooltipTrigger>
         <TooltipContent>View lyrics</TooltipContent>

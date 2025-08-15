@@ -32,7 +32,7 @@ const AudioPlayer = () => {
 
   return (
     <div className="audioPlayer">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl px-4 mx-auto">
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
           {/* Track Info */}
           <div className="flex flex-1 min-w-0 mb-0 sm:mb-0 items-center">
