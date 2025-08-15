@@ -26,6 +26,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Add CNAME file for custom domain
+        run: echo "songclub.club" > docs/CNAME
+
       - name: Commit and push docs folder
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
