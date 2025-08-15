@@ -37,6 +37,32 @@ const Index = () => {
   const [themes, setThemes] = useState<{ id: string; name: string; created_at: string }[]>([]);
   const [themesLoading, setThemesLoading] = useState(true);
 
+  // Selection state for SongCard
+  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+
+  // Deselect on click outside any .songItem
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      // Find if the click is inside a .songItem
+      let node = e.target as HTMLElement | null;
+      let found = false;
+      while (node) {
+        if (node.classList && node.classList.contains("songItem")) {
+          found = true;
+          break;
+        }
+        node = node.parentElement;
+      }
+      if (!found) {
+        setSelectedSongId(null);
+      }
+    };
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
   const fetchAllSongs = async () => {
     try {
       // Fetch songs
@@ -68,10 +94,24 @@ const Index = () => {
         return acc;
       }, {} as Record<string, any>) || {};
 
-      const songsWithProfiles = songsData?.map(song => ({
-        ...song,
-        profiles: profilesMap[song.user_id] || { username: 'Unknown' }
-      })) || [];
+      const songsWithProfiles = songsData?.map(song => {
+        // Ensure theme is either undefined or { name: string }
+        let theme: { name: string } | undefined = undefined;
+        if (
+          song.theme !== null &&
+          song.theme &&
+          typeof song.theme === "object" &&
+          "name" in song.theme &&
+          typeof (song.theme as any).name === "string"
+        ) {
+          theme = { name: (song.theme as any).name };
+        }
+        return {
+          ...song,
+          profiles: profilesMap[song.user_id] || { username: 'Unknown' },
+          theme,
+        };
+      }) || [];
 
       setSongs(songsWithProfiles);
       setFilteredSongs(songsWithProfiles);
@@ -198,7 +238,17 @@ const Index = () => {
                 <span className="text-xs font-bold">Lyrics</span>
               </div>
               {filteredSongs.map((song) => (
-                <SongCard key={song.id} song={song} onSongChanged={handleSongChanged} />
+                <SongCard
+                  key={song.id}
+                  song={song}
+                  onSongChanged={handleSongChanged}
+                  selected={selectedSongId === song.id}
+                  onClick={e => {
+                    // Prevent bubbling to document if clicking on the card itself
+                    e.stopPropagation?.();
+                    setSelectedSongId(song.id);
+                  }}
+                />
               ))}
             </div>
           )

@@ -13,7 +13,7 @@ interface AudioContextType {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
-  playTrack: (track: Track) => void;
+  playTrack: (track: Track, forceRestart?: boolean) => void;
   pauseTrack: () => void;
   resumeTrack: () => void;
   seekTo: (time: number) => void;
@@ -30,12 +30,15 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const playTrack = (track: Track) => {
+  const playTrack = (track: Track, forceRestart: boolean = false) => {
     setIsLoading(true);
     if (audioRef.current) {
       if (currentTrack?.id !== track.id) {
         audioRef.current.src = track.file_url;
         setCurrentTrack(track);
+        audioRef.current.currentTime = 0;
+      } else if (forceRestart) {
+        audioRef.current.currentTime = 0;
       }
       audioRef.current.play();
       setIsPlaying(true);

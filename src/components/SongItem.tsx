@@ -34,7 +34,7 @@ interface SongCardProps {
   onSongChanged?: () => void;
   showLyricsExpanded?: boolean;
   selected?: boolean;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
 }
 
 const SongCard = ({ song, onSongChanged, showLyricsExpanded, selected = false, onClick }: SongCardProps) => {
@@ -42,6 +42,23 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded, selected = false, o
   const { user } = useAuth();
   const { toast } = useToast();
   const isTouchDevice = useIsMobile();
+
+  // Handle double click and keyboard events for play-from-beginning
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    playTrack({ ...song, username: song.profiles.username }, true);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!selected) return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      playTrack({ ...song, username: song.profiles.username }, true);
+    } else if (e.key === " ") {
+      e.preventDefault();
+      handlePlayPause();
+    }
+  };
 
   const [themeId, setThemeId] = useState<string>(song.theme_id || "");
 
@@ -140,6 +157,11 @@ const SongCard = ({ song, onSongChanged, showLyricsExpanded, selected = false, o
     <div
       className={`songItem${selected ? " is-selected" : ""}`}
       onClick={onClick}
+      onDoubleClick={handleDoubleClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isCurrentSong && isPlaying}
     >
       <div>
         <div className="songItem-mainContent" >

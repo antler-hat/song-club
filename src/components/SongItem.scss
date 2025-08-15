@@ -7,11 +7,24 @@ $button-size: 30px;
     border-bottom: 1px solid var(--grey-lightest);
     position: relative;
     font-size: var(--font-size-sm);
+    border-radius: var(--radius);
+
+    &:focus {
+        outline: none;
+    }
 
     @media (hover: hover) and (pointer: fine) {
         &:hover .playpause-button svg {
             fill: currentColor
         }
+
+        &:hover {
+            background: var(--near-white);
+        }
+    }
+
+    &.is-selected {
+        background: var(--grey-lightest);
     }
 
     &-titleGroup {
@@ -147,7 +160,7 @@ $button-size: 30px;
         width: $button-size;
         height: $button-size;
         border-radius: 50px;
-        background-color: var(--white);
+        background-color: transparent;
         color: var(--black);
         display: flex;
         align-items: center;
