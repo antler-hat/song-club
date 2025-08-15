@@ -8,9 +8,11 @@ $button-size: 40px;
     position: relative;
     font-size: var(--font-size-sm);
 
-    &:hover button.playpause-button {
-        outline: 2px solid var(--black);
-        outline-offset: 2px;
+    @media (hover: hover) and (pointer: fine) {
+        .songItem:hover button.playpause-button {
+            outline: 2px solid var(--black);
+            outline-offset: 2px;
+        }
     }
 
     &-titleGroup {
