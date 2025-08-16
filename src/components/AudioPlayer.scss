@@ -14,6 +14,7 @@ button.audioPlayer-playPauseButton {
     padding: 0.25rem;
     background: var(--black);
     color: var(--white);
+    border-radius: 100%;
 
     &:hover {
         background: var(--grey-darkest);
