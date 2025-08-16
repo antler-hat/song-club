@@ -22,6 +22,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface UploadModalProps {
   onUploadComplete: () => void;
@@ -127,10 +128,14 @@ const UploadModal = ({ onUploadComplete }: UploadModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <Upload size={16} />
-          Upload
-        </Button>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Upload size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Upload a song</TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -35,7 +35,7 @@ const AudioPlayer = () => {
       <div className="max-w-4xl px-4 mx-auto">
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
           {/* Track Info */}
-          <div className="flex flex-1 min-w-0 mb-0 sm:mb-0 items-center">
+          <div className="flex flex-1 min-w-0 mb-1 sm:mb-0 items-center">
             <div className="flex flex-col min-w-0">
               <h4 className="text-sm font-bold truncate">{currentTrack.title}</h4>
               <p className="text-sm truncate">

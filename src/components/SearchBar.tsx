@@ -32,16 +32,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const isMobileOpen = typeof mobileOpen === "boolean" ? mobileOpen : internalMobileOpen;
   const setMobileOpenFn = setMobileOpen || internalSetMobileOpen;
 
+  // Desktop open state
+  const [desktopOpen, setDesktopOpen] = useState(false);
+
   if (isMobile) {
     if (!isMobileOpen) {
       return (
         <Button
-          variant="outline"
+          variant="ghost"
+          size="icon"
           aria-label="Open search"
           onClick={() => setMobileOpenFn(true)}
-          className={clsx("h-9 w-9", className)}
+          className={clsx(className)}
         >
-          <Search size={20} />
+          <Search size={16} />
         </Button>
       );
     }
@@ -83,7 +87,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
     );
   }
 
-  // Desktop: always show input
+  // Desktop: morphing button/input
+  if (!desktopOpen) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label="Open search"
+        onClick={() => setDesktopOpen(true)}
+        className={clsx(className)}
+      >
+        <Search size={16} />
+      </Button>
+    );
+  }
   return (
     <div className={clsx("relative flex-1 max-w-md flex items-center", className)}>
       <Input
@@ -91,6 +108,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
+        autoFocus
         className={clsx("searchBar-input", inputClassName)}
       />
       <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
@@ -106,7 +124,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <X size={14} />
           </Button>
         )}
-        <Search size={16} className="text-muted-foreground" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setDesktopOpen(false)}
+          className="h-6 w-6 p-0"
+          aria-label="Close search"
+          tabIndex={-1}
+        >
+          <X size={16} />
+        </Button>
       </div>
     </div>
   );
