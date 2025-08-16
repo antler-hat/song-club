@@ -10,6 +10,7 @@ import UploadModal from "@/components/UploadModal";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import SkeletonTrackCard from "@/components/SongItemSkeleton";
+import { useAudio } from "@/hooks/useAudio";
 
 interface Song {
   id: string;
@@ -39,6 +40,32 @@ const Index = () => {
 
   // Selection state for SongCard
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+
+  // Audio state and controls
+  const { currentTrack, isPlaying, pauseTrack, resumeTrack } = useAudio();
+
+  // Global spacebar play/pause handler
+  useEffect(() => {
+    const handleSpacebar = (event: KeyboardEvent) => {
+      if (
+        (event.code === "Space" || event.key === " " || event.key === "Spacebar") &&
+        !(event.target instanceof HTMLInputElement ||
+          event.target instanceof HTMLTextAreaElement ||
+          event.target instanceof HTMLButtonElement)
+      ) {
+        if (!selectedSongId && currentTrack) {
+          event.preventDefault();
+          if (isPlaying) {
+            pauseTrack();
+          } else {
+            resumeTrack();
+          }
+        }
+      }
+    };
+    window.addEventListener("keydown", handleSpacebar);
+    return () => window.removeEventListener("keydown", handleSpacebar);
+  }, [selectedSongId, currentTrack, isPlaying, pauseTrack, resumeTrack]);
 
   // Deselect on click outside any .songItem
   useEffect(() => {
@@ -97,14 +124,13 @@ const Index = () => {
       const songsWithProfiles = songsData?.map(song => {
         // Ensure theme is either undefined or { name: string }
         let theme: { name: string } | undefined = undefined;
+        const themeObj = song.theme as { name?: unknown } | null | undefined;
         if (
-          song.theme !== null &&
-          song.theme &&
-          typeof song.theme === "object" &&
-          "name" in song.theme &&
-          typeof (song.theme as any).name === "string"
+          themeObj &&
+          typeof themeObj === "object" &&
+          typeof themeObj.name === "string"
         ) {
-          theme = { name: (song.theme as any).name };
+          theme = { name: themeObj.name };
         }
         return {
           ...song,
