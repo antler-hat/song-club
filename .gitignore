@@ -25,4 +25,4 @@ dist-ssr
 /supabase/.temp
 /supabase/.temp
 /.vite
-docs/assets
+docs/
