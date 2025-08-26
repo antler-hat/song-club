@@ -4,7 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import SongCard from "@/components/SongItem";
-import AudioPlayer from "@/components/AudioPlayer";
 import Navbar from "@/components/Navbar";
 import UploadModal from "@/components/UploadModal";
 import { Button } from "@/components/ui/button";
@@ -43,29 +42,6 @@ const Index = () => {
 
   // Audio state and controls
   const { currentTrack, isPlaying, pauseTrack, resumeTrack } = useAudio();
-
-  // Global spacebar play/pause handler
-  useEffect(() => {
-    const handleSpacebar = (event: KeyboardEvent) => {
-      if (
-        (event.code === "Space" || event.key === " " || event.key === "Spacebar") &&
-        !(event.target instanceof HTMLInputElement ||
-          event.target instanceof HTMLTextAreaElement ||
-          event.target instanceof HTMLButtonElement)
-      ) {
-        if (!selectedSongId && currentTrack) {
-          event.preventDefault();
-          if (isPlaying) {
-            pauseTrack();
-          } else {
-            resumeTrack();
-          }
-        }
-      }
-    };
-    window.addEventListener("keydown", handleSpacebar);
-    return () => window.removeEventListener("keydown", handleSpacebar);
-  }, [selectedSongId, currentTrack, isPlaying, pauseTrack, resumeTrack]);
 
   // Deselect on click outside any .songItem
   useEffect(() => {
@@ -280,8 +256,6 @@ const Index = () => {
           )
         }
       </main >
-
-      <AudioPlayer />
     </div >
   );
 };
