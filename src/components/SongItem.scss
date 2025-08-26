@@ -101,11 +101,15 @@ $button-size: 30px;
 
     &-themeLink {
         font-size: var(--font-size-sm);
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
-        @media screen and (max-width: globals.$screen-mobile-max) {
-            color: var(--grey-base);
-            font-size: var(--font-size-xs);
-        }
+    @media screen and (max-width: globals.$screen-mobile-max) {
+        color: var(--grey-base);
+        font-size: var(--font-size-xs);
     }
 
     &-lyricsButton {
