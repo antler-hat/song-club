@@ -88,27 +88,42 @@ const SongDetail = () => {
   };
 
   const handleReplaceAudioFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const file = e.target.files[0];
+    if (!song) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("audio/")) {
+      toast({ title: "Invalid file type", description: "Please select an audio file", variant: "destructive" });
+      return;
+    }
     setReplacing(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const ext = file.name.split('.').pop();
+      const key = `${user?.id}/${song.id}-${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from('tracks').upload(key, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const publicUrl = supabase.storage.from('tracks').getPublicUrl(key).data.publicUrl;
+      const { error: dbError } = await supabase.from('songs').update({ file_url: publicUrl }).eq('id', song.id);
+      if (dbError) throw dbError;
       toast({ title: "Audio replaced", description: "Audio file updated." });
-    } catch {
-      toast({ title: "Error", description: "Failed to replace audio", variant: "destructive" });
+      // Optionally, refetch song data here
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Replace failed", variant: "destructive" });
     } finally {
       setReplacing(false);
     }
   };
 
   const handleDeleteTrack = async () => {
+    if (!song) return;
     setDeleting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { error } = await supabase.from('songs').delete().eq('id', song.id);
+      if (error) throw error;
       toast({ title: "Deleted", description: "Song has been deleted." });
       setDeleteDialogOpen(false);
-    } catch {
-      toast({ title: "Error", description: "Failed to delete song", variant: "destructive" });
+      // Optionally, redirect or update UI here
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Delete failed", variant: "destructive" });
     } finally {
       setDeleting(false);
     }
@@ -303,6 +318,7 @@ const SongDetail = () => {
                   onTitleChange={e => setEditedTitle(e.target.value)}
                   onLyricsChange={e => setEditedLyrics(e.target.value)}
                   onSave={async () => {
+                    if (!song) return;
                     if (!editedTitle.trim() || (editedTitle === song.title && editedLyrics === (song.lyrics || "")))
                       return;
                     setSavingTitle(true);
@@ -318,6 +334,7 @@ const SongDetail = () => {
                         throw error;
                       setEditTitleModalOpen(false);
                       toast({ title: "Info updated", description: "The song info has been updated." });
+                      // Optionally, refetch song data here
                     }
                     catch (error) {
                       toast({ title: "Error", description: "Failed to update info", variant: "destructive" });

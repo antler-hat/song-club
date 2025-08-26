@@ -261,7 +261,7 @@ const Index = () => {
                 <span className="text-xs font-bold">Title</span>
                 <span className="text-xs font-bold">Artist</span>
                 <span className="text-xs font-bold">Theme</span>
-                <span className="text-xs font-bold">Lyrics</span>
+                <span className="text-xs font-bold text-right">Lyrics</span>
               </div>
               {filteredSongs.map((song) => (
                 <SongCard

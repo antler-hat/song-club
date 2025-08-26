@@ -37,7 +37,7 @@ $button-size: 30px;
 
     &-mainContent {
         display: grid;
-        grid-template-columns: $button-size 1fr 150px;
+        grid-template-columns: $button-size 1fr 48px;
         gap: var(--spacing-base);
         position: relative;
 
@@ -64,7 +64,7 @@ $button-size: 30px;
 
     &-tableHeader {
         display: grid;
-        grid-template-columns: $button-size 2fr 1fr 1fr 150px;
+        grid-template-columns: $button-size 2fr 1fr 1fr 48px;
         align-items: center;
         padding: var(--spacing-base);
         border-bottom: 1px solid var(--grey-lightest);
@@ -112,24 +112,12 @@ $button-size: 30px;
         font-size: var(--font-size-xs);
     }
 
-    &-lyricsButton {
+    &-lyrics {
         display: flex;
         gap: var(--spacing-xs);
         align-items: center;
+        justify-content: flex-end;
         margin-top: var(--spacing-xs);
-    }
-
-    &-actions {
-        display: grid;
-        grid-template-columns: 1fr 50px;
-        gap: var(--spacing-base);
-        align-items: center;
-        justify-content: end;
-
-        @media screen and (max-width: globals.$screen-mobile-max) {
-            display: flex;
-            gap: var(--spacing-sm);
-        }
     }
 
     &-playpause {
