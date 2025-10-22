@@ -181,23 +181,7 @@ const Index = () => {
 
       {/* Content */}
       <main className="container">
-        <div className="themeLinks">
-          {themesLoading ? (
-            <div className="flex gap-4">
-              <Skeleton className="h-3 w-8 rounded-full" />
-              <Skeleton className="h-3 w-8 rounded-full" />
-              <Skeleton className="h-3 w-8 rounded-full" />
-              <Skeleton className="h-3 w-8 rounded-full" />
-              <Skeleton className="h-3 w-8 rounded-full" />
-            </div>
-          ) : (
-            themes.map((theme) => (
-              <Link key={theme.id} to={`/theme/${theme.id}`} className="button button-ghost button-xs">
-                {theme.name}
-              </Link>
-            ))
-          )}
-        </div>
+        
 
         {
           searchQuery && (
