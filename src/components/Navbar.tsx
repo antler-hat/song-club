@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink } from "@/components/ui/navigation-menu";
 import { useThemes } from "@/hooks/useThemes";
+import { supabase } from "@/integrations/supabase/client";
 import UploadModal from "@/components/UploadModal";
 import SearchBar from "@/components/SearchBar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -40,6 +41,34 @@ const Navbar: React.FC<NavbarProps> = ({
   const navigate = useNavigate();
   const [mobileSearchOpen, setMobileSearchOpenInternal] = useState(false);
   const themes = useThemes();
+  const [users, setUsers] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("songs")
+          .select("user_id, profiles!inner(username)")
+          .not("user_id", "is", null);
+
+        if (error) throw error;
+
+        const uniqueUsers = Array.from(
+          new Map(
+            (data || [])
+              .filter((item: any) => item.profiles?.username)
+              .map((item: any) => [item.user_id, { id: item.user_id, username: item.profiles.username }])
+          ).values()
+        );
+
+        setUsers(uniqueUsers);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Use internal state if not provided
   const effectiveMobileSearchOpen = setMobileSearchOpen ? mobileSearch : mobileSearchOpen;
@@ -79,6 +108,23 @@ const Navbar: React.FC<NavbarProps> = ({
                           <Link to={`/theme/${theme.id}`}>{theme.name}</Link>
                         </DropdownMenuItem>
                       ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="">Users
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {users.length === 0 ? (
+                      <DropdownMenuItem disabled>Loading users...</DropdownMenuItem>
+                    ) : (
+                      users.map((u) => (
+                        <DropdownMenuItem asChild key={u.id}>
+                          <Link to={`/user/${u.id}`}>{u.username}</Link>
+                        </DropdownMenuItem>
+                      ))
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               {showSearch && (
