@@ -100,9 +100,6 @@ const Navbar: React.FC<NavbarProps> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                          <Link to="/">All themes</Link>
-                      </DropdownMenuItem>
                       {themes?.map((theme: any) => (
                         <DropdownMenuItem asChild key={theme.id}>
                           <Link to={`/theme/${theme.id}`}>{theme.name}</Link>
@@ -112,7 +109,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="">Users
+                    <Button variant="ghost" className="">Artists
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
