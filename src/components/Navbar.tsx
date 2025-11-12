@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut, User, LogIn } from "lucide-react";
+import { LogOut, User, LogIn, DiscAlbum, MicVocal, Home } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -90,13 +90,20 @@ const Navbar: React.FC<NavbarProps> = ({
           <>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-4">
-                  <Link to="/"><h1 className="navbar-title">Song Club</h1></Link>
+                  <Link to="/">
+                    <h1 className="navbar-title hidden sm:block">Song Club</h1>
+                    <Button variant="ghost" size="iconOnMobile" className="block sm:hidden" >
+                      <Home size={16} />
+                    </Button>
+                  </Link>
               </div>
             </div>
             <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="">Themes
+                    <Button variant="ghost" size="iconOnMobile">
+                      <DiscAlbum className="block sm:hidden" size={16} />
+                      <span className="hidden sm:block">Themes</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -109,7 +116,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="">Artists
+                    <Button variant="ghost" size="iconOnMobile">
+                      <MicVocal className="block sm:hidden" size={16} />
+                      <span className="hidden sm:block">Artists</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
