@@ -9,6 +9,10 @@ $button-size: 30px;
     font-size: var(--font-size-sm);
     border-radius: var(--radius);
 
+    @media screen and (max-width: globals.$screen-mobile-max) {
+        padding: var(--spacing-xs) 0;
+    }
+
     &:focus {
         outline: none;
     }
