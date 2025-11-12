@@ -92,8 +92,8 @@ const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center gap-4">
                   <Link to="/">
                     <h1 className="navbar-title hidden sm:block">Song Club</h1>
-                    <Button variant="ghost" size="iconOnMobile" className="block sm:hidden" >
-                      <Home size={16} />
+                    <Button variant="ghost" size="icon" className="flex sm:hidden" >
+                    <Home size={16} />
                     </Button>
                   </Link>
               </div>
