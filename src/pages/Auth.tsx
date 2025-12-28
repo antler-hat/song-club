@@ -7,15 +7,13 @@ import { useToast } from "@/hooks/use-toast";
 import { Link, Navigate, useLocation } from "react-router-dom";
 
 const Auth = () => {
-  const { user, signIn, signUp, resetPassword, updatePassword } = useAuth();
+  const { user, signIn, resetPassword, updatePassword } = useAuth();
   const { toast } = useToast();
   const location = useLocation();
 
-  const [isSignUp, setIsSignUp] = useState(false);
   const [isReset, setIsReset] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Password reset (recovery) flow
@@ -79,20 +77,6 @@ const Auth = () => {
           });
           setIsReset(false);
         }
-      } else if (isSignUp) {
-        const { error } = await signUp(email, password, username);
-        if (error) {
-          toast({
-            title: "Error",
-            description: error.message,
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Account created",
-            description: "Check your email to verify your account",
-          });
-        }
       } else {
         const { error } = await signIn(email, password);
         if (error) {
@@ -122,11 +106,7 @@ const Auth = () => {
       <Card className="w-full max-w-md  p-8">
         <CardHeader>
           <CardTitle className="text-center text-lg font-bold">
-            {isRecovery
-              ? "Set New Password"
-              : isSignUp
-                ? "Sign up"
-                : "Log in"}
+            {isRecovery ? "Set New Password" : "Log in"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -206,19 +186,6 @@ const Auth = () => {
                   />
                 </div>
 
-                {isSignUp && (
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                      className="placeholder:text-muted-foreground"
-                    />
-                  </div>
-                )}
-
                 <div>
                   <Input
                     type="password"
@@ -236,20 +203,18 @@ const Auth = () => {
                   variant="default"
                   className="w-full"
                 >
-                  {loading ? "..." : (isSignUp ? "Sign up" : "Log in")}
+                  {loading ? "..." : "Log in"}
                 </Button>
               </form>
-              {!isSignUp && (
-                <div className="mt-6 text-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsReset(true)}
-                    className="text-sm underline"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-              )}
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => setIsReset(true)}
+                  className="text-sm underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
             </>
           )}
           {!isRecovery && (
@@ -263,13 +228,7 @@ const Auth = () => {
                   Back to login
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-sm underline"
-                >
-                  {isSignUp ? "Got an account? Log in" : "Need to create an account? Sign up"}
-                </button>
+                <p className="text-sm">Sign up is closed</p>
               )}
             </div>
           )}
